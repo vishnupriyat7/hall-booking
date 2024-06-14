@@ -80,6 +80,9 @@ class PersonController extends Controller
             $table->editColumn('state', function ($row) {
                 return $row->state ? $row->state : '';
             });
+            $table->editColumn('district', function ($row) {
+                return $row->district ? $row->district : '';
+            });
             $table->editColumn('post_office', function ($row) {
                 return $row->post_office ? $row->post_office : '';
             });

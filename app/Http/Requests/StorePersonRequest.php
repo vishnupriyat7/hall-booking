@@ -55,6 +55,10 @@ class StorePersonRequest extends FormRequest
                 'string',
                 'nullable',
             ],
+            'district' => [
+                'string',
+                'nullable',
+            ],
             'post_office' => [
                 'string',
                 'nullable',

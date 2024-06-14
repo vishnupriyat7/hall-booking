@@ -45,6 +45,7 @@ class Person extends Model implements HasMedia
         'address',
         'country',
         'state',
+        'district',
         'post_office',
         'pincode',
         'created_at',

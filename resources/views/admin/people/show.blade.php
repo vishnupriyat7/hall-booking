@@ -113,6 +113,14 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.person.fields.district') }}
+                        </th>
+                        <td>
+                            {{ $person->district }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.person.fields.post_office') }}
                         </th>
                         <td>

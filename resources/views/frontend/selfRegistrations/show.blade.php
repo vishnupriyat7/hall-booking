@@ -6,13 +6,13 @@
 
             <div class="card">
                 <div class="card-header">
-                    {{ trans('global.show') }} {{ trans('cruds.person.title') }}
+                    {{ trans('global.show') }} {{ trans('cruds.selfRegistration.title') }}
                 </div>
 
                 <div class="card-body">
                     <div class="form-group">
                         <div class="form-group">
-                            <a class="btn btn-default" href="{{ route('frontend.people.index') }}">
+                            <a class="btn btn-default" href="{{ route('frontend.self-registrations.index') }}">
                                 {{ trans('global.back_to_list') }}
                             </a>
                         </div>
@@ -20,140 +20,156 @@
                             <tbody>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.person.fields.id') }}
+                                        {{ trans('cruds.selfRegistration.fields.id') }}
                                     </th>
                                     <td>
-                                        {{ $person->id }}
+                                        {{ $selfRegistration->id }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.person.fields.name') }}
+                                        {{ trans('cruds.selfRegistration.fields.name') }}
                                     </th>
                                     <td>
-                                        {{ $person->name }}
+                                        {{ $selfRegistration->name }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.person.fields.gender') }}
+                                        {{ trans('cruds.selfRegistration.fields.gender') }}
                                     </th>
                                     <td>
-                                        {{ App\Models\Person::GENDER_SELECT[$person->gender] ?? '' }}
+                                        {{ App\Models\SelfRegistration::GENDER_SELECT[$selfRegistration->gender] ?? '' }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.person.fields.dob') }}
+                                        {{ trans('cruds.selfRegistration.fields.age') }}
                                     </th>
                                     <td>
-                                        {{ $person->dob }}
+                                        {{ $selfRegistration->age }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.person.fields.age') }}
+                                        {{ trans('cruds.selfRegistration.fields.mobile') }}
                                     </th>
                                     <td>
-                                        {{ $person->age }}
+                                        {{ $selfRegistration->mobile }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.person.fields.mobile') }}
+                                        {{ trans('cruds.selfRegistration.fields.id_type') }}
                                     </th>
                                     <td>
-                                        {{ $person->mobile }}
+                                        {{ $selfRegistration->id_type->name ?? '' }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.person.fields.id_type') }}
+                                        {{ trans('cruds.selfRegistration.fields.id_detail') }}
                                     </th>
                                     <td>
-                                        {{ $person->id_type->name ?? '' }}
+                                        {{ $selfRegistration->id_detail }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.person.fields.id_detail') }}
+                                        {{ trans('cruds.selfRegistration.fields.address') }}
                                     </th>
                                     <td>
-                                        {{ $person->id_detail }}
+                                        {{ $selfRegistration->address }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.person.fields.recommended_by_detail') }}
+                                        {{ trans('cruds.selfRegistration.fields.country') }}
                                     </th>
                                     <td>
-                                        {{ $person->recommended_by_detail }}
+                                        {{ App\Models\SelfRegistration::COUNTRY_SELECT[$selfRegistration->country] ?? '' }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.person.fields.address') }}
+                                        {{ trans('cruds.selfRegistration.fields.state') }}
                                     </th>
                                     <td>
-                                        {{ $person->address }}
+                                        {{ $selfRegistration->state }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.person.fields.country') }}
+                                        {{ trans('cruds.selfRegistration.fields.pincode') }}
                                     </th>
                                     <td>
-                                        {{ $person->country }}
+                                        {{ $selfRegistration->pincode }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.person.fields.state') }}
+                                        {{ trans('cruds.selfRegistration.fields.photo') }}
                                     </th>
                                     <td>
-                                        {{ $person->state }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        {{ trans('cruds.person.fields.district') }}
-                                    </th>
-                                    <td>
-                                        {{ $person->district }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        {{ trans('cruds.person.fields.post_office') }}
-                                    </th>
-                                    <td>
-                                        {{ $person->post_office }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        {{ trans('cruds.person.fields.pincode') }}
-                                    </th>
-                                    <td>
-                                        {{ $person->pincode }}
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <th>
-                                        {{ trans('cruds.person.fields.photo') }}
-                                    </th>
-                                    <td>
-                                        @if($person->photo)
-                                            <a href="{{ $person->photo->getUrl() }}" target="_blank" style="display: inline-block">
-                                                <img src="{{ $person->photo->getUrl('thumb') }}">
+                                        @if($selfRegistration->photo)
+                                            <a href="{{ $selfRegistration->photo->getUrl() }}" target="_blank" style="display: inline-block">
+                                                <img src="{{ $selfRegistration->photo->getUrl('thumb') }}">
                                             </a>
                                         @endif
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        {{ trans('cruds.selfRegistration.fields.purpose') }}
+                                    </th>
+                                    <td>
+                                        {{ App\Models\SelfRegistration::PURPOSE_SELECT[$selfRegistration->purpose] ?? '' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        {{ trans('cruds.selfRegistration.fields.date_of_visit') }}
+                                    </th>
+                                    <td>
+                                        {{ $selfRegistration->date_of_visit }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        {{ trans('cruds.selfRegistration.fields.visiting_office_category') }}
+                                    </th>
+                                    <td>
+                                        {{ $selfRegistration->visiting_office_category->title ?? '' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        {{ trans('cruds.selfRegistration.fields.visiting_office') }}
+                                    </th>
+                                    <td>
+                                        {{ $selfRegistration->visiting_office->name ?? '' }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        {{ trans('cruds.selfRegistration.fields.district') }}
+                                    </th>
+                                    <td>
+                                        {{ $selfRegistration->district }}
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        {{ trans('cruds.selfRegistration.fields.post_office') }}
+                                    </th>
+                                    <td>
+                                        {{ $selfRegistration->post_office }}
                                     </td>
                                 </tr>
                             </tbody>
                         </table>
                         <div class="form-group">
-                            <a class="btn btn-default" href="{{ route('frontend.people.index') }}">
+                            <a class="btn btn-default" href="{{ route('frontend.self-registrations.index') }}">
                                 {{ trans('global.back_to_list') }}
                             </a>
                         </div>

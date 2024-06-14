@@ -1,7 +1,14 @@
 <?php
 
-Route::view('/', 'welcome');
+Route::redirect('/', 'public/self-registrations/create');
 Auth::routes(['register' => false]);
+
+//  // Self Registration
+//  Route::delete('self-registrations/destroy', 'SelfRegistrationController@massDestroy')->name('self-registrations.massDestroy');
+//  Route::post('self-registrations/media', 'SelfRegistrationController@storeMedia')->name('self-registrations.storeMedia');
+//  Route::post('self-registrations/ckmedia', 'SelfRegistrationController@storeCKEditorImages')->name('self-registrations.storeCKEditorImages');
+// //  Route::resource('self-registrations', 'SelfRegistrationController');
+// Route::get('self-registrations', 'SelfRegistrationControllerCustom@register')->name('self-registrations.register');
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth', 'admin']], function () {
     Route::get('/', 'HomeController@index')->name('home');
@@ -51,6 +58,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('members/parse-csv-import', 'MemberController@parseCsvImport')->name('members.parseCsvImport');
     Route::post('members/process-csv-import', 'MemberController@processCsvImport')->name('members.processCsvImport');
     Route::resource('members', 'MemberController');
+
+
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
     // Change password
@@ -109,8 +118,20 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::delete('members/destroy', 'MemberController@massDestroy')->name('members.massDestroy');
     Route::resource('members', 'MemberController');
 
+
+
     Route::get('frontend/profile', 'ProfileController@index')->name('profile.index');
     Route::post('frontend/profile', 'ProfileController@update')->name('profile.update');
     Route::post('frontend/profile/destroy', 'ProfileController@destroy')->name('profile.destroy');
     Route::post('frontend/profile/password', 'ProfileController@password')->name('profile.password');
+});
+//////////////
+Route::group(['prefix' => 'public', 'as' => 'public.', 'namespace' => 'Public'], function () {
+    Route::get('/home', 'HomeController@index')->name('home');
+    // Self Registration
+    Route::delete('self-registrations/destroy', 'SelfRegistrationController@massDestroy')->name('self-registrations.massDestroy');
+    Route::post('self-registrations/media', 'SelfRegistrationController@storeMedia')->name('self-registrations.storeMedia');
+    Route::post('self-registrations/ckmedia', 'SelfRegistrationController@storeCKEditorImages')->name('self-registrations.storeCKEditorImages');
+    Route::resource('self-registrations', 'SelfRegistrationController');
+
 });

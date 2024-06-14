@@ -4,25 +4,25 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePeopleTable extends Migration
+class CreateSelfRegistrationsTable extends Migration
 {
     public function up()
     {
-        Schema::create('people', function (Blueprint $table) {
+        Schema::create('self_registrations', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('gender');
-            $table->date('dob')->nullable();
-            $table->integer('age')->nullable();
-            $table->string('mobile')->nullable();
+            $table->integer('age');
+            $table->string('mobile');
             $table->string('id_detail')->nullable();
-            $table->string('recommended_by_detail')->nullable();
             $table->longText('address')->nullable();
             $table->string('country')->nullable();
             $table->string('state')->nullable();
+            $table->string('pincode');
+            $table->string('purpose');
+            $table->date('date_of_visit')->nullable();
             $table->string('district')->nullable();
             $table->string('post_office')->nullable();
-            $table->string('pincode')->nullable();
             $table->timestamps();
         });
     }

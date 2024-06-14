@@ -147,6 +147,11 @@
                                             {{ trans('cruds.member.title') }}
                                         </a>
                                     @endcan
+                                    @can('self_registration_access')
+                                        <a class="dropdown-item ml-3" href="{{ route('frontend.self-registrations.index') }}">
+                                            {{ trans('cruds.selfRegistration.title') }}
+                                        </a>
+                                    @endcan
 
                                     <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">

@@ -133,6 +133,16 @@
                             <span class="help-block">{{ trans('cruds.person.fields.state_helper') }}</span>
                         </div>
                         <div class="form-group">
+                            <label for="district">{{ trans('cruds.person.fields.district') }}</label>
+                            <input class="form-control" type="text" name="district" id="district" value="{{ old('district', '') }}">
+                            @if($errors->has('district'))
+                                <div class="invalid-feedback">
+                                    {{ $errors->first('district') }}
+                                </div>
+                            @endif
+                            <span class="help-block">{{ trans('cruds.person.fields.district_helper') }}</span>
+                        </div>
+                        <div class="form-group">
                             <label for="post_office">{{ trans('cruds.person.fields.post_office') }}</label>
                             <input class="form-control" type="text" name="post_office" id="post_office" value="{{ old('post_office', '') }}">
                             @if($errors->has('post_office'))

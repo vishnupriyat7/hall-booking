@@ -111,8 +111,8 @@
                     </li>
                 @endcan
                 @can('database_access')
-                    <li class="nav-item has-treeview {{ request()->is("admin/id-types*") ? "menu-open" : "" }} {{ request()->is("admin/recommending-office-categories*") ? "menu-open" : "" }} {{ request()->is("admin/recommending-offices*") ? "menu-open" : "" }} {{ request()->is("admin/visiting-office-categories*") ? "menu-open" : "" }} {{ request()->is("admin/visiting-offices*") ? "menu-open" : "" }} {{ request()->is("admin/members*") ? "menu-open" : "" }}">
-                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/id-types*") ? "active" : "" }} {{ request()->is("admin/recommending-office-categories*") ? "active" : "" }} {{ request()->is("admin/recommending-offices*") ? "active" : "" }} {{ request()->is("admin/visiting-office-categories*") ? "active" : "" }} {{ request()->is("admin/visiting-offices*") ? "active" : "" }} {{ request()->is("admin/members*") ? "active" : "" }}" href="#">
+                    <li class="nav-item has-treeview {{ request()->is("admin/id-types*") ? "menu-open" : "" }} {{ request()->is("admin/recommending-office-categories*") ? "menu-open" : "" }} {{ request()->is("admin/recommending-offices*") ? "menu-open" : "" }} {{ request()->is("admin/visiting-office-categories*") ? "menu-open" : "" }} {{ request()->is("admin/visiting-offices*") ? "menu-open" : "" }} {{ request()->is("admin/members*") ? "menu-open" : "" }} {{ request()->is("admin/self-registrations*") ? "menu-open" : "" }}">
+                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/id-types*") ? "active" : "" }} {{ request()->is("admin/recommending-office-categories*") ? "active" : "" }} {{ request()->is("admin/recommending-offices*") ? "active" : "" }} {{ request()->is("admin/visiting-office-categories*") ? "active" : "" }} {{ request()->is("admin/visiting-offices*") ? "active" : "" }} {{ request()->is("admin/members*") ? "active" : "" }} {{ request()->is("admin/self-registrations*") ? "active" : "" }}" href="#">
                             <i class="fa-fw nav-icon fas fa-cogs">
 
                             </i>
@@ -190,6 +190,18 @@
                                         </i>
                                         <p>
                                             {{ trans('cruds.member.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('self_registration_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.self-registrations.index") }}" class="nav-link {{ request()->is("admin/self-registrations") || request()->is("admin/self-registrations/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-address-book">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.selfRegistration.title') }}
                                         </p>
                                     </a>
                                 </li>

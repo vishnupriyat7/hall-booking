@@ -3,72 +3,78 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            @can('person_create')
+            @can('self_registration_create')
                 <div style="margin-bottom: 10px;" class="row">
                     <div class="col-lg-12">
-                        <a class="btn btn-success" href="{{ route('frontend.people.create') }}">
-                            {{ trans('global.add') }} {{ trans('cruds.person.title_singular') }}
+                        <a class="btn btn-success" href="{{ route('frontend.self-registrations.create') }}">
+                            {{ trans('global.add') }} {{ trans('cruds.selfRegistration.title_singular') }}
                         </a>
                     </div>
                 </div>
             @endcan
             <div class="card">
                 <div class="card-header">
-                    {{ trans('cruds.person.title_singular') }} {{ trans('global.list') }}
+                    {{ trans('cruds.selfRegistration.title_singular') }} {{ trans('global.list') }}
                 </div>
 
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class=" table table-bordered table-striped table-hover datatable datatable-Person">
+                        <table class=" table table-bordered table-striped table-hover datatable datatable-SelfRegistration">
                             <thead>
                                 <tr>
                                     <th>
-                                        {{ trans('cruds.person.fields.id') }}
+                                        {{ trans('cruds.selfRegistration.fields.id') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.name') }}
+                                        {{ trans('cruds.selfRegistration.fields.name') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.gender') }}
+                                        {{ trans('cruds.selfRegistration.fields.gender') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.dob') }}
+                                        {{ trans('cruds.selfRegistration.fields.age') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.age') }}
+                                        {{ trans('cruds.selfRegistration.fields.mobile') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.mobile') }}
+                                        {{ trans('cruds.selfRegistration.fields.id_type') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.id_type') }}
+                                        {{ trans('cruds.selfRegistration.fields.id_detail') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.id_detail') }}
+                                        {{ trans('cruds.selfRegistration.fields.address') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.recommended_by_detail') }}
+                                        {{ trans('cruds.selfRegistration.fields.country') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.address') }}
+                                        {{ trans('cruds.selfRegistration.fields.state') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.country') }}
+                                        {{ trans('cruds.selfRegistration.fields.pincode') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.state') }}
+                                        {{ trans('cruds.selfRegistration.fields.photo') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.district') }}
+                                        {{ trans('cruds.selfRegistration.fields.purpose') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.post_office') }}
+                                        {{ trans('cruds.selfRegistration.fields.date_of_visit') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.pincode') }}
+                                        {{ trans('cruds.selfRegistration.fields.visiting_office_category') }}
                                     </th>
                                     <th>
-                                        {{ trans('cruds.person.fields.photo') }}
+                                        {{ trans('cruds.selfRegistration.fields.visiting_office') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.selfRegistration.fields.district') }}
+                                    </th>
+                                    <th>
+                                        {{ trans('cruds.selfRegistration.fields.post_office') }}
                                     </th>
                                     <th>
                                         &nbsp;
@@ -76,75 +82,81 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($people as $key => $person)
-                                    <tr data-entry-id="{{ $person->id }}">
+                                @foreach($selfRegistrations as $key => $selfRegistration)
+                                    <tr data-entry-id="{{ $selfRegistration->id }}">
                                         <td>
-                                            {{ $person->id ?? '' }}
+                                            {{ $selfRegistration->id ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $person->name ?? '' }}
+                                            {{ $selfRegistration->name ?? '' }}
                                         </td>
                                         <td>
-                                            {{ App\Models\Person::GENDER_SELECT[$person->gender] ?? '' }}
+                                            {{ App\Models\SelfRegistration::GENDER_SELECT[$selfRegistration->gender] ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $person->dob ?? '' }}
+                                            {{ $selfRegistration->age ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $person->age ?? '' }}
+                                            {{ $selfRegistration->mobile ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $person->mobile ?? '' }}
+                                            {{ $selfRegistration->id_type->name ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $person->id_type->name ?? '' }}
+                                            {{ $selfRegistration->id_detail ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $person->id_detail ?? '' }}
+                                            {{ $selfRegistration->address ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $person->recommended_by_detail ?? '' }}
+                                            {{ App\Models\SelfRegistration::COUNTRY_SELECT[$selfRegistration->country] ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $person->address ?? '' }}
+                                            {{ $selfRegistration->state ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $person->country ?? '' }}
+                                            {{ $selfRegistration->pincode ?? '' }}
                                         </td>
                                         <td>
-                                            {{ $person->state ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $person->district ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $person->post_office ?? '' }}
-                                        </td>
-                                        <td>
-                                            {{ $person->pincode ?? '' }}
-                                        </td>
-                                        <td>
-                                            @if($person->photo)
-                                                <a href="{{ $person->photo->getUrl() }}" target="_blank" style="display: inline-block">
-                                                    <img src="{{ $person->photo->getUrl('thumb') }}">
+                                            @if($selfRegistration->photo)
+                                                <a href="{{ $selfRegistration->photo->getUrl() }}" target="_blank" style="display: inline-block">
+                                                    <img src="{{ $selfRegistration->photo->getUrl('thumb') }}">
                                                 </a>
                                             @endif
                                         </td>
                                         <td>
-                                            @can('person_show')
-                                                <a class="btn btn-xs btn-primary" href="{{ route('frontend.people.show', $person->id) }}">
+                                            {{ App\Models\SelfRegistration::PURPOSE_SELECT[$selfRegistration->purpose] ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $selfRegistration->date_of_visit ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $selfRegistration->visiting_office_category->title ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $selfRegistration->visiting_office->name ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $selfRegistration->district ?? '' }}
+                                        </td>
+                                        <td>
+                                            {{ $selfRegistration->post_office ?? '' }}
+                                        </td>
+                                        <td>
+                                            @can('self_registration_show')
+                                                <a class="btn btn-xs btn-primary" href="{{ route('frontend.self-registrations.show', $selfRegistration->id) }}">
                                                     {{ trans('global.view') }}
                                                 </a>
                                             @endcan
 
-                                            @can('person_edit')
-                                                <a class="btn btn-xs btn-info" href="{{ route('frontend.people.edit', $person->id) }}">
+                                            @can('self_registration_edit')
+                                                <a class="btn btn-xs btn-info" href="{{ route('frontend.self-registrations.edit', $selfRegistration->id) }}">
                                                     {{ trans('global.edit') }}
                                                 </a>
                                             @endcan
 
-                                            @can('person_delete')
-                                                <form action="{{ route('frontend.people.destroy', $person->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
+                                            @can('self_registration_delete')
+                                                <form action="{{ route('frontend.self-registrations.destroy', $selfRegistration->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
                                                     <input type="hidden" name="_method" value="DELETE">
                                                     <input type="hidden" name="_token" value="{{ csrf_token() }}">
                                                     <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
@@ -170,11 +182,11 @@
 <script>
     $(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-@can('person_delete')
+@can('self_registration_delete')
   let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
   let deleteButton = {
     text: deleteButtonTrans,
-    url: "{{ route('frontend.people.massDestroy') }}",
+    url: "{{ route('frontend.self-registrations.massDestroy') }}",
     className: 'btn-danger',
     action: function (e, dt, node, config) {
       var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
@@ -205,7 +217,7 @@
     order: [[ 1, 'desc' ]],
     pageLength: 100,
   });
-  let table = $('.datatable-Person:not(.ajaxTable)').DataTable({ buttons: dtButtons })
+  let table = $('.datatable-SelfRegistration:not(.ajaxTable)').DataTable({ buttons: dtButtons })
   $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
