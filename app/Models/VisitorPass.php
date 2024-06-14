@@ -31,13 +31,17 @@ class VisitorPass extends Model
     ];
 
     protected $fillable = [
+        'number',
         'person_id',
         'pass_valid_from',
         'pass_valid_upto',
         'issued_date',
-        'number',
         'date_of_visit',
         'purpose',
+        'visiting_office_category_id',
+        'visiting_office',
+        'recommending_office_category_id',
+        'recommending_office',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -91,5 +95,15 @@ class VisitorPass extends Model
     public function setDateOfVisitAttribute($value)
     {
         $this->attributes['date_of_visit'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    }
+
+    public function visiting_office_category()
+    {
+        return $this->belongsTo(VisitingOfficeCategory::class, 'visiting_office_category_id');
+    }
+
+    public function recommending_office_category()
+    {
+        return $this->belongsTo(RecommendingOfficeCategory::class, 'recommending_office_category_id');
     }
 }

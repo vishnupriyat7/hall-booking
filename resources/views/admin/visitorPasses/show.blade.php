@@ -79,6 +79,38 @@
                             {{ App\Models\VisitorPass::PURPOSE_SELECT[$visitorPass->purpose] ?? '' }}
                         </td>
                     </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.visitorPass.fields.visiting_office_category') }}
+                        </th>
+                        <td>
+                            {{ $visitorPass->visiting_office_category->title ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.visitorPass.fields.visiting_office') }}
+                        </th>
+                        <td>
+                            {{ $visitorPass->visiting_office }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.visitorPass.fields.recommending_office_category') }}
+                        </th>
+                        <td>
+                            {{ $visitorPass->recommending_office_category->title ?? '' }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.visitorPass.fields.recommending_office') }}
+                        </th>
+                        <td>
+                            {{ $visitorPass->recommending_office }}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="form-group">

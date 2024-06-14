@@ -1,14 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\VisitorPassControllerCustom;
+
 Route::redirect('/', 'public/self-registrations/create');
 Auth::routes(['register' => false]);
 
-//  // Self Registration
-//  Route::delete('self-registrations/destroy', 'SelfRegistrationController@massDestroy')->name('self-registrations.massDestroy');
-//  Route::post('self-registrations/media', 'SelfRegistrationController@storeMedia')->name('self-registrations.storeMedia');
-//  Route::post('self-registrations/ckmedia', 'SelfRegistrationController@storeCKEditorImages')->name('self-registrations.storeCKEditorImages');
-// //  Route::resource('self-registrations', 'SelfRegistrationController');
-// Route::get('self-registrations', 'SelfRegistrationControllerCustom@register')->name('self-registrations.register');
+// Route::get('api/pindetails/{pincode}', [VisitorPassControllerCustom::class, 'fetchPinDetails']);
+
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth', 'admin']], function () {
     Route::get('/', 'HomeController@index')->name('home');
@@ -35,19 +33,12 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('id-types', 'IdTypesController', ['except' => ['show']]);
 
     // Visitor Pass
+    Route::get('visitor-passes/register', 'VisitorPassControllerCustom@register')->name('visitor-passes.register');;
     Route::resource('visitor-passes', 'VisitorPassController', ['except' => ['destroy']]);
-
-    // Recommending Office
-    Route::delete('recommending-offices/destroy', 'RecommendingOfficeController@massDestroy')->name('recommending-offices.massDestroy');
-    Route::resource('recommending-offices', 'RecommendingOfficeController');
 
     // Visiting Office Category
     Route::delete('visiting-office-categories/destroy', 'VisitingOfficeCategoryController@massDestroy')->name('visiting-office-categories.massDestroy');
     Route::resource('visiting-office-categories', 'VisitingOfficeCategoryController');
-
-    // Visiting Office
-    Route::delete('visiting-offices/destroy', 'VisitingOfficeController@massDestroy')->name('visiting-offices.massDestroy');
-    Route::resource('visiting-offices', 'VisitingOfficeController');
 
     // Recommending Office Category
     Route::delete('recommending-office-categories/destroy', 'RecommendingOfficeCategoryController@massDestroy')->name('recommending-office-categories.massDestroy');
@@ -59,6 +50,11 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::post('members/process-csv-import', 'MemberController@processCsvImport')->name('members.processCsvImport');
     Route::resource('members', 'MemberController');
 
+    //  // Self Registration
+ Route::delete('self-registrations/destroy', 'SelfRegistrationController@massDestroy')->name('self-registrations.massDestroy');
+ Route::post('self-registrations/media', 'SelfRegistrationController@storeMedia')->name('self-registrations.storeMedia');
+ Route::post('self-registrations/ckmedia', 'SelfRegistrationController@storeCKEditorImages')->name('self-registrations.storeCKEditorImages');
+ Route::resource('self-registrations', 'SelfRegistrationController');
 
 });
 Route::group(['prefix' => 'profile', 'as' => 'profile.', 'namespace' => 'Auth', 'middleware' => ['auth']], function () {
@@ -98,17 +94,9 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     // Visitor Pass
     Route::resource('visitor-passes', 'VisitorPassController', ['except' => ['destroy']]);
 
-    // Recommending Office
-    Route::delete('recommending-offices/destroy', 'RecommendingOfficeController@massDestroy')->name('recommending-offices.massDestroy');
-    Route::resource('recommending-offices', 'RecommendingOfficeController');
-
     // Visiting Office Category
     Route::delete('visiting-office-categories/destroy', 'VisitingOfficeCategoryController@massDestroy')->name('visiting-office-categories.massDestroy');
     Route::resource('visiting-office-categories', 'VisitingOfficeCategoryController');
-
-    // Visiting Office
-    Route::delete('visiting-offices/destroy', 'VisitingOfficeController@massDestroy')->name('visiting-offices.massDestroy');
-    Route::resource('visiting-offices', 'VisitingOfficeController');
 
     // Recommending Office Category
     Route::delete('recommending-office-categories/destroy', 'RecommendingOfficeCategoryController@massDestroy')->name('recommending-office-categories.massDestroy');

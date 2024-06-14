@@ -37,7 +37,6 @@ class SelfRegistrationController extends Controller
 
         $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $visiting_offices = VisitingOffice::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         return view('frontend.selfRegistrations.create', compact('id_types', 'visiting_office_categories', 'visiting_offices'));
     }
@@ -64,8 +63,6 @@ class SelfRegistrationController extends Controller
         $id_types = IdType::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $visiting_offices = VisitingOffice::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $selfRegistration->load('id_type', 'visiting_office_category', 'visiting_office');
 

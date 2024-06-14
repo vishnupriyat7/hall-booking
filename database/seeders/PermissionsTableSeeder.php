@@ -136,126 +136,86 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 32,
-                'title' => 'recommending_office_create',
-            ],
-            [
-                'id'    => 33,
-                'title' => 'recommending_office_edit',
-            ],
-            [
-                'id'    => 34,
-                'title' => 'recommending_office_show',
-            ],
-            [
-                'id'    => 35,
-                'title' => 'recommending_office_delete',
-            ],
-            [
-                'id'    => 36,
-                'title' => 'recommending_office_access',
-            ],
-            [
-                'id'    => 37,
                 'title' => 'visiting_office_category_create',
             ],
             [
-                'id'    => 38,
+                'id'    => 33,
                 'title' => 'visiting_office_category_edit',
             ],
             [
-                'id'    => 39,
+                'id'    => 34,
                 'title' => 'visiting_office_category_show',
             ],
             [
-                'id'    => 40,
+                'id'    => 35,
                 'title' => 'visiting_office_category_delete',
             ],
             [
-                'id'    => 41,
+                'id'    => 36,
                 'title' => 'visiting_office_category_access',
             ],
             [
-                'id'    => 42,
-                'title' => 'visiting_office_create',
-            ],
-            [
-                'id'    => 43,
-                'title' => 'visiting_office_edit',
-            ],
-            [
-                'id'    => 44,
-                'title' => 'visiting_office_show',
-            ],
-            [
-                'id'    => 45,
-                'title' => 'visiting_office_delete',
-            ],
-            [
-                'id'    => 46,
-                'title' => 'visiting_office_access',
-            ],
-            [
-                'id'    => 47,
+                'id'    => 37,
                 'title' => 'recommending_office_category_create',
             ],
             [
-                'id'    => 48,
+                'id'    => 38,
                 'title' => 'recommending_office_category_edit',
             ],
             [
-                'id'    => 49,
+                'id'    => 39,
                 'title' => 'recommending_office_category_show',
             ],
             [
-                'id'    => 50,
+                'id'    => 40,
                 'title' => 'recommending_office_category_delete',
             ],
             [
-                'id'    => 51,
+                'id'    => 41,
                 'title' => 'recommending_office_category_access',
             ],
             [
-                'id'    => 52,
+                'id'    => 42,
                 'title' => 'member_create',
             ],
             [
-                'id'    => 53,
+                'id'    => 43,
                 'title' => 'member_edit',
             ],
             [
-                'id'    => 54,
+                'id'    => 44,
                 'title' => 'member_show',
             ],
             [
-                'id'    => 55,
+                'id'    => 45,
                 'title' => 'member_delete',
             ],
             [
-                'id'    => 56,
+                'id'    => 46,
                 'title' => 'member_access',
             ],
             [
-                'id'    => 57,
+                'id'    => 47,
                 'title' => 'self_registration_create',
             ],
             [
-                'id'    => 58,
+                'id'    => 48,
                 'title' => 'self_registration_edit',
             ],
             [
-                'id'    => 59,
+                'id'    => 49,
                 'title' => 'self_registration_show',
             ],
             [
-                'id'    => 60,
+                'id'    => 50,
                 'title' => 'self_registration_delete',
             ],
             [
-                'id'    => 61,
+                'id'    => 51,
                 'title' => 'self_registration_access',
             ],
             [
-                'id'    => 62,
+                'id'    => 52,
                 'title' => 'profile_password_edit',
             ],
         ];

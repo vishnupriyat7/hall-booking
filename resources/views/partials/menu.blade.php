@@ -97,7 +97,17 @@
                             @endcan
                             @can('visitor_pass_access')
                                 <li class="nav-item">
-                                    <a href="{{ route("admin.visitor-passes.index") }}" class="nav-link {{ request()->is("admin/visitor-passes") || request()->is("admin/visitor-passes/*") ? "active" : "" }}">
+                                    <a href="{{ route("admin.visitor-passes.register") }}" class="nav-link {{ request()->is("admin/visitor-passes/register") || request()->is("admin/visitor-passes/register") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-cogs">
+
+                                        </i>
+                                        <p>
+                                           Register/Issue
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.visitor-passes.index") }}" class="nav-link {{ request()->is("admin/visitor-passes") || request()->is("admin/visitor-passes") ? "active" : "" }}">
                                         <i class="fa-fw nav-icon fas fa-cogs">
 
                                         </i>
@@ -111,8 +121,8 @@
                     </li>
                 @endcan
                 @can('database_access')
-                    <li class="nav-item has-treeview {{ request()->is("admin/id-types*") ? "menu-open" : "" }} {{ request()->is("admin/recommending-office-categories*") ? "menu-open" : "" }} {{ request()->is("admin/recommending-offices*") ? "menu-open" : "" }} {{ request()->is("admin/visiting-office-categories*") ? "menu-open" : "" }} {{ request()->is("admin/visiting-offices*") ? "menu-open" : "" }} {{ request()->is("admin/members*") ? "menu-open" : "" }} {{ request()->is("admin/self-registrations*") ? "menu-open" : "" }}">
-                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/id-types*") ? "active" : "" }} {{ request()->is("admin/recommending-office-categories*") ? "active" : "" }} {{ request()->is("admin/recommending-offices*") ? "active" : "" }} {{ request()->is("admin/visiting-office-categories*") ? "active" : "" }} {{ request()->is("admin/visiting-offices*") ? "active" : "" }} {{ request()->is("admin/members*") ? "active" : "" }} {{ request()->is("admin/self-registrations*") ? "active" : "" }}" href="#">
+                    <li class="nav-item has-treeview {{ request()->is("admin/id-types*") ? "menu-open" : "" }} {{ request()->is("admin/recommending-office-categories*") ? "menu-open" : "" }} {{ request()->is("admin/visiting-office-categories*") ? "menu-open" : "" }} {{ request()->is("admin/members*") ? "menu-open" : "" }} {{ request()->is("admin/self-registrations*") ? "menu-open" : "" }}">
+                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/id-types*") ? "active" : "" }} {{ request()->is("admin/recommending-office-categories*") ? "active" : "" }} {{ request()->is("admin/visiting-office-categories*") ? "active" : "" }} {{ request()->is("admin/members*") ? "active" : "" }} {{ request()->is("admin/self-registrations*") ? "active" : "" }}" href="#">
                             <i class="fa-fw nav-icon fas fa-cogs">
 
                             </i>
@@ -146,18 +156,6 @@
                                     </a>
                                 </li>
                             @endcan
-                            @can('recommending_office_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.recommending-offices.index") }}" class="nav-link {{ request()->is("admin/recommending-offices") || request()->is("admin/recommending-offices/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fas fa-cogs">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.recommendingOffice.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
                             @can('visiting_office_category_access')
                                 <li class="nav-item">
                                     <a href="{{ route("admin.visiting-office-categories.index") }}" class="nav-link {{ request()->is("admin/visiting-office-categories") || request()->is("admin/visiting-office-categories/*") ? "active" : "" }}">
@@ -166,18 +164,6 @@
                                         </i>
                                         <p>
                                             {{ trans('cruds.visitingOfficeCategory.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('visiting_office_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.visiting-offices.index") }}" class="nav-link {{ request()->is("admin/visiting-offices") || request()->is("admin/visiting-offices/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fas fa-cogs">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.visitingOffice.title') }}
                                         </p>
                                     </a>
                                 </li>

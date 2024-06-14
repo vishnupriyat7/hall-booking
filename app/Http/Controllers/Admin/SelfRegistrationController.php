@@ -2,20 +2,22 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Http\Controllers\Traits\MediaUploadingTrait;
-use App\Http\Requests\MassDestroySelfRegistrationRequest;
-use App\Http\Requests\StoreSelfRegistrationRequest;
-use App\Http\Requests\UpdateSelfRegistrationRequest;
-use App\Models\IdType;
-use App\Models\SelfRegistration;
-use App\Models\VisitingOffice;
-use App\Models\VisitingOfficeCategory;
 use Gate;
+use App\Models\IdType;
+use App\Models\Person;
 use Illuminate\Http\Request;
-use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Symfony\Component\HttpFoundation\Response;
+use App\Models\VisitingOffice;
+use App\Models\SelfRegistration;
+use App\Http\Controllers\Controller;
+use App\Models\VisitingOfficeCategory;
 use Yajra\DataTables\Facades\DataTables;
+use Symfony\Component\HttpFoundation\Response;
+use App\Http\Requests\StoreSelfRegistrationRequest;
+use App\Http\Controllers\Traits\MediaUploadingTrait;
+use App\Http\Requests\UpdateSelfRegistrationRequest;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use App\Http\Requests\MassDestroySelfRegistrationRequest;
+use App\Models\VisitorPass;
 
 class SelfRegistrationController extends Controller
 {
@@ -26,7 +28,7 @@ class SelfRegistrationController extends Controller
         abort_if(Gate::denies('self_registration_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = SelfRegistration::with(['id_type', 'visiting_office_category', 'visiting_office'])->select(sprintf('%s.*', (new SelfRegistration)->table));
+            $query = SelfRegistration::with(['id_type', 'visiting_office_category'])->select(sprintf('%s.*', (new SelfRegistration)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -100,18 +102,17 @@ class SelfRegistrationController extends Controller
                 return $row->visiting_office_category ? $row->visiting_office_category->title : '';
             });
 
-            $table->addColumn('visiting_office_name', function ($row) {
-                return $row->visiting_office ? $row->visiting_office->name : '';
-            });
-
             $table->editColumn('district', function ($row) {
                 return $row->district ? $row->district : '';
             });
             $table->editColumn('post_office', function ($row) {
                 return $row->post_office ? $row->post_office : '';
             });
+            $table->editColumn('visiting_office', function ($row) {
+                return $row->visiting_office ? $row->visiting_office : '';
+            });
 
-            $table->rawColumns(['actions', 'placeholder', 'id_type', 'photo', 'visiting_office_category', 'visiting_office']);
+            $table->rawColumns(['actions', 'placeholder', 'id_type', 'photo', 'visiting_office_category']);
 
             return $table->make(true);
         }
@@ -127,22 +128,51 @@ class SelfRegistrationController extends Controller
 
         $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $visiting_offices = VisitingOffice::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        return view('admin.selfRegistrations.create', compact('id_types', 'visiting_office_categories', 'visiting_offices'));
+        return view('admin.selfRegistrations.create', compact('id_types', 'visiting_office_categories'));
     }
 
     public function store(StoreSelfRegistrationRequest $request)
     {
-        $selfRegistration = SelfRegistration::create($request->all());
+        //$selfRegistration = SelfRegistration::create($request->all());
+
+        //create person
+        $person = new Person();
+        $person->name = $request->name;
+        $person->gender = $request->gender;
+        $person->age = $request->age;
+        $person->mobile = $request->mobile;
+        $person->id_type_id = $request->id_type_id == -1 || $request->id_type_id == '' ? null : $request->id_type_id;
+        $person->id_detail = $request->id_detail;
+        $person->address = $request->address;
+        $person->country = $request->country;
+        $person->state = $request->state;
+        $person->pincode = $request->pincode;
+        $person->district = $request->district;
+        $person->post_office = $request->post_office;
+        $person->save();
+
 
         if ($request->input('photo', false)) {
-            $selfRegistration->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
+            $person->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
         }
 
         if ($media = $request->input('ck-media', false)) {
-            Media::whereIn('id', $media)->update(['model_id' => $selfRegistration->id]);
+            Media::whereIn('id', $media)->update(['model_id' => $person->id]);
         }
+
+        //now create a pass
+        $visitorPass = new VisitorPass();
+        $visitorPass->person_id = $person->id;
+        $visitorPass->purpose = $request->purpose;
+        $visitorPass->visiting_office_category_id = $request->visiting_office_category_id;
+        $visitorPass->visiting_office = $request->visiting_office || $request->visiting_office_name;
+        $visitorPass->save();
+
+       /* 'pass_valid_from',
+        'pass_valid_upto',
+        'issued_date',
+        'number',
+        'date_of_visit',*/
 
         return redirect()->route('admin.self-registrations.index');
     }
@@ -155,9 +185,7 @@ class SelfRegistrationController extends Controller
 
         $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $visiting_offices = VisitingOffice::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $selfRegistration->load('id_type', 'visiting_office_category', 'visiting_office');
+        $selfRegistration->load('id_type', 'visiting_office_category');
 
         return view('admin.selfRegistrations.edit', compact('id_types', 'selfRegistration', 'visiting_office_categories', 'visiting_offices'));
     }
@@ -184,7 +212,7 @@ class SelfRegistrationController extends Controller
     {
         abort_if(Gate::denies('self_registration_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $selfRegistration->load('id_type', 'visiting_office_category', 'visiting_office');
+        $selfRegistration->load('id_type', 'visiting_office_category');
 
         return view('admin.selfRegistrations.show', compact('selfRegistration'));
     }

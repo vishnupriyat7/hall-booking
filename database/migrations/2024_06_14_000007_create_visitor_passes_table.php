@@ -16,6 +16,8 @@ class CreateVisitorPassesTable extends Migration
             $table->date('issued_date')->nullable();
             $table->date('date_of_visit')->nullable();
             $table->string('purpose');
+            $table->string('visiting_office')->nullable();
+            $table->string('recommending_office')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

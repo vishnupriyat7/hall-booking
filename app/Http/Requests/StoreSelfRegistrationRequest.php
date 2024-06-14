@@ -54,14 +54,7 @@ class StoreSelfRegistrationRequest extends FormRequest
                 'date_format:' . config('panel.date_format'),
                 'nullable',
             ],
-            'visiting_office_category_id' => [
-                'required',
-                'integer',
-            ],
-            'visiting_office_id' => [
-                'required',
-                'integer',
-            ],
+
             'district' => [
                 'string',
                 'nullable',

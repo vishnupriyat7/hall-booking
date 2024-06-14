@@ -75,6 +75,46 @@
                 <span class="help-block">{{ trans('cruds.visitorPass.fields.purpose_helper') }}</span>
             </div>
             <div class="form-group">
+                <label for="visiting_office_category_id">{{ trans('cruds.visitorPass.fields.visiting_office_category') }}</label>
+                <select class="form-control select2 {{ $errors->has('visiting_office_category') ? 'is-invalid' : '' }}" name="visiting_office_category_id" id="visiting_office_category_id">
+                    @foreach($visiting_office_categories as $id => $entry)
+                        <option value="{{ $id }}" {{ old('visiting_office_category_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('visiting_office_category'))
+                    <span class="text-danger">{{ $errors->first('visiting_office_category') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.visitorPass.fields.visiting_office_category_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label for="visiting_office">{{ trans('cruds.visitorPass.fields.visiting_office') }}</label>
+                <input class="form-control {{ $errors->has('visiting_office') ? 'is-invalid' : '' }}" type="text" name="visiting_office" id="visiting_office" value="{{ old('visiting_office', '') }}">
+                @if($errors->has('visiting_office'))
+                    <span class="text-danger">{{ $errors->first('visiting_office') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.visitorPass.fields.visiting_office_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label for="recommending_office_category_id">{{ trans('cruds.visitorPass.fields.recommending_office_category') }}</label>
+                <select class="form-control select2 {{ $errors->has('recommending_office_category') ? 'is-invalid' : '' }}" name="recommending_office_category_id" id="recommending_office_category_id">
+                    @foreach($recommending_office_categories as $id => $entry)
+                        <option value="{{ $id }}" {{ old('recommending_office_category_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('recommending_office_category'))
+                    <span class="text-danger">{{ $errors->first('recommending_office_category') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.visitorPass.fields.recommending_office_category_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label for="recommending_office">{{ trans('cruds.visitorPass.fields.recommending_office') }}</label>
+                <input class="form-control {{ $errors->has('recommending_office') ? 'is-invalid' : '' }}" type="text" name="recommending_office" id="recommending_office" value="{{ old('recommending_office', '') }}">
+                @if($errors->has('recommending_office'))
+                    <span class="text-danger">{{ $errors->first('recommending_office') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.visitorPass.fields.recommending_office_helper') }}</span>
+            </div>
+            <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>

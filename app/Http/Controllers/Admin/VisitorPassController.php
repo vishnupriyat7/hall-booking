@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreVisitorPassRequest;
 use App\Http\Requests\UpdateVisitorPassRequest;
 use App\Models\Person;
+use App\Models\RecommendingOfficeCategory;
+use App\Models\VisitingOfficeCategory;
 use App\Models\VisitorPass;
 use Gate;
 use Illuminate\Http\Request;
@@ -19,7 +21,7 @@ class VisitorPassController extends Controller
         abort_if(Gate::denies('visitor_pass_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = VisitorPass::with(['person'])->select(sprintf('%s.*', (new VisitorPass)->table));
+            $query = VisitorPass::with(['person', 'visiting_office_category', 'recommending_office_category'])->select(sprintf('%s.*', (new VisitorPass)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -43,6 +45,9 @@ class VisitorPassController extends Controller
             $table->editColumn('id', function ($row) {
                 return $row->id ? $row->id : '';
             });
+            $table->editColumn('number', function ($row) {
+                return $row->number ? $row->number : '';
+            });
             $table->addColumn('person_name', function ($row) {
                 return $row->person ? $row->person->name : '';
             });
@@ -54,15 +59,25 @@ class VisitorPassController extends Controller
                 return $row->person ? (is_string($row->person) ? $row->person : $row->person->id_detail) : '';
             });
 
-            $table->editColumn('number', function ($row) {
-                return $row->number ? $row->number : '';
-            });
-
             $table->editColumn('purpose', function ($row) {
                 return $row->purpose ? VisitorPass::PURPOSE_SELECT[$row->purpose] : '';
             });
+            $table->addColumn('visiting_office_category_title', function ($row) {
+                return $row->visiting_office_category ? $row->visiting_office_category->title : '';
+            });
 
-            $table->rawColumns(['actions', 'placeholder', 'person']);
+            $table->editColumn('visiting_office', function ($row) {
+                return $row->visiting_office ? $row->visiting_office : '';
+            });
+            $table->addColumn('recommending_office_category_title', function ($row) {
+                return $row->recommending_office_category ? $row->recommending_office_category->title : '';
+            });
+
+            $table->editColumn('recommending_office', function ($row) {
+                return $row->recommending_office ? $row->recommending_office : '';
+            });
+
+            $table->rawColumns(['actions', 'placeholder', 'person', 'visiting_office_category', 'recommending_office_category']);
 
             return $table->make(true);
         }
@@ -76,7 +91,11 @@ class VisitorPassController extends Controller
 
         $people = Person::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.visitorPasses.create', compact('people'));
+        $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $recommending_office_categories = RecommendingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        return view('admin.visitorPasses.create', compact('people', 'recommending_office_categories', 'visiting_office_categories'));
     }
 
     public function store(StoreVisitorPassRequest $request)
@@ -92,9 +111,13 @@ class VisitorPassController extends Controller
 
         $people = Person::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $visitorPass->load('person');
+        $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('admin.visitorPasses.edit', compact('people', 'visitorPass'));
+        $recommending_office_categories = RecommendingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $visitorPass->load('person', 'visiting_office_category', 'recommending_office_category');
+
+        return view('admin.visitorPasses.edit', compact('people', 'recommending_office_categories', 'visiting_office_categories', 'visitorPass'));
     }
 
     public function update(UpdateVisitorPassRequest $request, VisitorPass $visitorPass)
@@ -108,7 +131,7 @@ class VisitorPassController extends Controller
     {
         abort_if(Gate::denies('visitor_pass_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $visitorPass->load('person');
+        $visitorPass->load('person', 'visiting_office_category', 'recommending_office_category');
 
         return view('admin.visitorPasses.show', compact('visitorPass'));
     }

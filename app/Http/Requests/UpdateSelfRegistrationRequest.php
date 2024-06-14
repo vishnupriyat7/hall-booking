@@ -58,10 +58,7 @@ class UpdateSelfRegistrationRequest extends FormRequest
                 'required',
                 'integer',
             ],
-            'visiting_office_id' => [
-                'required',
-                'integer',
-            ],
+           
             'district' => [
                 'string',
                 'nullable',

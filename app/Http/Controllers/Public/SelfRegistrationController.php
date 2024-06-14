@@ -29,9 +29,8 @@ class SelfRegistrationController extends Controller
 
         $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $visiting_offices = VisitingOffice::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        return view('public.selfRegistrations.create', compact('id_types', 'visiting_office_categories', 'visiting_offices'));
+        return view('public.selfRegistrations.create', compact('id_types', 'visiting_office_categories'));
     }
 
     public function store(StoreSelfRegistrationRequest $request)
@@ -57,11 +56,10 @@ class SelfRegistrationController extends Controller
 
         $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
 
-        $visiting_offices = VisitingOffice::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
         $selfRegistration->load('id_type', 'visiting_office_category', 'visiting_office');
 
-        return view('public.selfRegistrations.edit', compact('id_types', 'selfRegistration', 'visiting_office_categories', 'visiting_offices'));
+        return view('public.selfRegistrations.edit', compact('id_types', 'selfRegistration', 'visiting_office_categories',));
     }
 
     public function update(UpdateSelfRegistrationRequest $request, SelfRegistration $selfRegistration)

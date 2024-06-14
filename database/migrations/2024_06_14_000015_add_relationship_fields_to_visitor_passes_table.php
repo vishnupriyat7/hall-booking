@@ -11,6 +11,10 @@ class AddRelationshipFieldsToVisitorPassesTable extends Migration
         Schema::table('visitor_passes', function (Blueprint $table) {
             $table->unsignedBigInteger('person_id')->nullable();
             $table->foreign('person_id', 'person_fk_9868790')->references('id')->on('people');
+            $table->unsignedBigInteger('visiting_office_category_id')->nullable();
+            $table->foreign('visiting_office_category_id', 'visiting_office_category_fk_9870669')->references('id')->on('visiting_office_categories');
+            $table->unsignedBigInteger('recommending_office_category_id')->nullable();
+            $table->foreign('recommending_office_category_id', 'recommending_office_category_fk_9870673')->references('id')->on('recommending_office_categories');
         });
     }
 }

@@ -55,9 +55,9 @@ class SelfRegistration extends Model implements HasMedia
         'purpose',
         'date_of_visit',
         'visiting_office_category_id',
-        'visiting_office_id',
         'district',
         'post_office',
+        'visiting_office',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -104,10 +104,5 @@ class SelfRegistration extends Model implements HasMedia
     public function visiting_office_category()
     {
         return $this->belongsTo(VisitingOfficeCategory::class, 'visiting_office_category_id');
-    }
-
-    public function visiting_office()
-    {
-        return $this->belongsTo(VisitingOffice::class, 'visiting_office_id');
     }
 }

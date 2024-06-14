@@ -23,6 +23,7 @@ class CreateSelfRegistrationsTable extends Migration
             $table->date('date_of_visit')->nullable();
             $table->string('district')->nullable();
             $table->string('post_office')->nullable();
+            $table->string('visiting_office')->nullable();
             $table->timestamps();
         });
     }

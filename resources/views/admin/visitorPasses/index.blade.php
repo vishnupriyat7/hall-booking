@@ -52,6 +52,18 @@
                         {{ trans('cruds.visitorPass.fields.purpose') }}
                     </th>
                     <th>
+                        {{ trans('cruds.visitorPass.fields.visiting_office_category') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.visitorPass.fields.visiting_office') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.visitorPass.fields.recommending_office_category') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.visitorPass.fields.recommending_office') }}
+                    </th>
+                    <th>
                         &nbsp;
                     </th>
                 </tr>
@@ -88,6 +100,10 @@
 { data: 'issued_date', name: 'issued_date' },
 { data: 'date_of_visit', name: 'date_of_visit' },
 { data: 'purpose', name: 'purpose' },
+{ data: 'visiting_office_category_title', name: 'visiting_office_category.title' },
+{ data: 'visiting_office', name: 'visiting_office' },
+{ data: 'recommending_office_category_title', name: 'recommending_office_category.title' },
+{ data: 'recommending_office', name: 'recommending_office' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,
