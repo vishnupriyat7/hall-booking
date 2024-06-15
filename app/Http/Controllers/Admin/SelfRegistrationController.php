@@ -72,15 +72,17 @@ class SelfRegistrationController extends Controller
         }
 
         //make sure if id type is recommended by, recommender is also provided
+        $recommendingOfficeCat = null;
         if($request->id_type_id == -1) {
 
             if(!$request->recommending_office_category_id) {
                 return response()->json( [ 'errors' => ['recommending_office_category' => 'Recommending office category is required for this id type'] ], 401 );
             }
-            if(!$request->recommending_office && !$request->recommending_office_name) {
+            if(!$request->recommending_office && !$request->recommending_office_input) {
                 return response()->json( [ 'errors' => ['recommending_office' => 'Recommending office is required for this id type'] ], 401 );
             }
             $recommendingOfficeCat = RecommendingOfficeCategory::find($request->recommending_office_category_id);
+
             if( $recommendingOfficeCat->title == 'MLA' || $recommendingOfficeCat->title == 'Minister' ) {
                 if(!$request->recommending_office || 'Select' == $request->recommending_office) {
                     return response()->json( [ 'errors' => ['recommending_office' => 'Recommending office is required'] ], 401 );
@@ -88,14 +90,32 @@ class SelfRegistrationController extends Controller
             }
         }
 
-        if(!$request->visiting_office && !$request->visiting_office_name) {
+        if(!$request->visiting_office && !$request->visiting_office_input) {
             return response()->json( [ 'errors' => ['visiting_office' => 'Visiting office is required for this id type'] ], 401 );
         }
         $visitingOfficeCat = VisitingOfficeCategory::find($request->visiting_office_category_id);
+
         if( $visitingOfficeCat->title == 'MLA' || $visitingOfficeCat->title == 'Minister' ) {
             if(!$request->visiting_office || 'Select' == $request->visiting_office) {
                 return response()->json( [ 'errors' => ['visiting_office' => 'Visiting office is required'] ], 401 );
             }
+        }
+        $visiting_office = $request->visiting_office;
+        $recommending_office = $request->recommending_office;
+        if(in_array($visitingOfficeCat->title, ['Legislative Assembly', 'Secretariat', 'Other','Section'])) {
+            $visiting_office = $request->visiting_office_input;
+        }
+        else {
+            $visiting_office = $request->visiting_office;
+        }
+        if($recommendingOfficeCat){
+            if(in_array($recommendingOfficeCat->title, ['Legislative Assembly', 'Secretariat', 'Other','Section'])) {
+                $recommending_office = $request->recommending_office_input;
+            }
+            else {
+                $recommending_office = $request->recommending_office;
+            }
+
         }
 
         //create person
@@ -139,9 +159,9 @@ class SelfRegistrationController extends Controller
             $visitorPass->person_id = $person->id;
             $visitorPass->purpose = $request->purpose;
             $visitorPass->visiting_office_category_id = $request->visiting_office_category_id;
-            $visitorPass->visiting_office = $request->visiting_office || $request->visiting_office_name;
+            $visitorPass->visiting_office = $visiting_office;
             $visitorPass->recommending_office_category_id = $request->recommending_office_category_id;
-            $visitorPass->recommending_office = $request->recommending_office || $request->recommending_office_name;
+            $visitorPass->recommending_office = $recommending_office;
             $visitorPass->pass_valid_from = Carbon::now()->format('Y-m-d H:i:s');
             //$visitorPass->pass_valid_upto = $request->pass_valid_upto;
             $visitorPass->issued_date = Carbon::now()->format('Y-m-d');
