@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use Gate;
+use App\Http\Controllers\Controller;
 use App\Models\IdType;
 use App\Models\Member;
 use App\Models\Person;
-use App\Models\VisitingOffice;
-use App\Http\Controllers\Controller;
 use App\Models\VisitingOfficeCategory;
+use Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class VisitorPassControllerCustom extends Controller
@@ -33,7 +32,7 @@ class VisitorPassControllerCustom extends Controller
             'Secretariat' => 'Secretariat',
             'Other' => 'Other',
         ];
-        $visiting_office_categories  = collect($visiting_office_categories)->prepend(trans('global.pleaseSelect'), '');
+        $visiting_office_categories = collect($visiting_office_categories)->prepend(trans('global.pleaseSelect'), '');
 
         $recommending_office_categories = [
             'Legislature Secretary' => 'Legislature Secretary',
@@ -45,7 +44,7 @@ class VisitorPassControllerCustom extends Controller
             'Leader of Opposition' => 'Leader of Opposition',
             'Other' => 'Other',
         ];
-        $recommending_office_categories  = collect($recommending_office_categories)->prepend(trans('global.pleaseSelect'), '');
+        $recommending_office_categories = collect($recommending_office_categories)->prepend(trans('global.pleaseSelect'), '');
 
         //VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -53,6 +52,6 @@ class VisitorPassControllerCustom extends Controller
         $ministers = Member::where('status', 'minister')->get();
         $date_of_visit = date('d.m.Y');
 
-        return view('admin.visitorPasses.register', compact('id_types', 'visiting_office_categories', 'recommending_office_categories', 'mlas', 'ministers',));
+        return view('admin.visitorPasses.register', compact('id_types', 'visiting_office_categories', 'recommending_office_categories', 'mlas', 'ministers'));
     }
 }

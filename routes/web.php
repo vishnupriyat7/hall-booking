@@ -51,6 +51,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('members', 'MemberController');
 
     //  // Self Registration
+ Route::get('self-registrations/search', 'SelfRegistrationController@search')->name('self-registrations.search');
  Route::delete('self-registrations/destroy', 'SelfRegistrationController@massDestroy')->name('self-registrations.massDestroy');
  Route::post('self-registrations/media', 'SelfRegistrationController@storeMedia')->name('self-registrations.storeMedia');
  Route::post('self-registrations/ckmedia', 'SelfRegistrationController@storeCKEditorImages')->name('self-registrations.storeCKEditorImages');

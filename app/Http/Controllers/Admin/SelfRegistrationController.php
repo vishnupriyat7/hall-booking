@@ -3,137 +3,73 @@
 namespace App\Http\Controllers\Admin;
 
 use Gate;
+use Carbon\Carbon;
 use App\Models\IdType;
 use App\Models\Person;
+use App\Models\VisitorPass;
 use Illuminate\Http\Request;
 use App\Models\VisitingOffice;
 use App\Models\SelfRegistration;
 use App\Http\Controllers\Controller;
 use App\Models\VisitingOfficeCategory;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Requests\StoreSelfRegistrationRequest;
 use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\UpdateSelfRegistrationRequest;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Http\Requests\MassDestroySelfRegistrationRequest;
-use App\Models\VisitorPass;
 
 class SelfRegistrationController extends Controller
 {
     use MediaUploadingTrait;
 
-    public function index(Request $request)
-    {
-        abort_if(Gate::denies('self_registration_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        if ($request->ajax()) {
-            $query = SelfRegistration::with(['id_type', 'visiting_office_category'])->select(sprintf('%s.*', (new SelfRegistration)->table));
-            $table = Datatables::of($query);
-
-            $table->addColumn('placeholder', '&nbsp;');
-            $table->addColumn('actions', '&nbsp;');
-
-            $table->editColumn('actions', function ($row) {
-                $viewGate      = 'self_registration_show';
-                $editGate      = 'self_registration_edit';
-                $deleteGate    = 'self_registration_delete';
-                $crudRoutePart = 'self-registrations';
-
-                return view('partials.datatablesActions', compact(
-                    'viewGate',
-                    'editGate',
-                    'deleteGate',
-                    'crudRoutePart',
-                    'row'
-                ));
-            });
-
-            $table->editColumn('id', function ($row) {
-                return $row->id ? $row->id : '';
-            });
-            $table->editColumn('name', function ($row) {
-                return $row->name ? $row->name : '';
-            });
-            $table->editColumn('gender', function ($row) {
-                return $row->gender ? SelfRegistration::GENDER_SELECT[$row->gender] : '';
-            });
-            $table->editColumn('age', function ($row) {
-                return $row->age ? $row->age : '';
-            });
-            $table->editColumn('mobile', function ($row) {
-                return $row->mobile ? $row->mobile : '';
-            });
-            $table->addColumn('id_type_name', function ($row) {
-                return $row->id_type ? $row->id_type->name : '';
-            });
-
-            $table->editColumn('id_detail', function ($row) {
-                return $row->id_detail ? $row->id_detail : '';
-            });
-            $table->editColumn('address', function ($row) {
-                return $row->address ? $row->address : '';
-            });
-            $table->editColumn('country', function ($row) {
-                return $row->country ? SelfRegistration::COUNTRY_SELECT[$row->country] : '';
-            });
-            $table->editColumn('state', function ($row) {
-                return $row->state ? $row->state : '';
-            });
-            $table->editColumn('pincode', function ($row) {
-                return $row->pincode ? $row->pincode : '';
-            });
-            $table->editColumn('photo', function ($row) {
-                if ($photo = $row->photo) {
-                    return sprintf(
-                        '<a href="%s" target="_blank"><img src="%s" width="50px" height="50px"></a>',
-                        $photo->url,
-                        $photo->thumbnail
-                    );
-                }
-
-                return '';
-            });
-            $table->editColumn('purpose', function ($row) {
-                return $row->purpose ? SelfRegistration::PURPOSE_SELECT[$row->purpose] : '';
-            });
-
-            $table->addColumn('visiting_office_category_title', function ($row) {
-                return $row->visiting_office_category ? $row->visiting_office_category->title : '';
-            });
-
-            $table->editColumn('district', function ($row) {
-                return $row->district ? $row->district : '';
-            });
-            $table->editColumn('post_office', function ($row) {
-                return $row->post_office ? $row->post_office : '';
-            });
-            $table->editColumn('visiting_office', function ($row) {
-                return $row->visiting_office ? $row->visiting_office : '';
-            });
-
-            $table->rawColumns(['actions', 'placeholder', 'id_type', 'photo', 'visiting_office_category']);
-
-            return $table->make(true);
-        }
-
-        return view('admin.selfRegistrations.index');
-    }
-
-    public function create()
-    {
-        abort_if(Gate::denies('self_registration_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $id_types = IdType::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        return view('admin.selfRegistrations.create', compact('id_types', 'visiting_office_categories'));
-    }
-
-    public function store(StoreSelfRegistrationRequest $request)
+    public function store(Request $request)
     {
         //$selfRegistration = SelfRegistration::create($request->all());
+
+        // $validator = Validator::make( $request->all(),
+        // [
+        //     'company_name' => 'required|string|max:255',
+        // ],
+        // [
+        //     'company_name.required' => 'Company name is required',
+        //     'company_name.string' => 'Company name should be string',
+        //     'company_name.max' => 'Company name should not exceed 255 characters',
+        // ]);
+
+        // if ( $validator->fails() ) {
+        //     return response()->json( [ 'errors' => $validator->errors() ] );
+        // }
+        //check if personid exists
+
+        $personid = $request->personid;
+        $person = null;
+        if($personid) {
+            $person = Person::find($personid);
+            if(!$person) {
+                return response()->json( [ 'errors' => ['personid' => 'Person not found'] ], 404);
+            }
+
+            //test
+            return response()->json( [ 'errors' => ['personid' => 'Person found'] ], 401 );
+
+        }
+
+        //if retrieved, update else create
+        $person = Person::where('mobile', $request->mobile)
+        ->when($request->id_type_id != -1, function($query) use ($request) {
+            return $query->orwhere('id_detail', $request->id_detail);
+        })
+        ->first();
+
+        if($person) {
+            //show error message
+            return redirect()->route('admin.visitor-passes.register')->with('error', 'Person already exists with same mobile number or id number');
+
+        }
 
         //create person
         $person = new Person();
@@ -161,34 +97,58 @@ class SelfRegistrationController extends Controller
         }
 
         //now create a pass
-        $visitorPass = new VisitorPass();
-        $visitorPass->person_id = $person->id;
-        $visitorPass->purpose = $request->purpose;
-        $visitorPass->visiting_office_category_id = $request->visiting_office_category_id;
-        $visitorPass->visiting_office = $request->visiting_office || $request->visiting_office_name;
-        $visitorPass->save();
 
-       /* 'pass_valid_from',
-        'pass_valid_upto',
-        'issued_date',
-        'number',
-        'date_of_visit',*/
+        //use transaction here to make sure number is unique
 
-        return redirect()->route('admin.self-registrations.index');
+        \DB::beginTransaction( function() use ($request, $person) {
+
+            $visitorPass = new VisitorPass();
+            $visitorPass->person_id = $person->id;
+            $visitorPass->purpose = $request->purpose;
+            $visitorPass->visiting_office_category_id = $request->visiting_office_category_id;
+            $visitorPass->visiting_office = $request->visiting_office || $request->visiting_office_name;
+            $visitorPass->recommending_office_category_id = $request->recommending_office_category_id;
+            $visitorPass->recommending_office = $request->recommending_office || $request->recommending_office_name;
+            $visitorPass->pass_valid_from = Carbon::now();
+            //$visitorPass->pass_valid_upto = $request->pass_valid_upto;
+            $visitorPass->issued_date = Carbon::now()->format('Y-m-d');
+            $lastNumberOfThisYear = VisitorPass::whereYear('created_at', Carbon::now()->year)->orderBy('id', 'desc')->first();
+            $lastNumber = $lastNumberOfThisYear ? $lastNumberOfThisYear->number : 0;
+            $visitorPass->number = $lastNumber + 1;
+            $visitorPass->date_of_visit = $request->date_of_visit;
+
+            $visitorPass->save();
+
+        });
+
+
+        return redirect()->route('admin.visitor-passes.index');
     }
 
-    public function edit(SelfRegistration $selfRegistration)
+    public function search(Request $request)
     {
-        abort_if(Gate::denies('self_registration_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        $queryName = $request->queryName;
+        $queryMob = $request->queryMob;
+        $queryId = $request->queryId;
 
-        $id_types = IdType::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $people = Person::with('id_type')
+        ->when($queryMob, function($query) use ($queryMob) {
+            return $query->where('mobile', 'like', '%'.$queryMob.'%');
+        })
+        ->when($queryId, function($query) use ($queryId) {
+            return $query->where('id_detail', 'like', '%'.$queryId.'%');
+        })
+        ->when($queryName, function($query) use ($queryName) {
+            return $query->where('name', 'like', '%'.$queryName.'%');
+        })
+        ->get();
 
-        $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
-
-        $selfRegistration->load('id_type', 'visiting_office_category');
-
-        return view('admin.selfRegistrations.edit', compact('id_types', 'selfRegistration', 'visiting_office_categories', 'visiting_offices'));
+        return response()->json(
+            $people,
+        );
+        return view('admin.visitorPasses.search', compact('people'));
     }
+
 
     public function update(UpdateSelfRegistrationRequest $request, SelfRegistration $selfRegistration)
     {
@@ -208,34 +168,7 @@ class SelfRegistrationController extends Controller
         return redirect()->route('admin.self-registrations.index');
     }
 
-    public function show(SelfRegistration $selfRegistration)
-    {
-        abort_if(Gate::denies('self_registration_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $selfRegistration->load('id_type', 'visiting_office_category');
-
-        return view('admin.selfRegistrations.show', compact('selfRegistration'));
-    }
-
-    public function destroy(SelfRegistration $selfRegistration)
-    {
-        abort_if(Gate::denies('self_registration_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $selfRegistration->delete();
-
-        return back();
-    }
-
-    public function massDestroy(MassDestroySelfRegistrationRequest $request)
-    {
-        $selfRegistrations = SelfRegistration::find(request('ids'));
-
-        foreach ($selfRegistrations as $selfRegistration) {
-            $selfRegistration->delete();
-        }
-
-        return response(null, Response::HTTP_NO_CONTENT);
-    }
 
     public function storeCKEditorImages(Request $request)
     {

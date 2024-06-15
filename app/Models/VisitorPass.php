@@ -39,9 +39,11 @@ class VisitorPass extends Model
         'date_of_visit',
         'purpose',
         'visiting_office_category_id',
-        'visiting_office',
+        'visiting_office', // || $visiting_office_name;
+        'visiting_office_name', //if it is not in the list
         'recommending_office_category_id',
-        'recommending_office',
+        'recommending_office', // || $recommending_office_name;
+        'recommending_office_name',
         'created_at',
         'updated_at',
         'deleted_at',
