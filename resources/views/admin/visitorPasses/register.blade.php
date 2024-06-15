@@ -145,7 +145,7 @@
 
                     <div class="form-group col">
                         <label for="recommending_office_category_id">{{ trans('cruds.selfRegistration.fields.recommending_office_category') }}</label>
-                        <select class="form-control {{ $errors->has('recommending_office_category') ? 'is-invalid' : '' }}" name="recommending_office_category_id" id="recommending_office_category_id" required>
+                        <select class="form-control {{ $errors->has('recommending_office_category') ? 'is-invalid' : '' }}" name="recommending_office_category_id" id="recommending_office_category_id">
                             @foreach($recommending_office_categories as $id => $entry)
                             <option value="{{ $id }}" {{ old('recommending_office_category_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
                             @endforeach
@@ -320,8 +320,12 @@
 
                     <button class="btn btn-primary" type="submit">
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none;" id="spinnerbtn"></span>
-                        Submit
+                        Save and Print
                     </button>
+
+                    <a class="btn btn-success" href="{{ route('admin.visitor-passes.register') }}">
+                    New Registration
+                    </a>
                 </div>
             </form>
             <div class="alert alert-danger" id="alert" style="display:none;">

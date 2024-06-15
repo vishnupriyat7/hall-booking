@@ -52,40 +52,55 @@ class SelfRegistrationController extends Controller
             if(!$person) {
                 return response()->json( [ 'errors' => ['personid' => 'Person not found'] ], 404);
             }
-
             //test
-            return response()->json( [ 'errors' => ['personid' => 'Person found'] ], 401 );
+          //  return response()->json( [ 'errors' => ['personid' => 'Person found'] ], 401 );
+          //update person
 
+
+        } else {
+
+            $person = Person::where('mobile', $request->mobile)
+            ->when($request->id_type_id != -1, function($query) use ($request) {
+                return $query->orwhere('id_detail', $request->id_detail);
+            })
+            ->first();
+
+            if($person) {
+                return response()->json( [ 'errors' => ['personid' => 'Person already exists with same mobile number or id number'] ], 401 );
+            }
         }
 
-        //if retrieved, update else create
-        $person = Person::where('mobile', $request->mobile)
-        ->when($request->id_type_id != -1, function($query) use ($request) {
-            return $query->orwhere('id_detail', $request->id_detail);
-        })
-        ->first();
+        //make sure if id type is recommended by, recommender is also provided
+        if($request->id_type_id == -1) {
+            if(!$request->recommending_office_category_id) {
+                return response()->json( [ 'errors' => ['recommending_office_category' => 'Recommending office category is required for this id type'] ], 401 );
+            }
+            if(!$request->recommending_office && !$request->recommending_office_name) {
+                return response()->json( [ 'errors' => ['recommending_office' => 'Recommending office is required for this id type'] ], 401 );
+            }
+        }
 
-        if($person) {
-            //show error message
-            return redirect()->route('admin.visitor-passes.register')->with('error', 'Person already exists with same mobile number or id number');
-
+        if(!$request->visiting_office && !$request->visiting_office_name) {
+            return response()->json( [ 'errors' => ['visiting_office' => 'Visiting office is required for this id type'] ], 401 );
         }
 
         //create person
-        $person = new Person();
-        $person->name = $request->name;
-        $person->gender = $request->gender;
-        $person->age = $request->age;
-        $person->mobile = $request->mobile;
-        $person->id_type_id = $request->id_type_id == -1 || $request->id_type_id == '' ? null : $request->id_type_id;
-        $person->id_detail = $request->id_detail;
-        $person->address = $request->address;
-        $person->country = $request->country;
-        $person->state = $request->state;
-        $person->pincode = $request->pincode;
-        $person->district = $request->district;
-        $person->post_office = $request->post_office;
-        $person->save();
+        if(!$person) {
+            $person = new Person();
+            $person->name = $request->name;
+            $person->gender = $request->gender;
+            $person->age = $request->age;
+            $person->mobile = $request->mobile;
+            $person->id_type_id = $request->id_type_id == -1 || $request->id_type_id == '' ? null : $request->id_type_id;
+            $person->id_detail = $request->id_detail;
+            $person->address = $request->address;
+            $person->country = $request->country;
+            $person->state = $request->state;
+            $person->pincode = $request->pincode;
+            $person->district = $request->district;
+            $person->post_office = $request->post_office;
+            $person->save();
+        }
 
 
         if ($request->input('photo', false)) {
@@ -100,7 +115,8 @@ class SelfRegistrationController extends Controller
 
         //use transaction here to make sure number is unique
 
-        \DB::beginTransaction( function() use ($request, $person) {
+        //\DB::beginTransaction( function() use ($request, $person)
+        {
 
             $visitorPass = new VisitorPass();
             $visitorPass->person_id = $person->id;
@@ -109,7 +125,7 @@ class SelfRegistrationController extends Controller
             $visitorPass->visiting_office = $request->visiting_office || $request->visiting_office_name;
             $visitorPass->recommending_office_category_id = $request->recommending_office_category_id;
             $visitorPass->recommending_office = $request->recommending_office || $request->recommending_office_name;
-            $visitorPass->pass_valid_from = Carbon::now();
+            $visitorPass->pass_valid_from = Carbon::now()->format('Y-m-d H:i:s');
             //$visitorPass->pass_valid_upto = $request->pass_valid_upto;
             $visitorPass->issued_date = Carbon::now()->format('Y-m-d');
             $lastNumberOfThisYear = VisitorPass::whereYear('created_at', Carbon::now()->year)->orderBy('id', 'desc')->first();
@@ -119,7 +135,8 @@ class SelfRegistrationController extends Controller
 
             $visitorPass->save();
 
-        });
+        }
+        //);
 
 
         return redirect()->route('admin.visitor-passes.index');
