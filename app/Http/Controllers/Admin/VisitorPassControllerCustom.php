@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\IdType;
 use App\Models\Member;
 use App\Models\Person;
+use App\Models\RecommendingOfficeCategory;
 use App\Models\VisitingOfficeCategory;
 use Gate;
 use Symfony\Component\HttpFoundation\Response;
@@ -20,33 +21,33 @@ class VisitorPassControllerCustom extends Controller
         $id_types = IdType::pluck('name', 'id')->prepend('RECOMMENDED BY', '-1')
             ->prepend(trans('global.pleaseSelect'), '');
 
-        $visiting_office_categories = [
-            'Legislature Secretary' => 'Legislature Secretary',
-            'MLA' => 'MLA',
-            'Minister' => 'Minister',
-            'Speaker' => 'Speaker',
-            'Deputy Speaker' => 'Deputy Speaker',
-            'Chief Minister' => 'Chief Minister',
-            'Leader of Opposition' => 'Leader of Opposition',
-            'Legislative Assembly' => 'Legislative Assembly',
-            'Secretariat' => 'Secretariat',
-            'Other' => 'Other',
-        ];
-        $visiting_office_categories = collect($visiting_office_categories)->prepend(trans('global.pleaseSelect'), '');
+        // $visiting_office_categories = [
+        //     'Legislature Secretary' => 'Legislature Secretary',
+        //     'MLA' => 'MLA',
+        //     'Minister' => 'Minister',
+        //     'Speaker' => 'Speaker',
+        //     'Deputy Speaker' => 'Deputy Speaker',
+        //     'Chief Minister' => 'Chief Minister',
+        //     'Leader of Opposition' => 'Leader of Opposition',
+        //     'Legislative Assembly' => 'Legislative Assembly',
+        //     'Secretariat' => 'Secretariat',
+        //     'Other' => 'Other',
+        // ];
+        // $visiting_office_categories = collect($visiting_office_categories)->prepend(trans('global.pleaseSelect'), '');
 
-        $recommending_office_categories = [
-            'Legislature Secretary' => 'Legislature Secretary',
-            'MLA' => 'MLA',
-            'Minister' => 'Minister',
-            'Speaker' => 'Speaker',
-            'Deputy Speaker' => 'Deputy Speaker',
-            'Chief Minister' => 'Chief Minister',
-            'Leader of Opposition' => 'Leader of Opposition',
-            'Other' => 'Other',
-        ];
-        $recommending_office_categories = collect($recommending_office_categories)->prepend(trans('global.pleaseSelect'), '');
-
-        //VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
+        // $recommending_office_categories = [
+        //     'Legislature Secretary' => 'Legislature Secretary',
+        //     'MLA' => 'MLA',
+        //     'Minister' => 'Minister',
+        //     'Speaker' => 'Speaker',
+        //     'Deputy Speaker' => 'Deputy Speaker',
+        //     'Chief Minister' => 'Chief Minister',
+        //     'Leader of Opposition' => 'Leader of Opposition',
+        //     'Other' => 'Other',
+        // ];
+        // $recommending_office_categories = collect($recommending_office_categories)->prepend(trans('global.pleaseSelect'), '');
+        $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $recommending_office_categories = RecommendingOfficeCategory::pluck('title, id')->prepend( trans('global.pleaseSelect'), '');
 
         $mlas = Member::where('status', 'mla')->get();
         $ministers = Member::where('status', 'minister')->get();
