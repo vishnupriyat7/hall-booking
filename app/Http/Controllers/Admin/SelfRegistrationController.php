@@ -20,6 +20,7 @@ use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\UpdateSelfRegistrationRequest;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Http\Requests\MassDestroySelfRegistrationRequest;
+use App\Models\RecommendingOfficeCategory;
 
 class SelfRegistrationController extends Controller
 {
@@ -72,16 +73,29 @@ class SelfRegistrationController extends Controller
 
         //make sure if id type is recommended by, recommender is also provided
         if($request->id_type_id == -1) {
+
             if(!$request->recommending_office_category_id) {
                 return response()->json( [ 'errors' => ['recommending_office_category' => 'Recommending office category is required for this id type'] ], 401 );
             }
             if(!$request->recommending_office && !$request->recommending_office_name) {
                 return response()->json( [ 'errors' => ['recommending_office' => 'Recommending office is required for this id type'] ], 401 );
             }
+            $recommendingOfficeCat = RecommendingOfficeCategory::find($request->recommending_office_category_id);
+            if( $recommendingOfficeCat->title == 'MLA' || $recommendingOfficeCat->title == 'Minister' ) {
+                if(!$request->recommending_office || 'Select' == $request->recommending_office) {
+                    return response()->json( [ 'errors' => ['recommending_office' => 'Recommending office is required'] ], 401 );
+                }
+            }
         }
 
         if(!$request->visiting_office && !$request->visiting_office_name) {
             return response()->json( [ 'errors' => ['visiting_office' => 'Visiting office is required for this id type'] ], 401 );
+        }
+        $visitingOfficeCat = VisitingOfficeCategory::find($request->visiting_office_category_id);
+        if( $visitingOfficeCat->title == 'MLA' || $visitingOfficeCat->title == 'Minister' ) {
+            if(!$request->visiting_office || 'Select' == $request->visiting_office) {
+                return response()->json( [ 'errors' => ['visiting_office' => 'Visiting office is required'] ], 401 );
+            }
         }
 
         //create person
@@ -115,6 +129,9 @@ class SelfRegistrationController extends Controller
 
         //use transaction here to make sure number is unique
 
+
+
+
         //\DB::beginTransaction( function() use ($request, $person)
         {
 
@@ -131,7 +148,7 @@ class SelfRegistrationController extends Controller
             $lastNumberOfThisYear = VisitorPass::whereYear('created_at', Carbon::now()->year)->orderBy('id', 'desc')->first();
             $lastNumber = $lastNumberOfThisYear ? $lastNumberOfThisYear->number : 0;
             $visitorPass->number = $lastNumber + 1;
-            $visitorPass->date_of_visit = $request->date_of_visit;
+            $visitorPass->date_of_visit = Carbon::createFromFormat( 'd.m.Y', $request->date_of_visit)->format( 'Y-m-d' );
 
             $visitorPass->save();
 
@@ -139,7 +156,7 @@ class SelfRegistrationController extends Controller
         //);
 
 
-        return redirect()->route('admin.visitor-passes.index');
+        return response()->json( [ 'success' => 'Pass created successfully', 'pass'=>$visitorPass ] );
     }
 
     public function search(Request $request)

@@ -46,9 +46,8 @@ class VisitorPassControllerCustom extends Controller
         //     'Other' => 'Other',
         // ];
         // $recommending_office_categories = collect($recommending_office_categories)->prepend(trans('global.pleaseSelect'), '');
-        $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
-        $recommending_office_categories = RecommendingOfficeCategory::pluck('title, id')->prepend( trans('global.pleaseSelect'), '');
-
+        $visiting_office_categories = VisitingOfficeCategory::all()->pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
+        $recommending_office_categories = RecommendingOfficeCategory::all()->pluck('title', 'id')->prepend( trans('global.pleaseSelect'), '');
         $mlas = Member::where('status', 'mla')->get();
         $ministers = Member::where('status', 'minister')->get();
         $date_of_visit = date('d.m.Y');

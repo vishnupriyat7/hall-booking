@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\CsvImportTrait;
 use App\Http\Requests\MassDestroyVisitingOfficeCategoryRequest;
 use App\Http\Requests\StoreVisitingOfficeCategoryRequest;
 use App\Http\Requests\UpdateVisitingOfficeCategoryRequest;
@@ -13,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class VisitingOfficeCategoryController extends Controller
 {
+    use CsvImportTrait;
     public function index()
     {
         abort_if(Gate::denies('visiting_office_category_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');

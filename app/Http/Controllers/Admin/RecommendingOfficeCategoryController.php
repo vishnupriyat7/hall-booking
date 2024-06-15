@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\CsvImportTrait;
 use App\Http\Requests\MassDestroyRecommendingOfficeCategoryRequest;
 use App\Http\Requests\StoreRecommendingOfficeCategoryRequest;
 use App\Http\Requests\UpdateRecommendingOfficeCategoryRequest;
@@ -13,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class RecommendingOfficeCategoryController extends Controller
 {
+    use CsvImportTrait;
+
     public function index()
     {
         abort_if(Gate::denies('recommending_office_category_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');

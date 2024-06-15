@@ -6,6 +6,10 @@
             <a class="btn btn-success" href="{{ route('admin.visiting-office-categories.create') }}">
                 {{ trans('global.add') }} {{ trans('cruds.visitingOfficeCategory.title_singular') }}
             </a>
+            <button class="btn btn-warning" data-toggle="modal" data-target="#csvImportModal">
+                {{ trans('global.app_csvImport') }}
+            </button>
+            @include('csvImport.modal', ['model' => 'VisitingOfficeCategory', 'route' => 'admin.visiting-office-categories.parseCsvImport'])
         </div>
     </div>
 @endcan

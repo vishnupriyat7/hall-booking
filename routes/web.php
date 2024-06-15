@@ -38,10 +38,14 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     // Visiting Office Category
     Route::delete('visiting-office-categories/destroy', 'VisitingOfficeCategoryController@massDestroy')->name('visiting-office-categories.massDestroy');
+    Route::post('visiting-office-categories/parse-csv-import', 'VisitingOfficeCategoryController@parseCsvImport')->name('visiting-office-categories.parseCsvImport');
+    Route::post('visiting-office-categories/process-csv-import', 'VisitingOfficeCategoryController@processCsvImport')->name('visiting-office-categories.processCsvImport');
     Route::resource('visiting-office-categories', 'VisitingOfficeCategoryController');
 
     // Recommending Office Category
     Route::delete('recommending-office-categories/destroy', 'RecommendingOfficeCategoryController@massDestroy')->name('recommending-office-categories.massDestroy');
+    Route::post('recommending-office-categories/parse-csv-import', 'RecommendingOfficeCategoryController@parseCsvImport')->name('recommending-office-categories.parseCsvImport');
+    Route::post('recommending-office-categories/process-csv-import', 'RecommendingOfficeCategoryController@processCsvImport')->name('recommending-office-categories.processCsvImport');
     Route::resource('recommending-office-categories', 'RecommendingOfficeCategoryController');
 
     // Member

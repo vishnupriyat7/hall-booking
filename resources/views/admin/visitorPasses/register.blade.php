@@ -63,9 +63,6 @@
 
 
     <div class="card" id="app">
-        <div class="card-header">
-            {{ trans('cruds.selfRegistration.title_singular') }}
-        </div>
 
         <!-- <pass-registration></pass-registration> -->
 
@@ -146,8 +143,8 @@
                     <div class="form-group col">
                         <label for="recommending_office_category_id">{{ trans('cruds.selfRegistration.fields.recommending_office_category') }}</label>
                         <select class="form-control {{ $errors->has('recommending_office_category') ? 'is-invalid' : '' }}" name="recommending_office_category_id" id="recommending_office_category_id">
-                            @foreach($recommending_office_categories as $id => $entry)
-                            <option value="{{ $id }}" {{ old('recommending_office_category_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                            @foreach($recommending_office_categories as $id => $title)
+                            <option value="{{ $id }}" {{ old('recommending_office_category_id') == $id ? 'selected' : '' }}>{{ $title }}</option>
                             @endforeach
                         </select>
                         @if($errors->has('recommending_office_category'))
@@ -184,7 +181,7 @@
 
                     </div>
 
-                    <div class="col">
+                    <div class="col d-flex flex-column justify-content-between ">
 
 
                         <div class="form-group ">
@@ -335,15 +332,16 @@
         </div>
     </div>
 
-
+</div>
 
     @endsection
 
     @section('scripts')
     <script src="{{ asset('js/country.js') }}"></script>
     <script src="{{ asset('js/jquery.form.min.js') }}"></script>
-
     <script>
+        var pass_issued = null;
+
          function fetchPin(pin) {
 
             // Creating Our XMLHttpRequest object
@@ -463,6 +461,19 @@
                 },
 
                 beforeSubmit: function(arr, $form, options) {
+
+                    //check if pass is already issued
+                    //if pass is already issued, show alert and return false
+
+                    if(pass_issued){
+                        alert('Pass already issued for this person' + pass_issued.id);
+                        return false;
+                    }
+
+
+
+
+
                     // The array of form data takes the following form:
                     // [ { name: 'username', value: 'jresig' }, { name: 'password', value: 'secret' } ]
 
@@ -470,16 +481,6 @@
                     //alert( JSON.stringify( arr));
                     $('#myerror').empty()
                     let valid = true;
-                    for (const item of arr) {
-                        if (item?.name == 'date') {
-                            if (!item?.value) {
-                                $('#myerror').append('<li>Fill all fields</li>');
-                                valid = false;
-                                break;
-                            }
-
-                        }
-                    }
 
                     if (!valid) {
                         $('#alert').show();
@@ -501,13 +502,15 @@
                 },
                 complete: function(xhr) {
 
+                    $('#spinnerbtn').hide();
+                    $('#myerror').empty();
+
                     let jsonResponse = JSON.parse(xhr.responseText);
                     //alert(jsonResponse);
 
                     //console.log('File has uploaded');
                     if (jsonResponse?.errors) {
-                        $('#spinnerbtn').hide();
-                        $('#myerror').empty();
+
                         for (const key in jsonResponse.errors) {
                             $('#myerror').append('<li>' + jsonResponse.errors[key] + '</li>');
                         }
@@ -517,7 +520,7 @@
                     } else {
                         // var i = window.location.href.lastIndexOf("/");
                         // window.location = window.location.href.substr(0, i)
-
+                        pass_issued = jsonResponse.pass
                     }
                 }
             });
@@ -553,26 +556,7 @@
             const idType = document.getElementById("id_type_id");
 
 
-            // selectDistrict.disabled = true;
 
-            //Add State Value to State Select option
-            /*data.states.forEach((value) => {
-              selectState.appendChild(createOption(value.state, value.state));
-            });
-            */
-
-            //   selectCountry.addEventListener("change", function (e) {
-            //     //selectState.disabled = false;
-            //   //  stateListOptions.innerHTML = "";
-            //     if(e.target.value === "India"){
-            //        // alert("India");
-            //        var options = '';
-            //       data.states.forEach((value) => {
-            //        // options += '<option value="' + value.state + '" />';
-            //         //selectState.appendChild(createOption(value.state, value.state));
-            //       });
-            //     }
-            //   });
 
             //Create New Option Tag With Value
             function createOption(displayMember, valueMember) {
@@ -607,38 +591,40 @@
             });
 
             visiting_office_category.addEventListener("input", function(e) {
-                let office = e.target.value
+               // let office = e.target.value
+               let office = visiting_office_category.options[visiting_office_category.selectedIndex].innerHTML;
+
                 visiting_office.innerHTML = "";
                 visiting_office_input.style.display = 'none';
                 visiting_office.removeAttribute('required');
                 visiting_office_input.removeAttribute('required');
                 if ('MLA' == office) {
                     jQuery("#visiting_office").select2().next().show();
-                    visiting_office.innerHTML = "<option> Select </option>";
+                    visiting_office.innerHTML = "<option>Select</option>";
                     visiting_office.setAttribute("required", "");
                     mlas.forEach(({
                         id,
                         name
                     }) => {
-                        visiting_office.append(createOption(name, id));
+                        visiting_office.append(createOption(name, name));
                     });
                 } else if ('Minister' == office) {
                     jQuery("#visiting_office").select2().next().show();
-                    visiting_office.innerHTML = "<option> Select </option>";
+                    visiting_office.innerHTML = "<option>Select</option>";
                     visiting_office.setAttribute("required", "");
 
                     ministers.forEach(({
                         id,
                         name
                     }) => {
-                        visiting_office.append(createOption(name, id));
+                        visiting_office.append(createOption(name, name));
                     });
                 } else if (['Legislature Secretary', 'Speaker', 'Deputy Speaker', 'Chief Minister', 'Leader of Opposition'].indexOf(office) !== -1) {
                     let officename = 'O/o ' + office;
                     visiting_office.setAttribute("required", "");
                     jQuery("#visiting_office").select2().next().show();
                     visiting_office.append(createOption(officename, officename));
-                } else {
+                } else if (e.target.value != 0){
                     visiting_office.style.display = 'none';
                     visiting_office_input.style.display = 'block';
                     visiting_office_input.hidden = false;
@@ -655,7 +641,8 @@
 
 
             recommending_office_category.addEventListener("input", function(e) {
-                let office = e.target.value
+               // let office = e.target.value
+                let office = recommending_office_category.options[recommending_office_category.selectedIndex].innerHTML;
                 recommending_office.innerHTML = "";
                 recommending_office_input.style.display = 'none';
                 //recommending_office.removeAttribute('required');
@@ -668,29 +655,29 @@
 
 
                     //recommending_office.setAttribute("required", "");
-                    recommending_office.innerHTML = "<option> Select </option>";
+                    recommending_office.innerHTML = "<option>Select</option>";
                     mlas.forEach(({
                         id,
                         name
                     }) => {
-                        recommending_office.append(createOption(name, id));
+                        recommending_office.append(createOption(name, name));
                     });
                 } else if ('Minister' == office) {
                     jQuery("#recommending_office").select2().next().show();
                     jQuery("#recommending_office").select2().attr('required', true);
-                    recommending_office.innerHTML = "<option> Select </option>";
+                    recommending_office.innerHTML = "<option>Select</option>";
                     ministers.forEach(({
                         id,
                         name
                     }) => {
-                        recommending_office.append(createOption(name, id));
+                        recommending_office.append(createOption(name, name));
                     });
                 } else if (['Legislature Secretary', 'Speaker', 'Deputy Speaker', 'Chief Minister', 'Leader of Opposition'].indexOf(office) !== -1) {
                     let officename = 'O/o ' + office;
                     jQuery("#recommending_office").select2().next().show();
                     jQuery("#recommending_office").select2().attr('required', true);
                     recommending_office.append(createOption(officename, officename));
-                } else {
+                } else if (e.target.value != 0){ //ignore 'please select'
                     recommending_office.style.display = 'none';
                     recommending_office_input.style.display = 'block';
                     recommending_office_input.hidden = false;
