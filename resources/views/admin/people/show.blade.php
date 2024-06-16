@@ -142,7 +142,7 @@
                         <td>
                             @if($person->photo)
                                 <a href="{{ $person->photo->getUrl() }}" target="_blank" style="display: inline-block">
-                                    <img src="{{ $person->photo->getUrl('thumb') }}">
+                                    <img src="{{ $person->photo->getUrl('') }}">
                                 </a>
                             @endif
                         </td>

@@ -2,6 +2,52 @@
 
 @section('styles')
 <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+
+<style>
+    #video {
+  border: 1px solid black;
+  box-shadow: 2px 2px 3px black;
+  width: 320px;
+  height: 240px;
+}
+
+#photo {
+  border: 1px solid black;
+  box-shadow: 2px 2px 3px black;
+  width: 320px;
+  height: 240px;
+}
+
+#canvas {
+  display: none;
+}
+
+.camera {
+  width: 340px;
+  display: inline-block;
+}
+
+.output {
+  width: 340px;
+  display: inline-block;
+  vertical-align: top;
+}
+
+/* #startbutton {
+  display: block;
+  position: relative;
+  margin-left: auto;
+  margin-right: auto;
+  bottom: 32px;
+  background-color: rgb(0 150 0 / 50%);
+  border: 1px solid rgb(255 255 255 / 70%);
+  box-shadow: 0px 0px 1px 2px rgb(0 0 0 / 20%);
+  font-size: 14px;
+  font-family: "Lucida Grande", "Arial", sans-serif;
+  color: rgb(255 255 255 / 100%);
+} */
+</style>
+
 @endsection
 
 @section('content')
@@ -335,14 +381,16 @@
 
                 <div class="row d-flex justify-content-center">
 
-                    <video id="videoElement" autoplay></video>
-
-                    <canvas id="canvasElement" style="display: none;"></canvas>
-                    <img id="photoElement" style="display: none;">
-
+                    <div class="camera">
+                        <video id="video">Video stream not available.</video>
+                    </div>
+                    <canvas id="canvas"> </canvas>
+                    <div class="output">
+                        <img id="photo" alt="The screen capture will appear in this box." />
+                    </div>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group d-flex justify-content-center">
 
                     <button class="btn btn-primary" type="submit">
                         <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none;" id="spinnerbtn"></span>
@@ -352,6 +400,9 @@
                     <a class="btn btn-success" href="{{ route('admin.visitor-passes.register') }}">
                     New Registration
                     </a>
+
+                    <button class="btn btn-warning" type='button' id="startbutton">Take photo</button>
+
                 </div>
                 <input type="hidden" name="personid" id="personid" >
                 <input type="hidden" name="passid" id="passid" >
@@ -364,11 +415,9 @@
             </div>
         </div>
 
-        <div class="row d-flex justify-content-center">
-
-            <button id="startButton">Start Webcam</button>
-            <button id="captureButton">Capture Photo</button>
-        </div>
+        <div  id="info">
+              
+            </div>
 
 
     </div>
@@ -384,38 +433,130 @@
 
 
     <script>
+(() => {
+  // The width and height of the captured photo. We will set the
+  // width to the value defined here, but the height will be
+  // calculated based on the aspect ratio of the input stream.
+
+  const width = 320; // We will scale the photo width to this
+  let height = 0; // This will be computed based on the input stream
+
+  // |streaming| indicates whether or not we're currently streaming
+  // video from the camera. Obviously, we start at false.
+
+  let streaming = false;
+
+  // The various HTML elements we need to configure or control. These
+  // will be set by the startup() function.
+
+  let video = null;
+  let canvas = null;
+  let photo = null;
+  let startbutton = null;
 
 
-        const videoElement = document.getElementById('videoElement');
-        const canvasElement = document.getElementById('canvasElement');
-        const photoElement = document.getElementById('photoElement');
-        const startButton = document.getElementById('startButton');
-        const captureButton = document.getElementById('captureButton');
 
-        let stream;
+  function startup() {
 
-        async function startWebcam() {
-            try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
-                videoElement.srcObject = stream;
-                startButton.disabled = true;
-                captureButton.disabled = false;
-            } catch (error) {
-                console.error('Error accessing webcam:', error);
-            }
+    video = document.getElementById("video");
+    canvas = document.getElementById("canvas");
+    photo = document.getElementById("photo");
+    startbutton = document.getElementById("startbutton");
+
+    navigator.mediaDevices
+      .getUserMedia({ video: true, audio: false })
+      .then((stream) => {
+        video.srcObject = stream;
+        video.play();
+      })
+      .catch((err) => {
+        console.error(`An error occurred: ${err}`);
+      });
+
+    video.addEventListener(
+      "canplay",
+      (ev) => {
+        if (!streaming) {
+          height = video.videoHeight / (video.videoWidth / width);
+
+          // Firefox currently has a bug where the height can't be read from
+          // the video, so we will make assumptions if this happens.
+
+          if (isNaN(height)) {
+            height = width / (4 / 3);
+          }
+
+          video.setAttribute("width", width);
+          video.setAttribute("height", height);
+          canvas.setAttribute("width", width);
+          canvas.setAttribute("height", height);
+          streaming = true;
         }
+      },
+      false,
+    );
 
-        function capturePhoto() {
-            canvasElement.width = 300;//videoElement.videoWidth;
-            canvasElement.height = 400;//videoElement.videoHeight;
-            canvasElement.getContext('2d').drawImage(videoElement, 0, 0);
-            const photoDataUrl = canvasElement.toDataURL('image/jpeg');
-            photoElement.src = photoDataUrl;
-            photoElement.style.display = 'block';
-        }
+    startbutton.addEventListener(
+      "click",
+      (ev) => {
+        takepicture();
+        ev.preventDefault();
+      },
+      false,
+    );
 
-        startButton.addEventListener('click', startWebcam);
-        captureButton.addEventListener('click', capturePhoto);
+    clearphoto();
+  }
+
+  // Fill the photo with an indication that none has been
+  // captured.
+
+  function clearphoto() {
+    const context = canvas.getContext("2d");
+    context.fillStyle = "#AAA";
+    context.fillRect(0, 0, canvas.width, canvas.height);
+
+    const data = canvas.toDataURL("image/png");
+    photo.setAttribute("src", data);
+  }
+
+  // Capture a photo by fetching the current contents of the video
+  // and drawing it into a canvas, then converting that to a PNG
+  // format data URL. By drawing it on an offscreen canvas and then
+  // drawing that to the screen, we can change its size and/or apply
+  // other changes before drawing it.
+
+  function takepicture() {
+    const context = canvas.getContext("2d");
+    if (width && height) {
+      const x = width / 2 - 100;
+        const y = height / 2 - 75;
+      canvas.width = 200;// width;
+      canvas.height = 150;// height;
+      context.drawImage(video, 0, 0, width, height);
+
+      const data = canvas.toDataURL("image/jpeg");
+      photo.setAttribute("src", data);
+    } else {
+      clearphoto();
+    }
+  }
+
+  // Set up our event listener to run the startup process
+  // once loading is complete.
+  window.addEventListener("load", startup, false);
+
+  document.getElementById("photo").onload = function(){
+    let img = document.getElementById("photo");
+    document.getElementById("info").innerText = "Image Width: " + img.naturalWidth +"\nImage Height: " + img.naturalHeight;
+    }
+
+
+
+
+})();
+
+
 
     </script>
 
@@ -461,7 +602,6 @@
 
     <script>
         $(document).ready(function() {
-            startWebcam();
             $('#searchForm').on('submit', function(e) {
                 e.preventDefault();
                 let queryName = $('#searchName').val();
@@ -545,19 +685,7 @@
 
                 beforeSubmit: function(arr, $form, options) {
 
-                    //check if pass is already issued
-                    //if pass is already issued, show alert and return false
-
-                    // if(pass_issued){
-                    //     alert('Pass already issued for this person' + pass_issued.id);
-                    //     return false;
-                    // }
-
-                    // The array of form data takes the following form:
-                    // [ { name: 'username', value: 'jresig' }, { name: 'password', value: 'secret' } ]
-
-                    // return false to cancel submit
-                    //alert( JSON.stringify( arr));
+        
                     $('#myerror').empty()
                     let valid = true;
 

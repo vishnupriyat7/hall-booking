@@ -151,7 +151,7 @@
 
                                         </i>
                                         <p>
-                                            {{ trans('cruds.recommendingOfficeCategory.title') }}
+                                        Recommending Offices
                                         </p>
                                     </a>
                                 </li>
@@ -163,7 +163,7 @@
 
                                         </i>
                                         <p>
-                                            {{ trans('cruds.visitingOfficeCategory.title') }}
+                                            Visiting Offices
                                         </p>
                                     </a>
                                 </li>

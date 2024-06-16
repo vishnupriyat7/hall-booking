@@ -24,7 +24,6 @@
     <!-- <link href="{{ asset('css/nice-select2.css') }}" rel="stylesheet" /> -->
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet" />
     @yield('styles')
-    @vite(['resources/js/app.js','resources/css/app.css'])
 
 </head>
 
@@ -91,7 +90,6 @@
             {{ csrf_field() }}
         </form>
     </div>
-    @vite('resources/js/app.js')
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <!-- <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script> -->

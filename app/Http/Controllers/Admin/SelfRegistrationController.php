@@ -21,6 +21,7 @@ use App\Http\Requests\UpdateSelfRegistrationRequest;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use App\Http\Requests\MassDestroySelfRegistrationRequest;
 use App\Models\RecommendingOfficeCategory;
+use Illuminate\Support\Facades\Storage;
 
 class SelfRegistrationController extends Controller
 {
@@ -243,10 +244,30 @@ class SelfRegistrationController extends Controller
         $person->district = $request->district;
         $person->post_office = $request->post_office;
         $person->save();
+       
 
-        // if ($request->input('photo', false)) {
-        //     $person->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
-        // }
+        if ($request->input('photo', false)) {
+
+                /////////photo///////////
+            $img = $request->photo;
+            $folderPath = "photos/";
+            $image_parts = explode(";base64,", $img);
+        // \Log::info($image_parts);
+            $image_type_aux = explode("image/", $image_parts[0]);
+        //  $image_type = $image_type_aux[1];
+            $image_base64 = base64_decode($image_parts[1]);
+            $fileName =  $person->id .  '_' . Carbon::today()->format('Y-m-d') . '.png';
+            $file = $folderPath . $fileName;
+        
+            ////////////
+            
+
+            if(!Storage::disk('public')->put($file, $image_base64)) {
+                return response()->json( [ 'errors' => ['photo' => 'Error saving photo'] ], 401 );
+            }
+            $person->addMedia(storage_path('app/public/photos/' . $fileName))->toMediaCollection('photo');
+         //   $person->addMedia(storage_path('app/photos/' . $fileName))->toMediaCollection('photo');
+        }
 
         // if ($media = $request->input('ck-media', false)) {
         //     Media::whereIn('id', $media)->update(['model_id' => $person->id]);
@@ -260,6 +281,8 @@ class SelfRegistrationController extends Controller
         $visitorPass = null;
         \DB::transaction( function() use ($request, $person, $visitingOffice, $recommendingOffice, &$visitorPass)
         {
+
+            
 
             if($request->passid) {
                 $visitorPass = VisitorPass::find($request->passid);

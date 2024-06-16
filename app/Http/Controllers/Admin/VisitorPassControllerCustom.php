@@ -21,31 +21,6 @@ class VisitorPassControllerCustom extends Controller
         $id_types = IdType::pluck('name', 'id')->prepend('RECOMMENDED BY', '-1')
             ->prepend(trans('global.pleaseSelect'), '');
 
-        // $visiting_office_categories = [
-        //     'Legislature Secretary' => 'Legislature Secretary',
-        //     'MLA' => 'MLA',
-        //     'Minister' => 'Minister',
-        //     'Speaker' => 'Speaker',
-        //     'Deputy Speaker' => 'Deputy Speaker',
-        //     'Chief Minister' => 'Chief Minister',
-        //     'Leader of Opposition' => 'Leader of Opposition',
-        //     'Legislative Assembly' => 'Legislative Assembly',
-        //     'Secretariat' => 'Secretariat',
-        //     'Other' => 'Other',
-        // ];
-        // $visiting_office_categories = collect($visiting_office_categories)->prepend(trans('global.pleaseSelect'), '');
-
-        // $recommending_office_categories = [
-        //     'Legislature Secretary' => 'Legislature Secretary',
-        //     'MLA' => 'MLA',
-        //     'Minister' => 'Minister',
-        //     'Speaker' => 'Speaker',
-        //     'Deputy Speaker' => 'Deputy Speaker',
-        //     'Chief Minister' => 'Chief Minister',
-        //     'Leader of Opposition' => 'Leader of Opposition',
-        //     'Other' => 'Other',
-        // ];
-        // $recommending_office_categories = collect($recommending_office_categories)->prepend(trans('global.pleaseSelect'), '');
         $visiting_office_categories = VisitingOfficeCategory::all()->pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
         $recommending_office_categories = RecommendingOfficeCategory::all()->pluck('title', 'id')->prepend( trans('global.pleaseSelect'), '');
         $mlas = Member::where('status', 'mla')->get();

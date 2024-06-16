@@ -94,7 +94,8 @@ class PersonController extends Controller
                     return sprintf(
                         '<a href="%s" target="_blank"><img src="%s" width="50px" height="50px"></a>',
                         $photo->url,
-                        $photo->thumbnail
+                       // $photo->thumbnail
+                        $photo->url
                     );
                 }
 
