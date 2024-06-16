@@ -73,107 +73,124 @@ class SelfRegistrationController extends Controller
 
         //make sure if id type is recommended by, recommender is also provided
         $recommendingOfficeCat = null;
+        $recommendingOffice = null;
         if($request->id_type_id == -1) {
 
             if(!$request->recommending_office_category_id) {
                 return response()->json( [ 'errors' => ['recommending_office_category' => 'Recommending office category is required for this id type'] ], 401 );
             }
-            if(!$request->recommending_office && !$request->recommending_office_input) {
-                return response()->json( [ 'errors' => ['recommending_office' => 'Recommending office is required for this id type'] ], 401 );
-            }
             $recommendingOfficeCat = RecommendingOfficeCategory::find($request->recommending_office_category_id);
 
-            if( $recommendingOfficeCat->title == 'MLA' || $recommendingOfficeCat->title == 'Minister' ) {
-                if(!$request->recommending_office || 'Select' == $request->recommending_office) {
+            if( $recommendingOfficeCat->title == 'MLA' ) {
+                if(!$request->recommending_office_mla || 'Select' == $request->recommending_office_mla) {
                     return response()->json( [ 'errors' => ['recommending_office' => 'Recommending office is required'] ], 401 );
                 }
+                $recommendingOffice = $request->recommending_office_mla;
+            } else if( $recommendingOfficeCat->title == 'Minister' ) {
+                if(!$request->recommending_office_minister || 'Select' == $request->recommending_office_minister) {
+                    return response()->json( [ 'errors' => ['recommending_office' => 'Recommending office is required'] ], 401 );
+                }
+                $recommendingOffice = $request->recommending_office_minister;
+            }
+            else{
+               if(!$request->recommending_office_input) {
+                    return response()->json( [ 'errors' => ['recommending_office' => 'Recommending office is required for this id type'] ], 401 );
+                }
+                $recommendingOffice = $request->recommending_office_input;
             }
         }
 
-        if(!$request->visiting_office && !$request->visiting_office_input) {
-            return response()->json( [ 'errors' => ['visiting_office' => 'Visiting office is required for this id type'] ], 401 );
+        if(!$request->visiting_office_category_id ) {
+            return response()->json( [ 'errors' => ['visiting_office' => 'Visiting office Category is required'] ], 401 );
         }
         $visitingOfficeCat = VisitingOfficeCategory::find($request->visiting_office_category_id);
-
-        if( $visitingOfficeCat->title == 'MLA' || $visitingOfficeCat->title == 'Minister' ) {
-            if(!$request->visiting_office || 'Select' == $request->visiting_office) {
+        $visitingOffice = null;
+        if( $visitingOfficeCat->title == 'MLA'  ) {
+            if(!$request->visiting_office_mla || 'Select' == $request->visiting_office_mla) {
                 return response()->json( [ 'errors' => ['visiting_office' => 'Visiting office is required'] ], 401 );
             }
-        }
-        $visiting_office = $request->visiting_office;
-        $recommending_office = $request->recommending_office;
-        if(in_array($visitingOfficeCat->title, ['Legislative Assembly', 'Secretariat', 'Other','Section'])) {
-            $visiting_office = $request->visiting_office_input;
+            $visitingOffice = $request->visiting_office_mla;
+        } else if( $visitingOfficeCat->title == 'Minister' ) {
+            if(!$request->visiting_office_minister || 'Select' == $request->visiting_office_minister) {
+                return response()->json( [ 'errors' => ['visiting_office' => 'Visiting office is required'] ], 401 );
+            }
+            $visitingOffice = $request->visiting_office_minister;
         }
         else {
-            $visiting_office = $request->visiting_office;
+            if(!$request->visiting_office_input) {
+                return response()->json( [ 'errors' => ['visiting_office' => 'Visiting office is required'] ], 401 );
+            }
+            $visitingOffice = $request->visiting_office_input;
         }
-        if($recommendingOfficeCat){
-            if(in_array($recommendingOfficeCat->title, ['Legislative Assembly', 'Secretariat', 'Other','Section'])) {
-                $recommending_office = $request->recommending_office_input;
-            }
-            else {
-                $recommending_office = $request->recommending_office;
-            }
 
-        }
+
 
         //create person
         if(!$person) {
             $person = new Person();
-            $person->name = $request->name;
-            $person->gender = $request->gender;
-            $person->age = $request->age;
-            $person->mobile = $request->mobile;
-            $person->id_type_id = $request->id_type_id == -1 || $request->id_type_id == '' ? null : $request->id_type_id;
-            $person->id_detail = $request->id_detail;
-            $person->address = $request->address;
-            $person->country = $request->country;
-            $person->state = $request->state;
-            $person->pincode = $request->pincode;
-            $person->district = $request->district;
-            $person->post_office = $request->post_office;
-            $person->save();
         }
 
+        $person->name = $request->name;
+        $person->gender = $request->gender;
+        $person->age = $request->age;
+        $person->mobile = $request->mobile;
+        $person->id_type_id = $request->id_type_id == -1 || $request->id_type_id == '' ? null : $request->id_type_id;
+        $person->id_detail = $request->id_detail;
+        $person->address = $request->address;
+        $person->country = $request->country;
+        $person->state = $request->state;
+        $person->pincode = $request->pincode;
+        $person->district = $request->district;
+        $person->post_office = $request->post_office;
+        $person->save();
 
-        if ($request->input('photo', false)) {
-            $person->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
-        }
+        // if ($request->input('photo', false)) {
+        //     $person->addMedia(storage_path('tmp/uploads/' . basename($request->input('photo'))))->toMediaCollection('photo');
+        // }
 
-        if ($media = $request->input('ck-media', false)) {
-            Media::whereIn('id', $media)->update(['model_id' => $person->id]);
-        }
+        // if ($media = $request->input('ck-media', false)) {
+        //     Media::whereIn('id', $media)->update(['model_id' => $person->id]);
+        // }
 
         //now create a pass
 
         //use transaction here to make sure number is unique
 
 
-
-
-        //\DB::beginTransaction( function() use ($request, $person)
+        $visitorPass = null;
+        \DB::transaction( function() use ($request, $person, $visitingOffice, $recommendingOffice, &$visitorPass)
         {
 
-            $visitorPass = new VisitorPass();
+            if($request->passid) {
+                $visitorPass = VisitorPass::find($request->passid);
+
+                if(!$visitorPass) {
+                    return response()->json( [ 'errors' => ['pass_id' => 'Pass not found'] ], 404);
+                }
+            }
+            else {
+                $visitorPass = new VisitorPass();
+                $lastNumberOfThisYear = VisitorPass::whereYear('created_at', Carbon::now()->year)->orderBy('id', 'desc')->first();
+                $lastNumber = $lastNumberOfThisYear ? $lastNumberOfThisYear->number : 0;
+                $visitorPass->number = $lastNumber + 1;
+            }
+
+           // $visitorPass = new VisitorPass();
             $visitorPass->person_id = $person->id;
             $visitorPass->purpose = $request->purpose;
             $visitorPass->visiting_office_category_id = $request->visiting_office_category_id;
-            $visitorPass->visiting_office = $visiting_office;
+            $visitorPass->visiting_office = $visitingOffice;
             $visitorPass->recommending_office_category_id = $request->recommending_office_category_id;
-            $visitorPass->recommending_office = $recommending_office;
+            $visitorPass->recommending_office = $recommendingOffice;
             $visitorPass->pass_valid_from = Carbon::now()->format('Y-m-d H:i:s');
             //$visitorPass->pass_valid_upto = $request->pass_valid_upto;
             $visitorPass->issued_date = Carbon::now()->format('Y-m-d');
-            $lastNumberOfThisYear = VisitorPass::whereYear('created_at', Carbon::now()->year)->orderBy('id', 'desc')->first();
-            $lastNumber = $lastNumberOfThisYear ? $lastNumberOfThisYear->number : 0;
-            $visitorPass->number = $lastNumber + 1;
+
             $visitorPass->date_of_visit = Carbon::createFromFormat( 'd.m.Y', $request->date_of_visit)->format( 'Y-m-d' );
 
             $visitorPass->save();
-
-        }
-        //);
+           // return response()->json( [ 'success' => 'Pass created successfully', 'pass'=> $visitorPass ] );
+        });
 
 
         return response()->json( [ 'success' => 'Pass created successfully', 'pass'=>$visitorPass ] );

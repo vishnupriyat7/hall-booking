@@ -178,8 +178,8 @@ return [
         ],
     ],
     'visitingOfficeCategory' => [
-        'title'          => 'Visiting Office Category',
-        'title_singular' => 'Visiting Office Category',
+        'title'          => 'Visiting Offices',
+        'title_singular' => 'Visiting Offices',
         'fields'         => [
             'id'                => 'ID',
             'id_helper'         => ' ',
@@ -194,8 +194,8 @@ return [
         ],
     ],
     'recommendingOfficeCategory' => [
-        'title'          => 'Recommending Office Category',
-        'title_singular' => 'Recommending Office Category',
+        'title'          => 'Recommending Offices',
+        'title_singular' => 'Recommending Offices',
         'fields'         => [
             'id'                => 'ID',
             'id_helper'         => ' ',

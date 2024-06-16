@@ -41,12 +41,20 @@
                     </tr>
                     <tr>
                         <th>
+                            Date of Birth
+                        </th>
+                        <td>
+                            {{ $selfRegistration->dob }}
+                        </td>
+                    </tr>
+                    <!-- <tr>
+                        <th>
                             {{ trans('cruds.selfRegistration.fields.age') }}
                         </th>
                         <td>
                             {{ $selfRegistration->age }}
                         </td>
-                    </tr>
+                    </tr> -->
                     <tr>
                         <th>
                             {{ trans('cruds.selfRegistration.fields.mobile') }}
@@ -97,58 +105,6 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.selfRegistration.fields.pincode') }}
-                        </th>
-                        <td>
-                            {{ $selfRegistration->pincode }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.selfRegistration.fields.photo') }}
-                        </th>
-                        <td>
-                            @if($selfRegistration->photo)
-                                <a href="{{ $selfRegistration->photo->getUrl() }}" target="_blank" style="display: inline-block">
-                                    <img src="{{ $selfRegistration->photo->getUrl('thumb') }}">
-                                </a>
-                            @endif
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.selfRegistration.fields.purpose') }}
-                        </th>
-                        <td>
-                            {{ App\Models\SelfRegistration::PURPOSE_SELECT[$selfRegistration->purpose] ?? '' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.selfRegistration.fields.date_of_visit') }}
-                        </th>
-                        <td>
-                            {{ $selfRegistration->date_of_visit }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.selfRegistration.fields.visiting_office_category') }}
-                        </th>
-                        <td>
-                            {{ $selfRegistration->visiting_office_category->title ?? '' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.selfRegistration.fields.visiting_office') }}
-                        </th>
-                        <td>
-                            {{ $selfRegistration->visiting_office->name ?? '' }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
                             {{ trans('cruds.selfRegistration.fields.district') }}
                         </th>
                         <td>
@@ -157,19 +113,20 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.selfRegistration.fields.post_office') }}
+                            {{ trans('cruds.selfRegistration.fields.pincode') }}
                         </th>
                         <td>
-                            {{ $selfRegistration->post_office }}
+                            {{ $selfRegistration->pincode }}
                         </td>
                     </tr>
+
                 </tbody>
             </table>
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <a class="btn btn-default" href="{{ route('admin.self-registrations.index') }}">
                     {{ trans('global.back_to_list') }}
                 </a>
-            </div>
+            </div> -->
         </div>
     </div>
 </div>

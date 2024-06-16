@@ -59,7 +59,7 @@
 
 
     </div>
-</div>
+
 
 
     <div class="card" id="app">
@@ -78,6 +78,7 @@
                         @endif
                         <span class="help-block">{{ trans('cruds.selfRegistration.fields.name_helper') }}</span>
                     </div>
+                    <input type="hidden" name="personid" id="personid" >
 
                     <div class="form-group col">
                         <label class="required">{{ trans('cruds.selfRegistration.fields.gender') }}</label>
@@ -103,6 +104,10 @@
                         <span class="help-block">{{ trans('cruds.selfRegistration.fields.age_helper') }}</span>
                     </div>
 
+                </div>
+
+                <div class="row">
+
                     <div class="form-group col">
                         <label class="required" for="mobile">{{ trans('cruds.selfRegistration.fields.mobile') }}</label>
                         <input autocomplete="new-password" class="form-control {{ $errors->has('mobile') ? 'is-invalid' : '' }}" type="text" name="mobile" id="mobile" value="{{ old('mobile', '') }}" required>
@@ -111,12 +116,6 @@
                         @endif
                         <span class="help-block">{{ trans('cruds.selfRegistration.fields.mobile_helper') }}</span>
                     </div>
-
-                </div>
-
-                <div class="row">
-
-
                     <div class="form-group col ">
                         <label for="id_type_id">{{ trans('cruds.selfRegistration.fields.id_type') }}</label>
                         <select required class="form-control {{ $errors->has('id_type') ? 'is-invalid' : '' }}" name="id_type_id" id="id_type_id">
@@ -137,10 +136,12 @@
                         @endif
                         <span class="help-block">{{ trans('cruds.selfRegistration.fields.id_detail_helper') }}</span>
                     </div>
+                </div>
 
+                <div class="row">
 
                     <div class="form-group col">
-                        <label for="recommending_office_category_id">Recommendation</label>
+                        <label for="recommending_office_category_id">{{ trans('cruds.selfRegistration.fields.recommending_office_category') }}</label>
                         <select class="form-control {{ $errors->has('recommending_office_category') ? 'is-invalid' : '' }}" name="recommending_office_category_id" id="recommending_office_category_id">
                             @foreach($recommending_office_categories as $id => $title)
                             <option value="{{ $id }}" {{ old('recommending_office_category_id') == $id ? 'selected' : '' }}>{{ $title }}</option>
@@ -153,21 +154,8 @@
                     </div>
                     <div class="form-group col">
                         <label for="recommending_office">{{ trans('cruds.selfRegistration.fields.recommending_office') }}</label>
-
-                        <select  data-live-search="true" class="form-control selectpicker {{ $errors->has('recommending_office_mla') ? 'is-invalid' : '' }}" name="recommending_office_mla" id="recommending_office_mla">
-                            <option value="Select">Select</option>
-                            @foreach($mlas as $id => $entry)
-                            <option value="{{ $entry->name }}">{{ $entry->name }}</option>
-                            @endforeach
-                            </select>
-                        <select  data-live-search="true" class="form-control selectpicker {{ $errors->has('recommending_office_minister') ? 'is-invalid' : '' }}" name="recommending_office_minister" id="recommending_office_minister">
-                            <option value="Select">Select</option>
-                            @foreach($ministers as $id => $entry)
-                            <option value="{{ $entry->name }}">{{ $entry->name }}</option>
-                            @endforeach
-                        </select>
-
-                        <input class="form-control {{ $errors->has('recommending_office') ? 'is-invalid' : '' }}" name="recommending_office_input" id="recommending_office_input">
+                        <select data-live-search="true" class="form-control selectpicker {{ $errors->has('recommending_office') ? 'is-invalid' : '' }}" name="recommending_office" id="recommending_office"> </select>
+                        <input class="form-control {{ $errors->has('recommending_office') ? 'is-invalid' : '' }}" name="recommending_office_input" id="recommending_office_input" hidden>
 
                         @if($errors->has('recommending_office'))
                         <span class="text-danger">{{ $errors->first('recommending_office') }}</span>
@@ -313,19 +301,11 @@
                     </div>
                     <div class="form-group col">
                         <label class="required" for="visiting_office">{{ trans('cruds.selfRegistration.fields.visiting_office') }}</label>
-                        <select  data-live-search="true" class="form-control selectpicker {{ $errors->has('visiting_office_mla') ? 'is-invalid' : '' }}" name="visiting_office_mla" id="visiting_office_mla">
-                            <option value="Select">Select</option>
-                            @foreach($mlas as $id => $entry)
-                            <option value="{{ $entry->name }}">{{ $entry->name }}</option>
-                            @endforeach
-                            </select>
-                        <select  data-live-search="true" class="form-control selectpicker {{ $errors->has('visiting_office_minister') ? 'is-invalid' : '' }}" name="visiting_office_minister" id="visiting_office_minister">
-                            <option value="Select">Select</option>
-                            @foreach($ministers as $id => $entry)
-                            <option value="{{ $entry->name }}">{{ $entry->name }}</option>
-                            @endforeach
-                             </select>
-                        <input class="form-control {{ $errors->has('visiting_office') ? 'is-invalid' : '' }}" name="visiting_office_input" id="visiting_office_input">
+                        <select  data-width="auto" class="form-control  {{ $errors->has('visiting_office') ? 'is-invalid' : '' }}" name="visiting_office_mla" id="visiting_office_mla">
+
+                    </select>
+                        <select  data-width="auto" class="form-control  {{ $errors->has('visiting_office') ? 'is-invalid' : '' }}" name="visiting_office_minister" id="visiting_office_minister"> </select>
+                        <input class="form-control {{ $errors->has('visiting_office') ? 'is-invalid' : '' }}" name="visiting_office_input" id="visiting_office_input" hidden>
 
                         @if($errors->has('visiting_office'))
                         <span class="text-danger">{{ $errors->first('visiting_office') }}</span>
@@ -355,30 +335,23 @@
                     New Registration
                     </a>
                 </div>
-                <input type="hidden" name="personid" id="personid" >
-                <input type="hidden" name="passid" id="passid" >
-
-
             </form>
             <div class="alert alert-danger" id="alert" style="display:none;">
                 <ul class="list-unstyled" id="myerror">
                 </ul>
             </div>
         </div>
-
-        <div class="row d-flex justify-content-center">
-
-            <button id="startButton">Start Webcam</button>
-            <button id="captureButton">Capture Photo</button>
-        </div>
-
-
     </div>
 
 
+    <div class="row d-flex justify-content-end">
 
+        <button id="startButton">Start Webcam</button>
+        <button id="captureButton">Capture Photo</button>
 
+</div>
 
+</div>
 
     @endsection
 
@@ -549,10 +522,14 @@
                     //check if pass is already issued
                     //if pass is already issued, show alert and return false
 
-                    // if(pass_issued){
-                    //     alert('Pass already issued for this person' + pass_issued.id);
-                    //     return false;
-                    // }
+                    if(pass_issued){
+                        alert('Pass already issued for this person' + pass_issued.id);
+                        return false;
+                    }
+
+
+
+
 
                     // The array of form data takes the following form:
                     // [ { name: 'username', value: 'jresig' }, { name: 'password', value: 'secret' } ]
@@ -601,7 +578,6 @@
                         // var i = window.location.href.lastIndexOf("/");
                         // window.location = window.location.href.substr(0, i)
                         pass_issued = jsonResponse.pass
-                        $('#passid').val(pass_issued.id);
                     }
                 }
             });
@@ -622,9 +598,7 @@
         window.onload = function() {
             const selectCountry = document.getElementById("country");
             const visiting_office_category = document.getElementById("visiting_office_category_id");
-            const visiting_office_minister = document.getElementById("visiting_office_minister");
-            const visiting_office_mla = document.getElementById("visiting_office_mla");
-
+            const visiting_office = document.getElementById("visiting_office");
             const visiting_office_input = document.getElementById("visiting_office_input");
 
             const recommending_office_category = document.getElementById("recommending_office_category_id");
@@ -638,16 +612,8 @@
             const pinCtrl = document.getElementById("pincode");
             const idType = document.getElementById("id_type_id");
 
-            const visitingOfficeSelectMLA = $('#visiting_office_mla');
-            const visitingOfficeSelectMinister = $('#visiting_office_minister');
-            const recommendingOfficeSelectMLA = $('#recommending_office_mla');
-            const recommendingOfficeSelectMinister = $('#recommending_office_minister');
 
 
-            visitingOfficeSelectMLA.selectpicker('hide');
-            visitingOfficeSelectMinister.selectpicker('hide');
-            recommendingOfficeSelectMLA.selectpicker('hide');
-            recommendingOfficeSelectMinister.selectpicker('hide');
 
             //Create New Option Tag With Value
             function createOption(displayMember, valueMember) {
@@ -684,25 +650,91 @@
             visiting_office_category.addEventListener("input", function(e) {
                // let office = e.target.value
                let office = visiting_office_category.options[visiting_office_category.selectedIndex].innerHTML;
+               // visiting_office.innerHTML = "";
+                //$("#visiting_office").selectpicker('refresh');
+                //clear all options
+                //remove 'selectpicker' class from #visiting_office'
+               // $('#visiting_office').selectpicker('destroy');
+                var visitingOfficeSelect = $('#visiting_office');
+                visiting_office.innerHTML = "";
+                //visitingOfficeSelect.empty();
+                // visitingOfficeSelect.selectpicker();
+                // visitingOfficeSelect.selectpicker('refresh');
+                var itemSelectorOption = $('#visiting_office option:selected');
+                itemSelectorOption.remove();
+               // $("#visiting_office").selectpicker('hide');
 
-                visitingOfficeSelectMLA.selectpicker('hide');
-                visitingOfficeSelectMinister.selectpicker('hide');
+               visitingOfficeSelect.selectpicker('val', '');
+               visitingOfficeSelect.find('li').remove();
+
+    // var itemSelectorOption = $('#item-selector option:selected');
+    // groupFilter.selectpicker('val', itemSelectorOption.next().val());
+// itemSelectorOption.remove();
+               // $("#visiting_office").empty();
+
+               visitingOfficeSelect.find('option').remove();
+
                 visiting_office_input.style.display = 'none';
+               // visiting_office.removeAttribute('required');
                 visiting_office_input.removeAttribute('required');
                 if ('MLA' == office) {
-                    visitingOfficeSelectMLA.selectpicker('show');
+                    //visiting_office.innerHTML = "<option>Select</option>";
+                    // $("#visiting_office").append('<option value="-1" selected="">Select</option>');
+                    //visiting_office.setAttribute("required", "");
+                    visitingOfficeSelect.find('option').remove();
+                    mlas.forEach(({
+                        id,
+                        name
+                    }) => {
+                       // visiting_office.append(createOption(name, name));
+                       $("#visiting_office").append('<option >'+name+'</option>');
+                    });
+
+                    $("#visiting_office").selectpicker();
+                    $("#visiting_office").selectpicker('show');
+                    $("#visiting_office").selectpicker('refresh');
                 } else if ('Minister' == office) {
-                    visitingOfficeSelectMinister.selectpicker('show');
-                } else{
+                    //visiting_office.innerHTML = "<option>Select</option>";
+                   // visiting_office.setAttribute("required", "");
+                   visitingOfficeSelect.find('option').remove();
+
+                    ministers.forEach(({
+                        id,
+                        name
+                    }) => {
+                       // visiting_office.append(createOption(name, name));
+                          $("#visiting_office").append('<option >'+name+'</option>');
+                    });
+                    $("#visiting_office").selectpicker();
+                    $("#visiting_office").selectpicker('show');
+                    $("#visiting_office").selectpicker('refresh');
+                } else if (['Legislature Secretary', 'Speaker', 'Deputy Speaker', 'Chief Minister', 'Leader of Opposition'].indexOf(office) !== -1) {
+
+                    let officename = 'O/o ' + office;
+
+                    visitingOfficeSelect.find('option').remove();
+
+                    //visiting_office.setAttribute("required", "");
+                    //visiting_office.append(createOption(officename, officename));
+                    $("#visiting_office").append('<option >'+officename+'</option>');
+                    $("#visiting_office").selectpicker();
+                    $("#visiting_office").selectpicker('show');
+                    $("#visiting_office").selectpicker('refresh');
+
+                } else if (e.target.value != 0){
+                   visitingOfficeSelect.find('option').remove();
+                   $("#visiting_office").selectpicker();
+
+                   $("#visiting_office").selectpicker('hide');
+                   $("#visiting_office").selectpicker('refresh');
+
                     visiting_office_input.style.display = 'block';
                     visiting_office_input.hidden = false;
                     visiting_office_input.setAttribute("required", "");
-                    visiting_office_input.value = "";
-                    if (['Legislature Secretary', 'Speaker', 'Deputy Speaker', 'Chief Minister', 'Leader of Opposition'].indexOf(office) !== -1) {
-                        let officename = 'O/o ' + office;
-                        visiting_office_input.value = officename;
-                    }
+                    // alert("Please select a valid office category");
+                    // visiting_office.disabled = true;
                 }
+               // $('#visiting_office').selectpicker('val', '');
 
             });
 
@@ -710,24 +742,50 @@
             recommending_office_category.addEventListener("input", function(e) {
                // let office = e.target.value
                 let office = recommending_office_category.options[recommending_office_category.selectedIndex].innerHTML;
-                recommendingOfficeSelectMLA.selectpicker('hide');
-                recommendingOfficeSelectMinister.selectpicker('hide');
+                recommending_office.innerHTML = "";
+                $("#recommending_office").selectpicker('hide');
                 recommending_office_input.style.display = 'none';
                 recommending_office_input.removeAttribute('required');
                 if ('MLA' == office) {
-                    recommendingOfficeSelectMLA.selectpicker('show');
+                    //show recommending_office
+                    $("#recommending_office").selectpicker('show');
+                    //make recommending_office required
+                    recommending_office.setAttribute("required", "");
+                    recommending_office.innerHTML = "<option>Select</option>";
+                    mlas.forEach(({
+                        id,
+                        name
+                    }) => {
+                        recommending_office.append(createOption(name, name));
+                    });
                 } else if ('Minister' == office) {
-                    recommendingOfficeSelectMinister.selectpicker('show');
-                } else{
+                    $("#recommending_office").selectpicker('show');
+                    recommending_office.setAttribute("required", "");
+                    recommending_office.innerHTML = "<option>Select</option>";
+                    ministers.forEach(({
+                        id,
+                        name
+                    }) => {
+                        recommending_office.append(createOption(name, name));
+                    });
+                } else if (['Legislature Secretary', 'Speaker', 'Deputy Speaker', 'Chief Minister', 'Leader of Opposition'].indexOf(office) !== -1) {
+                    let officename = 'O/o ' + office;
+                    $("#recommending_office").selectpicker('show');
+                    recommending_office.setAttribute("required", "");
+                    recommending_office.append(createOption(officename, officename));
+                } else if (e.target.value != 0){ //ignore 'please select'
+                    $("#recommending_office").selectpicker('hide');
                     recommending_office_input.style.display = 'block';
                     recommending_office_input.hidden = false;
                     recommending_office_input.setAttribute("required", "");
-                    recommending_office_input.value = "";
-                    if (['Legislature Secretary', 'Speaker', 'Deputy Speaker', 'Chief Minister', 'Leader of Opposition'].indexOf(office) !== -1) {
-                        let officename = 'O/o ' + office;
-                        recommending_office_input.value = officename;
-                    }
+                    // alert("Please select a valid office category");
+
+                    // visiting_office.disabled = true;
                 }
+                // visiting_office_instance.update();
+                $("#recommending_office").selectpicker('refresh');
+                //$('#recommending_office').selectpicker('render');
+
             });
 
 

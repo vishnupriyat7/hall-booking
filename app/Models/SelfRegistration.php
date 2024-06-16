@@ -61,6 +61,9 @@ class SelfRegistration extends Model implements HasMedia
         'created_at',
         'updated_at',
         'deleted_at',
+        'dob',
+
+        'email',
     ];
 
     protected function serializeDate(DateTimeInterface $date)
