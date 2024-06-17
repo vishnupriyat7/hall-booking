@@ -251,11 +251,13 @@ class SelfRegistrationController extends Controller
 
         if ($request->input('photo', false)) {
 
-                /////////photo///////////
+           /////////photo///////////
+           //$person->addMediaFromRequest('photo')->toMediaCollection('photo');
+
+           
             $img = $request->photo;
-            $folderPath = "photos/";
+            $folderPath = "photos_tmp/";
             $image_parts = explode(";base64,", $img);
-        // \Log::info($image_parts);
             $image_type_aux = explode("image/", $image_parts[0]);
         //  $image_type = $image_type_aux[1];
             $image_base64 = base64_decode($image_parts[1]);
@@ -268,8 +270,10 @@ class SelfRegistrationController extends Controller
             if(!Storage::disk('public')->put($file, $image_base64)) {
                 return response()->json( [ 'errors' => ['photo' => 'Error saving photo'] ], 401 );
             }
-            $person->addMedia(storage_path('app/public/photos/' . $fileName))->toMediaCollection('photo');
+
+            $person->addMedia(storage_path('app/public/photos_tmp/' . $fileName))->toMediaCollection('photo');
          //   $person->addMedia(storage_path('app/photos/' . $fileName))->toMediaCollection('photo');
+         
         }
 
         // if ($media = $request->input('ck-media', false)) {

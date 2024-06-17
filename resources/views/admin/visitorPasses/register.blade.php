@@ -34,6 +34,10 @@
     }
 
 
+    .modal-dialog {
+        width: auto !important;
+    max-width: 850px; 
+    }
 
 
 </style>
@@ -443,7 +447,7 @@
         // width to the value defined here, but the height will be
         // calculated based on the aspect ratio of the input stream.
 
-        const width = 320; // We will scale the photo width to this
+        const width = 600; // We will scale the photo width to this
         let height = 0; // This will be computed based on the input stream
 
         // |streaming| indicates whether or not we're currently streaming
@@ -515,8 +519,8 @@
             startbutton.addEventListener(
                 "click",
                 (ev) => {
-                   // takepicture();
-                    takePhotoUsingImageCaptureApi();
+                    takepicture();
+                   // takePhotoUsingImageCaptureApi();
                     ev.preventDefault();
                 },
                 false,
@@ -749,9 +753,9 @@
             let address = $(this).data('address');
             let pincode = $(this).data('pincode')?.toString();
 
-            let person_visitor_passes_count = $(this).data('person_visitor_passes_count');
-            let person_visitor_pass_latest_date = $(this).data('person_visitor_pass_latest_date');
-            let person_visitor_pass_latest_id = $(this).data('person_visitor_pass_latest_id');
+            let person_visitor_passes_count = $(this).data('person_visitor_passes_count') || 0;
+            let person_visitor_pass_latest_date = $(this).data('person_visitor_pass_latest_date') || null;
+            let person_visitor_pass_latest_id = $(this).data('person_visitor_pass_latest_id') || null;
 
             if(-1 !== personid){
                 $('#personid').val(personid);
@@ -772,8 +776,8 @@
 
             //check if pass is issued to this person
             $('#pass_issed_to_this_person').html('');
-
-            if(person_visitor_passes_count){
+          //  alert(person_visitor_passes_count);
+            if(person_visitor_passes_count > 0){
                 //add a button to view pass details
                 let link = "{{ route('admin.visitor-passes.show', ':id') }}";
                 link = link.replace(':id', person_visitor_pass_latest_id);
