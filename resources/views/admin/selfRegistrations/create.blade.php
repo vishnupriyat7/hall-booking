@@ -186,6 +186,27 @@
                 <span class="help-block">{{ trans('cruds.selfRegistration.fields.visiting_office_helper') }}</span>
             </div>
             <div class="form-group">
+                <label for="number">{{ trans('cruds.selfRegistration.fields.number') }}</label>
+                <input class="form-control {{ $errors->has('number') ? 'is-invalid' : '' }}" type="number" name="number" id="number" value="{{ old('number', '') }}" step="1">
+                @if($errors->has('number'))
+                    <span class="text-danger">{{ $errors->first('number') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.selfRegistration.fields.number_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label>{{ trans('cruds.selfRegistration.fields.pass_type') }}</label>
+                <select class="form-control {{ $errors->has('pass_type') ? 'is-invalid' : '' }}" name="pass_type" id="pass_type">
+                    <option value disabled {{ old('pass_type', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
+                    @foreach(App\Models\SelfRegistration::PASS_TYPE_SELECT as $key => $label)
+                        <option value="{{ $key }}" {{ old('pass_type', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('pass_type'))
+                    <span class="text-danger">{{ $errors->first('pass_type') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.selfRegistration.fields.pass_type_helper') }}</span>
+            </div>
+            <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>

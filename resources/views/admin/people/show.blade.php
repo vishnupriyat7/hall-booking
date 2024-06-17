@@ -65,6 +65,14 @@
                     </tr>
                     <tr>
                         <th>
+                            {{ trans('cruds.person.fields.email') }}
+                        </th>
+                        <td>
+                            {{ $person->email }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
                             {{ trans('cruds.person.fields.id_type') }}
                         </th>
                         <td>
@@ -77,14 +85,6 @@
                         </th>
                         <td>
                             {{ $person->id_detail }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.person.fields.recommended_by_detail') }}
-                        </th>
-                        <td>
-                            {{ $person->recommended_by_detail }}
                         </td>
                     </tr>
                     <tr>
@@ -142,7 +142,7 @@
                         <td>
                             @if($person->photo)
                                 <a href="{{ $person->photo->getUrl() }}" target="_blank" style="display: inline-block">
-                                    <img src="{{ $person->photo->getUrl('') }}">
+                                    <img src="{{ $person->photo->getUrl('thumb') }}">
                                 </a>
                             @endif
                         </td>
@@ -158,6 +158,22 @@
     </div>
 </div>
 
-
+<div class="card">
+    <div class="card-header">
+        {{ trans('global.relatedData') }}
+    </div>
+    <ul class="nav nav-tabs" role="tablist" id="relationship-tabs">
+        <li class="nav-item">
+            <a class="nav-link" href="#person_visitor_passes" role="tab" data-toggle="tab">
+                {{ trans('cruds.visitorPass.title') }}
+            </a>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <div class="tab-pane" role="tabpanel" id="person_visitor_passes">
+            @includeIf('admin.people.relationships.personVisitorPasses', ['visitorPasses' => $person->personVisitorPasses])
+        </div>
+    </div>
+</div>
 
 @endsection

@@ -40,13 +40,13 @@
                         {{ trans('cruds.person.fields.mobile') }}
                     </th>
                     <th>
+                        {{ trans('cruds.person.fields.email') }}
+                    </th>
+                    <th>
                         {{ trans('cruds.person.fields.id_type') }}
                     </th>
                     <th>
                         {{ trans('cruds.person.fields.id_detail') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.person.fields.recommended_by_detail') }}
                     </th>
                     <th>
                         {{ trans('cruds.person.fields.address') }}
@@ -131,9 +131,9 @@
 { data: 'dob', name: 'dob' },
 { data: 'age', name: 'age' },
 { data: 'mobile', name: 'mobile' },
+{ data: 'email', name: 'email' },
 { data: 'id_type_name', name: 'id_type.name' },
 { data: 'id_detail', name: 'id_detail' },
-{ data: 'recommended_by_detail', name: 'recommended_by_detail' },
 { data: 'address', name: 'address' },
 { data: 'country', name: 'country' },
 { data: 'state', name: 'state' },

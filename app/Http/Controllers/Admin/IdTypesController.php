@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Controllers\Traits\CsvImportTrait;
 use App\Http\Requests\MassDestroyIdTypeRequest;
 use App\Http\Requests\StoreIdTypeRequest;
 use App\Http\Requests\UpdateIdTypeRequest;
@@ -13,6 +14,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class IdTypesController extends Controller
 {
+    use CsvImportTrait;
+
     public function index()
     {
         abort_if(Gate::denies('id_type_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');

@@ -15,8 +15,8 @@ class CreatePeopleTable extends Migration
             $table->date('dob')->nullable();
             $table->integer('age')->nullable();
             $table->string('mobile')->nullable();
+            $table->string('email')->nullable();
             $table->string('id_detail')->nullable();
-            $table->string('recommended_by_detail')->nullable();
             $table->longText('address')->nullable();
             $table->string('country')->nullable();
             $table->string('state')->nullable();

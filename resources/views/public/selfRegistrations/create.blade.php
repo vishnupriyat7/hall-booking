@@ -7,7 +7,8 @@
 @section('content')
 <div class="card">
     <div class="card-header">
-        Visitor {{ trans('cruds.selfRegistration.title_singular') }}
+        KERALA LEGISLATIVE ASSEMBLY<br>
+        {{ trans('cruds.selfRegistration.title_singular') }}
     </div>
 
     <div class="card-body">

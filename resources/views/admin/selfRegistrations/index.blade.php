@@ -82,6 +82,12 @@
                         {{ trans('cruds.selfRegistration.fields.visiting_office') }}
                     </th>
                     <th>
+                        {{ trans('cruds.selfRegistration.fields.number') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.selfRegistration.fields.pass_type') }}
+                    </th>
+                    <th>
                         &nbsp;
                     </th>
                 </tr>
@@ -157,6 +163,8 @@
 { data: 'date_of_visit', name: 'date_of_visit' },
 { data: 'visiting_office_category_title', name: 'visiting_office_category.title' },
 { data: 'visiting_office', name: 'visiting_office' },
+{ data: 'number', name: 'number' },
+{ data: 'pass_type', name: 'pass_type' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

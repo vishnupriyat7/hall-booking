@@ -119,6 +119,9 @@ class SelfRegistrationController extends Controller
             $table->editColumn('visiting_office', function ($row) {
                 return $row->visiting_office ? $row->visiting_office : '';
             });
+	      $table->editColumn('number', function ($row) {
+                return $row->number ? $row->number : '';
+            });
 
             $table->rawColumns(['actions', 'placeholder', 'id_type', 'photo', 'visiting_office_category']);
 
@@ -244,7 +247,7 @@ class SelfRegistrationController extends Controller
         $person->district = $request->district;
         $person->post_office = $request->post_office;
         $person->save();
-       
+
 
         if ($request->input('photo', false)) {
 
@@ -258,9 +261,9 @@ class SelfRegistrationController extends Controller
             $image_base64 = base64_decode($image_parts[1]);
             $fileName =  $person->id .  '_' . Carbon::today()->format('Y-m-d') . '.png';
             $file = $folderPath . $fileName;
-        
+
             ////////////
-            
+
 
             if(!Storage::disk('public')->put($file, $image_base64)) {
                 return response()->json( [ 'errors' => ['photo' => 'Error saving photo'] ], 401 );
@@ -282,7 +285,7 @@ class SelfRegistrationController extends Controller
         \DB::transaction( function() use ($request, $person, $visitingOffice, $recommendingOffice, &$visitorPass)
         {
 
-            
+
 
             if($request->passid) {
                 $visitorPass = VisitorPass::find($request->passid);
@@ -293,8 +296,10 @@ class SelfRegistrationController extends Controller
             }
             else {
                 $visitorPass = new VisitorPass();
-                $lastNumberOfThisYear = VisitorPass::whereYear('created_at', Carbon::now()->year)->orderBy('id', 'desc')->first();
-                $lastNumber = $lastNumberOfThisYear ? $lastNumberOfThisYear->number : 0;
+                // $lastNumberOfThisYear = VisitorPass::whereYear('created_at', Carbon::now()->year)->orderBy('id', 'desc')->first();
+                //find last number of today
+                $lastNumberOfToday = VisitorPass::whereDate('created_at', Carbon::today())->orderBy('id', 'desc')->first();
+                $lastNumber = $lastNumberOfToday ? $lastNumberOfToday->number : 0;
                 $visitorPass->number = $lastNumber + 1;
             }
 
@@ -308,6 +313,7 @@ class SelfRegistrationController extends Controller
             $visitorPass->pass_valid_from = Carbon::now()->format('Y-m-d H:i:s');
             //$visitorPass->pass_valid_upto = $request->pass_valid_upto;
             $visitorPass->issued_date = Carbon::now()->format('Y-m-d');
+            $visitorPass->
 
             $visitorPass->date_of_visit = Carbon::createFromFormat( 'd.m.Y', $request->date_of_visit)->format( 'Y-m-d' );
 

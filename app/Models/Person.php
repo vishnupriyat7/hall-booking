@@ -39,9 +39,9 @@ class Person extends Model implements HasMedia
         'dob',
         'age',
         'mobile',
+        'email',
         'id_type_id',
         'id_detail',
-        'recommended_by_detail',
         'address',
         'country',
         'state',
@@ -62,6 +62,11 @@ class Person extends Model implements HasMedia
     {
         $this->addMediaConversion('thumb')->fit('crop', 50, 50);
         $this->addMediaConversion('preview')->fit('crop', 120, 120);
+    }
+
+    public function personVisitorPasses()
+    {
+        return $this->hasMany(VisitorPass::class, 'person_id', 'id');
     }
 
     public function getDobAttribute($value)

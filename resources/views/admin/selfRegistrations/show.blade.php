@@ -179,6 +179,22 @@
                             {{ $selfRegistration->visiting_office }}
                         </td>
                     </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.selfRegistration.fields.number') }}
+                        </th>
+                        <td>
+                            {{ $selfRegistration->number }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.selfRegistration.fields.pass_type') }}
+                        </th>
+                        <td>
+                            {{ App\Models\SelfRegistration::PASS_TYPE_SELECT[$selfRegistration->pass_type] ?? '' }}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="form-group">

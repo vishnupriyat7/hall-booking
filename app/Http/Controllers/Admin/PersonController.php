@@ -61,15 +61,15 @@ class PersonController extends Controller
             $table->editColumn('mobile', function ($row) {
                 return $row->mobile ? $row->mobile : '';
             });
+            $table->editColumn('email', function ($row) {
+                return $row->email ? $row->email : '';
+            });
             $table->addColumn('id_type_name', function ($row) {
                 return $row->id_type ? $row->id_type->name : '';
             });
 
             $table->editColumn('id_detail', function ($row) {
                 return $row->id_detail ? $row->id_detail : '';
-            });
-            $table->editColumn('recommended_by_detail', function ($row) {
-                return $row->recommended_by_detail ? $row->recommended_by_detail : '';
             });
             $table->editColumn('address', function ($row) {
                 return $row->address ? $row->address : '';
@@ -167,7 +167,7 @@ class PersonController extends Controller
     {
         abort_if(Gate::denies('person_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $person->load('id_type');
+        $person->load('id_type', 'personVisitorPasses');
 
         return view('admin.people.show', compact('person'));
     }

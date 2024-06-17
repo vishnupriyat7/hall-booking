@@ -56,6 +56,14 @@
                 <span class="help-block">{{ trans('cruds.person.fields.mobile_helper') }}</span>
             </div>
             <div class="form-group">
+                <label for="email">{{ trans('cruds.person.fields.email') }}</label>
+                <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email" id="email" value="{{ old('email', $person->email) }}">
+                @if($errors->has('email'))
+                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.person.fields.email_helper') }}</span>
+            </div>
+            <div class="form-group">
                 <label for="id_type_id">{{ trans('cruds.person.fields.id_type') }}</label>
                 <select class="form-control select2 {{ $errors->has('id_type') ? 'is-invalid' : '' }}" name="id_type_id" id="id_type_id">
                     @foreach($id_types as $id => $entry)
@@ -74,14 +82,6 @@
                     <span class="text-danger">{{ $errors->first('id_detail') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.person.fields.id_detail_helper') }}</span>
-            </div>
-            <div class="form-group">
-                <label for="recommended_by_detail">{{ trans('cruds.person.fields.recommended_by_detail') }}</label>
-                <input class="form-control {{ $errors->has('recommended_by_detail') ? 'is-invalid' : '' }}" type="text" name="recommended_by_detail" id="recommended_by_detail" value="{{ old('recommended_by_detail', $person->recommended_by_detail) }}">
-                @if($errors->has('recommended_by_detail'))
-                    <span class="text-danger">{{ $errors->first('recommended_by_detail') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.person.fields.recommended_by_detail_helper') }}</span>
             </div>
             <div class="form-group">
                 <label for="address">{{ trans('cruds.person.fields.address') }}</label>

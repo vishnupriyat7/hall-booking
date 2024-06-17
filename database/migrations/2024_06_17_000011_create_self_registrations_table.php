@@ -12,18 +12,22 @@ class CreateSelfRegistrationsTable extends Migration
             $table->bigIncrements('id');
             $table->string('name');
             $table->string('gender');
+            $table->date('dob');
             $table->integer('age');
             $table->string('mobile');
-            $table->string('id_detail')->nullable();
-            $table->longText('address')->nullable();
-            $table->string('country')->nullable();
-            $table->string('state')->nullable();
+            $table->string('email')->nullable();
+            $table->string('id_detail');
+            $table->longText('address');
+            $table->string('country');
+            $table->string('state');
+            $table->string('district');
             $table->string('pincode');
+            $table->string('post_office')->nullable();
             $table->string('purpose');
             $table->date('date_of_visit')->nullable();
-            $table->string('district')->nullable();
-            $table->string('post_office')->nullable();
             $table->string('visiting_office')->nullable();
+            $table->integer('number')->nullable();
+            $table->string('pass_type')->nullable();
             $table->timestamps();
         });
     }

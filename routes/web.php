@@ -30,6 +30,8 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
 
     // Id Types
     Route::delete('id-types/destroy', 'IdTypesController@massDestroy')->name('id-types.massDestroy');
+    Route::post('id-types/parse-csv-import', 'IdTypesController@parseCsvImport')->name('id-types.parseCsvImport');
+    Route::post('id-types/process-csv-import', 'IdTypesController@processCsvImport')->name('id-types.processCsvImport');
     Route::resource('id-types', 'IdTypesController', ['except' => ['show']]);
 
     // Visitor Pass
