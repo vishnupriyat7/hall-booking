@@ -68,16 +68,20 @@ class Person extends Model implements HasMedia
     {
         return $this->hasMany(VisitorPass::class, 'person_id', 'id');
     }
-
-    public function getDobAttribute($value)
+    public function personVisitorPassLatest()
     {
-        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+        return $this->hasOne(VisitorPass::class, 'person_id', 'id')->latest();
     }
 
-    public function setDobAttribute($value)
-    {
-        $this->attributes['dob'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
-    }
+    // public function getDobAttribute($value)
+    // {
+    //     return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    // }
+
+    // public function setDobAttribute($value)
+    // {
+    //     $this->attributes['dob'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    // }
 
     public function id_type()
     {

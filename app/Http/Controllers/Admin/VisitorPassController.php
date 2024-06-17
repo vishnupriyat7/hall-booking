@@ -46,7 +46,7 @@ class VisitorPassController extends Controller
                 return $row->id ? $row->id : '';
             });
             $table->editColumn('number', function ($row) {
-                return $row->number ? $row->number : '';
+                return $row->number ? /*$row->created_at->format('Y-m-d/') .*/$row->number : '';
             });
             $table->addColumn('person_name', function ($row) {
                 return $row->person ? $row->person->name : '';

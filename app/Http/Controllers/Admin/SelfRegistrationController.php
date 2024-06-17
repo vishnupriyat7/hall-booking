@@ -152,7 +152,7 @@ class SelfRegistrationController extends Controller
 
         $personid = $request->personid;
         $person = null;
-        if($personid) {
+        if($personid && $personid != -1) {
             $person = Person::find($personid);
             if(!$person) {
                 return response()->json( [ 'errors' => ['personid' => 'Person not found'] ], 404);
@@ -284,9 +284,6 @@ class SelfRegistrationController extends Controller
         $visitorPass = null;
         \DB::transaction( function() use ($request, $person, $visitingOffice, $recommendingOffice, &$visitorPass)
         {
-
-
-
             if($request->passid) {
                 $visitorPass = VisitorPass::find($request->passid);
 
@@ -313,7 +310,6 @@ class SelfRegistrationController extends Controller
             $visitorPass->pass_valid_from = Carbon::now()->format('Y-m-d H:i:s');
             //$visitorPass->pass_valid_upto = $request->pass_valid_upto;
             $visitorPass->issued_date = Carbon::now()->format('Y-m-d');
-            $visitorPass->
 
             $visitorPass->date_of_visit = Carbon::createFromFormat( 'd.m.Y', $request->date_of_visit)->format( 'Y-m-d' );
 
@@ -327,26 +323,77 @@ class SelfRegistrationController extends Controller
 
     public function search(Request $request)
     {
-        $queryName = $request->queryName;
+        \Log::info($request->all());
+        // $queryName = $request->queryName;
         $queryMob = $request->queryMob;
         $queryId = $request->queryId;
+        $querySelfRegDate = $request->querySelfRegDate;
+        $querySelfRegNumber = $request->querySelfRegNumber;
 
-        $people = Person::with('id_type')
+        $people = Person::with(['id_type', 'personVisitorPassLatest'])
+        ->withCount('personVisitorPasses')
         ->when($queryMob, function($query) use ($queryMob) {
             return $query->where('mobile', 'like', '%'.$queryMob.'%');
         })
         ->when($queryId, function($query) use ($queryId) {
             return $query->where('id_detail', 'like', '%'.$queryId.'%');
         })
-        ->when($queryName, function($query) use ($queryName) {
-            return $query->where('name', 'like', '%'.$queryName.'%');
-        })
+        // ->when($queryName, function($query) use ($queryName) {
+        //     return $query->where('name', 'like', '%'.$queryName.'%');
+        // })
         ->get();
 
+        //also search in self registrations if no results found in person
+        $selfRegs = [];
+        if($people->count() == 0) {
+
+            //replace dots and slashes in $querySelfRegDate with dashes
+            $querySelfRegDate = str_replace( ['.', '/'], '-', $querySelfRegDate);
+
+            $selfRegs = SelfRegistration::with('id_type')
+            ->when($queryMob, function($query) use ($queryMob) {
+                return $query->where('mobile', 'like', '%'.$queryMob.'%');
+            })
+            ->when($queryId, function($query) use ($queryId) {
+                return $query->where('id_detail', 'like', '%'.$queryId.'%');
+            })
+            // ->when($queryName, function($query) use ($queryName) {
+            //     return $query->where('name', 'like', '%'.$queryName.'%');
+            // })
+            ->when($querySelfRegNumber &&  $querySelfRegDate, function($query) use ($querySelfRegNumber, $querySelfRegDate) {
+                return $query->where('number', $querySelfRegNumber)
+                ->whereDate('created_at', $querySelfRegDate);
+            })
+            ->get();
+            \Log::info($selfRegs);
+
+            //if results found, convert them to person
+            if($selfRegs->count() > 0) {
+                $people = $selfRegs->map( function($selfReg) {
+                    $person = new Person();
+                    $person->id = -1; //this denotes person does not exist in person table
+                    $person->name = $selfReg->name;
+                    $person->gender = $selfReg->gender;
+                    $person->dob = $selfReg->dob;
+                    $person->age = $selfReg->age;
+                    $person->mobile = $selfReg->mobile;
+                    $person->email = $selfReg->email;
+                    $person->id_type_id = $selfReg->id_type_id;
+                    $person->id_detail = $selfReg->id_detail;
+                    $person->address = $selfReg->address;
+                    $person->country = $selfReg->country;
+                    $person->state = $selfReg->state;
+                    $person->district = $selfReg->district;
+                    $person->post_office = $selfReg->post_office;
+                    $person->pincode = $selfReg->pincode;
+                    return $person;
+                });
+            }
+        }
+
         return response()->json(
-            $people,
+        $people
         );
-        return view('admin.visitorPasses.search', compact('people'));
     }
 
 
@@ -370,15 +417,21 @@ class SelfRegistrationController extends Controller
 
 
 
-    public function storeCKEditorImages(Request $request)
+    public function show(SelfRegistration $selfRegistration)
     {
-        abort_if(Gate::denies('self_registration_create') && Gate::denies('self_registration_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('self_registration_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $model         = new SelfRegistration();
-        $model->id     = $request->input('crud_id', 0);
-        $model->exists = true;
-        $media         = $model->addMediaFromRequest('upload')->toMediaCollection('ck-media');
+        $selfRegistration->load('id_type', 'visiting_office_category');
 
-        return response()->json(['id' => $media->id, 'url' => $media->getUrl()], Response::HTTP_CREATED);
+        return view('admin.selfRegistrations.show', compact('selfRegistration'));
+    }
+
+    public function destroy(SelfRegistration $selfRegistration)
+    {
+        abort_if(Gate::denies('self_registration_delete'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+
+        $selfRegistration->delete();
+
+        return back();
     }
 }

@@ -73,19 +73,23 @@ class SelfRegistrationController extends Controller
         $selfRegistration = SelfRegistration::where('mobile', $request->mobile)
             ->orWhere(function ($query) use ($request) {
                 $query->where('id_type_id', $request->id_type_id)
-                    ->where('id_number', $request->id_number);
+                    ->where('id_detail', $request->id_detail);
             })->first();
 
         $alreadyRegistered = false;
         if ($selfRegistration) {
             $alreadyRegistered = true;
-            return redirect()->route('public.self-registrations.show', compact('selfRegistration', 'alreadyRegistered') );
+            return view('public.selfRegistrations.show', [
+                'selfRegistration' => $selfRegistration,
+                'alreadyRegistered' => $alreadyRegistered
+            ] );
         }
 
 
 
         \DB::transaction(function () use ($request, &$selfRegistration) {
-            $age = Carbon::parse($request->dob)->age;
+            \Log::info($request->all());
+            $age = Carbon::createFromFormat('Y-m-d', $request->dob)->age;
             $lastNumberOfToday = SelfRegistration::whereDate('created_at', Carbon::today())->orderBy('id', 'desc')->first();
             $lastNumber = $lastNumberOfToday ? $lastNumberOfToday->number : 0;
             $number = $lastNumber + 1;
@@ -95,7 +99,13 @@ class SelfRegistrationController extends Controller
                 + ['age' => $age, 'pass_type' => 'visitor', 'number' => $number]);
         });
 
-        return redirect()->route('public.self-registrations.show', compact('selfRegistration', 'alreadyRegistered'));
+        return view('public.selfRegistrations.show',
+        [
+            'selfRegistration' => $selfRegistration,
+            'alreadyRegistered' => $alreadyRegistered
+        ]
+    );
+
     }
 
 

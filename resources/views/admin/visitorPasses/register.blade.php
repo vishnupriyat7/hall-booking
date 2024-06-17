@@ -6,14 +6,14 @@
 <style>
     #video {
         border: 1px solid black;
-        box-shadow: 2px 2px 3px black;
+        /* box-shadow: 2px 2px 3px black; */
         width: 320px;
         height: 240px;
     }
 
     #photo {
         border: 1px solid black;
-        box-shadow: 2px 2px 3px black;
+        /* box-shadow: 2px 2px 3px black; */
         width: 320px;
         height: 240px;
     }
@@ -33,19 +33,9 @@
         vertical-align: top;
     }
 
-    /* #startbutton {
-  display: block;
-  position: relative;
-  margin-left: auto;
-  margin-right: auto;
-  bottom: 32px;
-  background-color: rgb(0 150 0 / 50%);
-  border: 1px solid rgb(255 255 255 / 70%);
-  box-shadow: 0px 0px 1px 2px rgb(0 0 0 / 20%);
-  font-size: 14px;
-  font-family: "Lucida Grande", "Arial", sans-serif;
-  color: rgb(255 255 255 / 100%);
-} */
+
+
+
 </style>
 
 @endsection
@@ -56,17 +46,23 @@
     <div class="card-body">
         <form class="form-inline" id="searchForm" method="GET" action="{{ route('admin.self-registrations.search') }}" enctype="multipart/form-data">
             @csrf
+            <!-- <div class="form-group ">
+                <input autocomplete="new-password" placeholder="Name" class="form-control {{ $errors->has('searchName') ? 'is-invalid' : '' }}" type="text" name="searchName" id="searchName">
+
+            </div> -->
             <div class="form-group ">
-                <input autocomplete="new-password" placeholder="Name" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text" name="searchName" id="searchName">
+                <input autocomplete="new-password" placeholder="Mobile" class="form-control {{ $errors->has('searchMob') ? 'is-invalid' : '' }}" type="text" name="searchMob" id="searchMob">
 
             </div>
             <div class="form-group ">
-                <input autocomplete="new-password" placeholder="Mobile" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text" name="searchMob" id="searchMob">
+                <input autocomplete="new-password" placeholder="ID" class="form-control {{ $errors->has('searchId') ? 'is-invalid' : '' }}" type="text" name="searchId" id="searchId">
 
             </div>
             <div class="form-group ">
-                <input autocomplete="new-password" placeholder="ID" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text" name="searchId" id="searchId">
-
+                <input autocomplete="new-password" placeholder="Self Reg Date" class="form-control {{ $errors->has('searchSelfRegDate') ? 'is-invalid' : '' }}" type="date" name="searchSelfRegDate" id="searchSelfRegDate">
+            </div>
+            <div class="form-group ">
+                <input autocomplete="new-password" placeholder="Self Reg No" class="form-control {{ $errors->has('searchSelfRegNum') ? 'is-invalid' : '' }}" type="number" name="searchSelfRegNum" id="searchSelfRegNum">
             </div>
             <button class="btn btn-primary" type="submit">
                 Find
@@ -103,6 +99,10 @@
             </div>
         </div>
 
+        <!-- show if pass is issued to this person  -->
+         <div id='pass_issed_to_this_person'>
+
+         </div>
 
     </div>
 </div>
@@ -114,7 +114,7 @@
         <form id="registerForm" method="POST" action="{{ route('admin.self-registrations.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="row">
-                <div class="form-group col ">
+                <div class="form-group col-4">
                     <label class="required" for="name">{{ trans('cruds.selfRegistration.fields.name') }}</label>
                     <input autocomplete="new-password" class="form-control {{ $errors->has('name') ? 'is-invalid' : '' }}" type="text" name="name" id="name" value="{{ old('name', '') }}" required>
                     @if($errors->has('name'))
@@ -123,7 +123,7 @@
                     <span class="help-block">{{ trans('cruds.selfRegistration.fields.name_helper') }}</span>
                 </div>
 
-                <div class="form-group col">
+                <div class="form-group col-2">
                     <label class="required">{{ trans('cruds.selfRegistration.fields.gender') }}</label>
                     <select class="form-control {{ $errors->has('gender') ? 'is-invalid' : '' }}" name="gender" id="gender" required>
                         <option value disabled {{ old('gender', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
@@ -148,15 +148,35 @@
                 </div>
 
                 <div class="form-group col">
-                    <label class="required" for="mobile">{{ trans('cruds.selfRegistration.fields.mobile') }}</label>
+                <label for="dob">{{ trans('cruds.person.fields.dob') }}</label>
+                <input class="form-control date {{ $errors->has('dob') ? 'is-invalid' : '' }}" type="text" name="dob" id="dob" value="{{ old('dob') }}">
+                @if($errors->has('dob'))
+                    <span class="text-danger">{{ $errors->first('dob') }}</span>
+                @endif
+
+
+                </div>
+
+            </div>
+
+            <div class="row">
+            <div class="form-group col">
+            <label class="required" for="mobile">{{ trans('cruds.selfRegistration.fields.mobile') }}</label>
                     <input autocomplete="new-password" class="form-control {{ $errors->has('mobile') ? 'is-invalid' : '' }}" type="text" name="mobile" id="mobile" value="{{ old('mobile', '') }}" required>
                     @if($errors->has('mobile'))
                     <span class="text-danger">{{ $errors->first('mobile') }}</span>
                     @endif
-                    <span class="help-block">{{ trans('cruds.selfRegistration.fields.mobile_helper') }}</span>
-                </div>
-
             </div>
+            <div class="form-group col">
+                <label for="email">{{ trans('cruds.person.fields.email') }}</label>
+                <input class="form-control {{ $errors->has('email') ? 'is-invalid' : '' }}" type="email" name="email" id="email" value="{{ old('email') }}">
+                @if($errors->has('email'))
+                    <span class="text-danger">{{ $errors->first('email') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.person.fields.email_helper') }}</span>
+            </div>
+            </div>
+
 
             <div class="row">
 
@@ -282,11 +302,11 @@
                     </div>
                     </div>
 
-                 
+
                 </div>
             </div>
 
-         
+
 
 
             <div class="row">
@@ -377,16 +397,16 @@
 
             <div class="form-group d-flex justify-content-center">
 
-                <button class="btn btn-primary" type="submit">
+                <button class="btn btn-primary" type="submit" id='register-print-btn'>
                     <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true" style="display:none;" id="spinnerbtn"></span>
-                    Save and Print
+                    Register and Print
                 </button>
 
-                <a class="btn btn-success" href="{{ route('admin.visitor-passes.register') }}">
+                <a class="ml-2 btn btn-success" href="{{ route('admin.visitor-passes.register') }}">
                     New Registration
                 </a>
 
-                <button class="btn btn-warning" type='button' id="startbutton">Take photo</button>
+                <button class="ml-2 btn btn-warning" type='button' id="startbutton">Take photo</button>
 
             </div>
             <input type="hidden" name="personid" id="personid">
@@ -549,13 +569,13 @@
                     imageCapture.takePhoto().then(blob => {
                         const data = URL.createObjectURL(blob);
                         photo.setAttribute("src", data);
-                        //convert blob to base64 
+                        //convert blob to base64
                         blobToBase64(blob).then(res => {
                             document.getElementById("captured_photo").value = res;
                         console.log(res); // res is base64 now
                         });
-                        
-                       // 
+
+                       //
                     });
 
                     //src = URL.createObjectURL(blob);
@@ -651,12 +671,16 @@
 
 <script>
     $(document).ready(function() {
+        document.getElementById('searchSelfRegDate').valueAsDate = new Date();
         $('#searchForm').on('submit', function(e) {
             e.preventDefault();
-            let queryName = $('#searchName').val();
+            // let queryName = $('#searchName').val();
             let queryId = $('#searchId').val();
             let queryMob = $('#searchMob').val();
-            if (!queryName && !queryId && !queryMob) {
+            let querySelfRegDate = $('#searchSelfRegDate').val();
+            let querySelfRegNum = $('#searchSelfRegNum').val();
+
+            if (!queryId && !queryMob && !querySelfRegDate && !querySelfRegNum) {
                 alert('Please enter at least one search criteria');
                 return;
             }
@@ -664,14 +688,17 @@
                 url: "{{ route('admin.self-registrations.search') }}",
                 type: 'GET',
                 data: {
-                    queryName: queryName,
+                    // queryName: queryName,
                     queryId: queryId,
-                    queryMob: queryMob
+                    queryMob: queryMob,
+                    querySelfRegDate: querySelfRegDate,
+                    querySelfRegNum: querySelfRegNum
                 },
                 success: function(data) {
                     let resultsList = $('#resultsList');
                     resultsList.empty();
                     data.forEach(function(item) {
+                        if(!item) return;
                         resultsList.append(
                             `<tr>
                                     <td>${item.name}</td>
@@ -684,11 +711,16 @@
                                       ${item.pincode}</small></td>
                                     <td>
                                         <button type="button" class="btn btn-primary btn-sm select-record"
+                                            data-person_visitor_passes_count="${item.person_visitor_passes_count}"
+                                            data-person_visitor_pass_latest_date="${item.person_visitor_pass_latest?.created_at}"
+                                            data-person_visitor_pass_latest_id="${item.person_visitor_pass_latest?.id}"
                                             data-personid="${item.id}"
                                             data-name="${item.name}"
                                             data-age="${item.age}"
+                                            data-dob="${item.dob}"
                                             data-gender="${item.gender}"
                                             data-mobile="${item.mobile}"
+                                            data-email="${item.email}"
                                             data-id_type_id="${item.id_type_id}"
                                             data-id_detail="${item.id_detail}"
                                             data-address="${item.address}"
@@ -709,14 +741,26 @@
             let name = $(this).data('name');
             let gender = $(this).data('gender');
             let age = $(this).data('age');
+            let dob = $(this).data('dob');
             let mobile = $(this).data('mobile')?.toString();
+            let email = $(this).data('email');
             let id_type_id = $(this).data('id_type_id');
             let id_detail = $(this).data('id_detail')?.toString();
             let address = $(this).data('address');
             let pincode = $(this).data('pincode')?.toString();
-            $('#personid').val(personid);
+
+            let person_visitor_passes_count = $(this).data('person_visitor_passes_count');
+            let person_visitor_pass_latest_date = $(this).data('person_visitor_pass_latest_date');
+            let person_visitor_pass_latest_id = $(this).data('person_visitor_pass_latest_id');
+
+            if(-1 !== personid){
+                $('#personid').val(personid);
+            }
+
             $('#name').val(name);
             $('#mobile').val(mobile);
+            $('#dob').val(dob);
+            $('#email').val(email);
             $('#gender').val(gender);
             $('#age').val(age);
             $('#id_type_id').val(id_type_id);
@@ -725,6 +769,25 @@
             $('#pincode').val(pincode);
             $('#resultsModal').modal('hide');
             fetchPin(pincode);
+
+            //check if pass is issued to this person
+            $('#pass_issed_to_this_person').html('');
+
+            if(person_visitor_passes_count){
+                //add a button to view pass details
+                let link = "{{ route('admin.visitor-passes.show', ':id') }}";
+                link = link.replace(':id', person_visitor_pass_latest_id);
+
+                $('#pass_issed_to_this_person').html(`
+
+                    <div class="mt-1 alert alert-warning">
+                         Already issued ${person_visitor_passes_count} pass to this person. Last Pass Date: ${person_visitor_pass_latest_date}
+                            <a href="${link}" >View</a>
+                    </div>
+
+                `);
+
+            }
         });
 
         $('#registerForm').ajaxForm({
@@ -780,6 +843,7 @@
                     pass_issued = jsonResponse.pass
                     $('#passid').val(pass_issued.id);
                     $('#personid').val(pass_issued.person_id);
+                    $('#register-print-btn').html(`Update and Print (No:${pass_issued.number})`);
                 }
             }
         });
@@ -789,7 +853,7 @@
 </script>
 
 <script>
-    
+
     //  var visiting_office_instance =  NiceSelect.bind(document.getElementById("visiting_office"), {searchable: true});
 
 

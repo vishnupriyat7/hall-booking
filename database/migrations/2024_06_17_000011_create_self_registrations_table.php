@@ -23,7 +23,7 @@ class CreateSelfRegistrationsTable extends Migration
             $table->string('district');
             $table->string('pincode');
             $table->string('post_office')->nullable();
-            $table->string('purpose');
+            $table->string('purpose')->nullable();
             $table->date('date_of_visit')->nullable();
             $table->string('visiting_office')->nullable();
             $table->integer('number')->nullable();
