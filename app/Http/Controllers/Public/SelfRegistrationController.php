@@ -66,7 +66,8 @@ class SelfRegistrationController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect('/')->withErrors($validator)->withInput();
+            return back()->withErrors($validator)->withInput();
+            // return redirect('/')->withErrors($validator)->withInput();
         }
 
         $person = Person::where('mobile', $request->mobile)

@@ -2,7 +2,8 @@
 
 use App\Http\Controllers\Admin\VisitorPassControllerCustom;
 
-Route::redirect('/', 'public/self-registrations/create');
+Route::redirect('/', 'admin');
+Route::redirect('/pubregister', 'public/self-registrations/create');
 Auth::routes(['register' => false]);
 
 // Route::get('api/pindetails/{pincode}', [VisitorPassControllerCustom::class, 'fetchPinDetails']);
@@ -122,7 +123,7 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
 });
 //////////////
 Route::group(['prefix' => 'public', 'as' => 'public.', 'namespace' => 'Public'], function () {
-    Route::get('/home', 'HomeController@index')->name('home');
+    //Route::get('/home', 'HomeController@index')->name('home');
     // Self Registration
     Route::delete('self-registrations/destroy', 'SelfRegistrationController@massDestroy')->name('self-registrations.massDestroy');
     Route::post('self-registrations/media', 'SelfRegistrationController@storeMedia')->name('self-registrations.storeMedia');

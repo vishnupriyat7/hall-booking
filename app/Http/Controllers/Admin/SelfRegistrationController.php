@@ -327,30 +327,37 @@ class SelfRegistrationController extends Controller
 
     public function search(Request $request)
     {
+        \Log::info('searching in Person');
+        
         \Log::info($request->all());
         // $queryName = $request->queryName;
         $queryMob = $request->queryMob;
         $queryId = $request->queryId;
         $querySelfRegDate = $request->querySelfRegDate;
-        $querySelfRegNumber = $request->querySelfRegNumber;
+        $querySelfRegNum = $request->querySelfRegNum;
 
-        $people = Person::with(['id_type', 'personVisitorPassLatest'])
-        ->withCount('personVisitorPasses')
-        ->when($queryMob, function($query) use ($queryMob) {
-            return $query->where('mobile', 'like', '%'.$queryMob.'%');
-        })
-        ->when($queryId, function($query) use ($queryId) {
-            return $query->where('id_detail', 'like', '%'.$queryId.'%');
-        })
-        // ->when($queryName, function($query) use ($queryName) {
-        //     return $query->where('name', 'like', '%'.$queryName.'%');
-        // })
-        ->get();
+        $people = null;
+        if(($queryMob || $queryId ) && $querySelfRegNum == '') {
+            
+            $people = Person::with(['id_type', 'personVisitorPassLatest'])
+            ->withCount('personVisitorPasses')
+            ->when($queryMob, function($query) use ($queryMob) {
+                return $query->where('mobile', 'like', '%'.$queryMob.'%');
+            })
+            ->when($queryId, function($query) use ($queryId) {
+                return $query->where('id_detail', 'like', '%'.$queryId.'%');
+            })
+            // ->when($queryName, function($query) use ($queryName) {
+            //     return $query->where('name', 'like', '%'.$queryName.'%');
+            // })
+            ->get();
+        }
 
+        \Log::info($people);
         //also search in self registrations if no results found in person
         $selfRegs = [];
-        if($people->count() == 0) {
-
+        if( !$people || ($people && $people->count() == 0)) {
+            \Log::info('searching in self registrations');
             //replace dots and slashes in $querySelfRegDate with dashes
             $querySelfRegDate = str_replace( ['.', '/'], '-', $querySelfRegDate);
 
@@ -364,8 +371,8 @@ class SelfRegistrationController extends Controller
             // ->when($queryName, function($query) use ($queryName) {
             //     return $query->where('name', 'like', '%'.$queryName.'%');
             // })
-            ->when($querySelfRegNumber &&  $querySelfRegDate, function($query) use ($querySelfRegNumber, $querySelfRegDate) {
-                return $query->where('number', $querySelfRegNumber)
+            ->when($querySelfRegNum &&  $querySelfRegDate, function($query) use ($querySelfRegNum, $querySelfRegDate) {
+                return $query->where('number', $querySelfRegNum)
                 ->whereDate('created_at', $querySelfRegDate);
             })
             ->get();
