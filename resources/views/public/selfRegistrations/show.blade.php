@@ -11,7 +11,13 @@
                 <div class="alert alert-success" role="alert">
                     Previous registration found with this mobile/ID.
                 </div>
-            @endif
+            @else
+
+                @if($person)
+                <div class="alert alert-warning" role="alert">
+                    Registered person exists with this mobile/ID.
+                </div>
+                @endif
 
             <table class="table">
                 <tbody>
@@ -41,11 +47,7 @@
                     </tr>
                 </tbody>
             </table>
-            <!-- <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.self-registrations.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div> -->
+            @endif
         </div>
     </div>
 </div>

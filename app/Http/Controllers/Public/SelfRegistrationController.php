@@ -7,6 +7,7 @@ use App\Http\Controllers\Traits\MediaUploadingTrait;
 use App\Http\Requests\MassDestroySelfRegistrationRequest;
 use App\Http\Requests\StoreSelfRegistrationRequest;
 use App\Http\Requests\UpdateSelfRegistrationRequest;
+use App\Models\Person;
 use App\Models\IdType;
 use App\Models\SelfRegistration;
 use App\Models\VisitingOffice;
@@ -68,6 +69,16 @@ class SelfRegistrationController extends Controller
             return redirect('/')->withErrors($validator)->withInput();
         }
 
+        $person = Person::where('mobile', $request->mobile)
+            ->when($request->id_type_id != -1, function($query) use ($request) {
+                return $query->orwhere('id_detail', $request->id_detail);
+            })
+            ->first();
+
+        if($person) {
+           // return response()->json( [ 'errors' => ['personid' => 'Person already exists with same mobile number or id number'] ], 401 );
+        }
+
         //check if the user is already registered with same mobile number
         //or same card type and number
         $selfRegistration = SelfRegistration::where('mobile', $request->mobile)
@@ -79,10 +90,7 @@ class SelfRegistrationController extends Controller
         $alreadyRegistered = false;
         if ($selfRegistration) {
             $alreadyRegistered = true;
-            return view('public.selfRegistrations.show', [
-                'selfRegistration' => $selfRegistration,
-                'alreadyRegistered' => $alreadyRegistered
-            ] );
+            return view('public.selfRegistrations.show', compact('selfRegistration', 'alreadyRegistered', 'person') );
         }
 
 
@@ -99,12 +107,7 @@ class SelfRegistrationController extends Controller
                 + ['age' => $age, 'pass_type' => 'visitor', 'number' => $number]);
         });
 
-        return view('public.selfRegistrations.show',
-        [
-            'selfRegistration' => $selfRegistration,
-            'alreadyRegistered' => $alreadyRegistered
-        ]
-    );
+        return view('public.selfRegistrations.show', compact('selfRegistration', 'alreadyRegistered', 'person') );
 
     }
 
