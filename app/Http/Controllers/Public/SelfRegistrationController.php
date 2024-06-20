@@ -55,7 +55,7 @@ class SelfRegistrationController extends Controller
             'name' => 'required',
             'gender' => 'required',
             'dob' => 'required',
-            'mobile' => 'required|min:10|max:10',
+            'mobile' => 'required|min:10',
             'id_type_id' => 'required',
             'id_detail' => 'required',
             'address' => 'required',

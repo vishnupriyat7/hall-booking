@@ -21,7 +21,7 @@ class VisitorPassController extends Controller
         abort_if(Gate::denies('visitor_pass_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
-            $query = VisitorPass::with(['person', 'visiting_office_category', 'recommending_office_category'])->select(sprintf('%s.*', (new VisitorPass)->table));
+            $query = VisitorPass::with(['person', 'person.id_type' ,'visiting_office_category', 'recommending_office_category'])->select(sprintf('%s.*', (new VisitorPass)->table));
             $table = Datatables::of($query);
 
             $table->addColumn('placeholder', '&nbsp;');
@@ -33,7 +33,7 @@ class VisitorPassController extends Controller
                 $deleteGate    = 'visitor_pass_delete';
                 $crudRoutePart = 'visitor-passes';
 
-                return view('partials.datatablesActions', compact(
+                return view('partials.visitorPassActions', compact(
                     'viewGate',
                     'editGate',
                     'deleteGate',
@@ -56,7 +56,7 @@ class VisitorPassController extends Controller
                 return $row->person ? (is_string($row->person) ? $row->person : $row->person->mobile) : '';
             });
             $table->editColumn('person.id_detail', function ($row) {
-                return $row->person ? (is_string($row->person) ? $row->person : $row->person->id_detail) : '';
+                return $row->person ? (is_string($row->person) ? $row->person : $row->person->id_type->name .' ' . $row->person->id_detail) : '';
             });
 
             $table->editColumn('purpose', function ($row) {

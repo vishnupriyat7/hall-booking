@@ -36,6 +36,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::resource('id-types', 'IdTypesController', ['except' => ['show']]);
 
     // Visitor Pass
+    Route::get('visitor-passes/print/{id}', 'VisitorPassControllerCustom@print')->name('visitor-passes.print');;
     Route::get('visitor-passes/register', 'VisitorPassControllerCustom@register')->name('visitor-passes.register');;
     Route::resource('visitor-passes', 'VisitorPassController', ['except' => ['destroy']]);
 

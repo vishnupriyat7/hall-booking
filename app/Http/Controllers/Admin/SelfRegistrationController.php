@@ -324,6 +324,7 @@ class SelfRegistrationController extends Controller
 
         return response()->json( [ 'success' => 'Pass created successfully', 'pass'=>$visitorPass ] );
     }
+   
 
     public function search(Request $request)
     {
@@ -401,10 +402,10 @@ class SelfRegistrationController extends Controller
                 });
             }
         }
-
-        return response()->json(
-        $people
-        );
+        if(!$people) {
+            $people = [];
+        }
+        return response()->json( $people );
     }
 
 

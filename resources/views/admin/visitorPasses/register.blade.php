@@ -699,6 +699,12 @@
                     querySelfRegNum: querySelfRegNum
                 },
                 success: function(data) {
+                    //console.log(data);
+                    $('#pass_issed_to_this_person').html(``);
+                    if (!data || data?.length == 0) {
+                        $('#pass_issed_to_this_person').html(`<div class="mt-1 alert alert-warning">  Not found </div>`);
+                        return;
+                    }
                     let resultsList = $('#resultsList');
                     resultsList.empty();
                     data.forEach(function(item) {
@@ -757,9 +763,15 @@
             let person_visitor_pass_latest_date = $(this).data('person_visitor_pass_latest_date') || null;
             let person_visitor_pass_latest_id = $(this).data('person_visitor_pass_latest_id') || null;
 
-            if(-1 !== personid){
+            $('#register-print-btn').html(`Register and Print`);
+
+            if(-1 !== personid){ // -1 means self registration
                 $('#personid').val(personid);
+                $('#register-print-btn').html(`ReIssue and Print`);
             }
+            //reset old passid
+            $('#passid').val('');
+            
 
             $('#name').val(name);
             $('#mobile').val(mobile);
@@ -847,7 +859,12 @@
                     pass_issued = jsonResponse.pass
                     $('#passid').val(pass_issued.id);
                     $('#personid').val(pass_issued.person_id);
-                    $('#register-print-btn').html(`Update and Print (No:${pass_issued.number})`);
+                    $('#register-print-btn').html(`Update and RePrint (No:${pass_issued.number})`);
+                    //go to a pass print page with pass id
+                   // localStorage.setItem('pass_issued', JSON.stringify(pass_issued));
+                    window.open('/admin/visitor-passes/print/' + pass_issued.id , '_blank');
+                    //window.location.href = "{{URL::to('admin/visitor-passes/print/' . ':id')}}" . replace(':id', pass_issued.id) ;
+
                 }
             }
         });
