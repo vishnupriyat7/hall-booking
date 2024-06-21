@@ -17,7 +17,7 @@ class GalleryPassController extends Controller
 {
     public function index(Request $request)
     {
-        abort_if(Gate::denies('gallery_pass_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('visitor_pass_access'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         if ($request->ajax()) {
             $query = GalleryPass::with(['person', 'guide'])->select(sprintf('%s.*', (new GalleryPass)->table));
@@ -27,9 +27,9 @@ class GalleryPassController extends Controller
             $table->addColumn('actions', '&nbsp;');
 
             $table->editColumn('actions', function ($row) {
-                $viewGate      = 'gallery_pass_show';
-                $editGate      = 'gallery_pass_edit';
-                $deleteGate    = 'gallery_pass_delete';
+                $viewGate      = 'visitor_pass_show';
+                $editGate      = 'visitor_pass_edit';
+                $deleteGate    = 'visitor_pass_delete';
                 $crudRoutePart = 'gallery-passes';
 
                 return view('partials.datatablesActions', compact(
@@ -103,7 +103,7 @@ class GalleryPassController extends Controller
 
     public function create()
     {
-        abort_if(Gate::denies('gallery_pass_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('visitor_pass_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $people = Person::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -121,7 +121,7 @@ class GalleryPassController extends Controller
 
     public function edit(GalleryPass $galleryPass)
     {
-        abort_if(Gate::denies('gallery_pass_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('visitor_pass_edit'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $people = Person::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
 
@@ -141,7 +141,7 @@ class GalleryPassController extends Controller
 
     public function show(GalleryPass $galleryPass)
     {
-        abort_if(Gate::denies('gallery_pass_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
+        abort_if(Gate::denies('visitor_pass_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
         $galleryPass->load('person', 'guide');
 

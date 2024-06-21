@@ -58,7 +58,7 @@
 			//window.close();
 
 			setTimeout(function () { window.print(); }, 500);
-        window.onfocus = function () { setTimeout(function () { window.close(); }, 500); }
+        //window.onfocus = function () { setTimeout(function () { window.close(); }, 500); }
 		}
 		</script>
 </head>
@@ -86,8 +86,7 @@
 				
 				<tr rowspan='2'>    
 				<td colspan='3'  style='font-size:10px;' class='barcodecell'>
-				{!! DNS1D::getBarcodeHTML(strval($visitorPass->id), 'C128') !!}
-
+				{!! DNS1D::getBarcodeHTML(strval($visitorPass->id), 'C128C') !!}
 				{{$visitorPass->id}}    
 			</td>
 

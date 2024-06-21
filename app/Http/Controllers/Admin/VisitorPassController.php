@@ -56,7 +56,7 @@ class VisitorPassController extends Controller
                 return $row->person ? (is_string($row->person) ? $row->person : $row->person->mobile) : '';
             });
             $table->editColumn('person.id_detail', function ($row) {
-                return $row->person ? (is_string($row->person) ? $row->person : $row->person->id_type->name .' ' . $row->person->id_detail) : '';
+                return $row->person ? (is_string($row->person) ? $row->person : $row->person->id_type?->name .' ' . $row->person->id_detail) : '';
             });
 
             $table->editColumn('purpose', function ($row) {

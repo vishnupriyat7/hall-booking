@@ -102,7 +102,17 @@
 
                                         </i>
                                         <p>
-                                           Register/Issue
+                                           Issue Visitor Pass
+                                        </p>
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.gallery-passes.register") }}" class="nav-link {{ request()->is("admin/gallery-passes/register") || request()->is("admin/gallery-passes/register") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-cogs">
+
+                                        </i>
+                                        <p>
+                                           Issue Gallery Pass
                                         </p>
                                     </a>
                                 </li>
@@ -116,10 +126,8 @@
                                         </p>
                                     </a>
                                 </li>
-                            @endcan
-			    @can('gallery_pass_access')
                                 <li class="nav-item">
-                                    <a href="{{ route("admin.gallery-passes.index") }}" class="nav-link {{ request()->is("admin/gallery-passes") || request()->is("admin/gallery-passes/*") ? "active" : "" }}">
+                                    <a href="{{ route("admin.gallery-passes.index") }}" class="nav-link {{ request()->is("admin/gallery-passes") || request()->is("admin/gallery-passes") ? "active" : "" }}">
                                         <i class="fa-fw nav-icon fas fa-id-card">
 
                                         </i>

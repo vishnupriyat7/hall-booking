@@ -25,7 +25,7 @@ class SelfRegistrationController extends Controller
 
 
 
-    public function create()
+    public function create_visitor()
     {
 
         $id_types = IdType::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
@@ -33,10 +33,19 @@ class SelfRegistrationController extends Controller
         $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
 
 
-        return view('public.selfRegistrations.create', compact('id_types', 'visiting_office_categories'));
+        return view('public.selfRegistrations.create_visitor', compact('id_types', 'visiting_office_categories'));
     }
+    public function create_gallery()
+    {
 
-    public function store(Request $request)
+        $id_types = IdType::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+
+        return view('public.selfRegistrations.create_gallery', compact('id_types', 'visiting_office_categories'));
+    }
+    public function store_visitor(Request $request)
     {
         // 'name',
         // 'gender',
