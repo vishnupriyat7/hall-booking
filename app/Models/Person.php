@@ -68,6 +68,11 @@ class Person extends Model implements HasMedia
     {
         return $this->hasMany(VisitorPass::class, 'person_id', 'id');
     }
+public function personGalleryPasses()
+    {
+        return $this->hasMany(GalleryPass::class, 'person_id', 'id');
+    }
+
     public function personVisitorPassLatest()
     {
         return $this->hasOne(VisitorPass::class, 'person_id', 'id')->latest();

@@ -72,8 +72,8 @@
                     </li>
                 @endcan
                 @can('visitor_mangement_access')
-                    <li class="nav-item has-treeview {{ request()->is("admin/people*") ? "menu-open" : "" }} {{ request()->is("admin/visitor-passes*") ? "menu-open" : "" }}">
-                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/people*") ? "active" : "" }} {{ request()->is("admin/visitor-passes*") ? "active" : "" }}" href="#">
+                    <li class="nav-item has-treeview {{ request()->is("admin/visitor-passes*") ? "menu-open" : "" }} {{ request()->is("admin/gallery-passes*") ? "menu-open" : "" }} {{ request()->is("admin/people*") ? "menu-open" : "" }} {{ request()->is("admin/lockers*") ? "menu-open" : "" }}">
+                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/visitor-passes*") ? "active" : "" }} {{ request()->is("admin/gallery-passes*") ? "active" : "" }} {{ request()->is("admin/people*") ? "active" : "" }} {{ request()->is("admin/lockers*") ? "active" : "" }}" href="#">
                             <i class="fa-fw nav-icon fas fa-address-book">
 
                             </i>
@@ -113,6 +113,18 @@
                                         </i>
                                         <p>
                                             {{ trans('cruds.visitorPass.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+			    @can('gallery_pass_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.gallery-passes.index") }}" class="nav-link {{ request()->is("admin/gallery-passes") || request()->is("admin/gallery-passes/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-id-card">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.galleryPass.title') }}
                                         </p>
                                     </a>
                                 </li>
@@ -188,6 +200,114 @@
                                         </i>
                                         <p>
                                             {{ trans('cruds.selfRegistration.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('group_person_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.group-people.index") }}" class="nav-link {{ request()->is("admin/group-people") || request()->is("admin/group-people/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-cogs">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.groupPerson.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('country_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.countries.index") }}" class="nav-link {{ request()->is("admin/countries") || request()->is("admin/countries/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-cogs">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.country.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('guiding_officer_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.guiding-officers.index") }}" class="nav-link {{ request()->is("admin/guiding-officers") || request()->is("admin/guiding-officers/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-cogs">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.guidingOfficer.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('locker_item_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.locker-items.index") }}" class="nav-link {{ request()->is("admin/locker-items") || request()->is("admin/locker-items/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-cogs">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.lockerItem.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('locker_token_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.locker-tokens.index") }}" class="nav-link {{ request()->is("admin/locker-tokens") || request()->is("admin/locker-tokens/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-cogs">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.lockerToken.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('state_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.states.index") }}" class="nav-link {{ request()->is("admin/states") || request()->is("admin/states/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-cogs">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.state.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('district_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.districts.index") }}" class="nav-link {{ request()->is("admin/districts") || request()->is("admin/districts/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-cogs">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.district.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('post_office_detail_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.post-office-details.index") }}" class="nav-link {{ request()->is("admin/post-office-details") || request()->is("admin/post-office-details/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-cogs">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.postOfficeDetail.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('session_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.sessions.index") }}" class="nav-link {{ request()->is("admin/sessions") || request()->is("admin/sessions/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-cogs">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.session.title') }}
                                         </p>
                                     </a>
                                 </li>

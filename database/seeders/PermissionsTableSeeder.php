@@ -216,6 +216,222 @@ class PermissionsTableSeeder extends Seeder
             ],
             [
                 'id'    => 52,
+                'title' => 'gallery_pass_create',
+            ],
+            [
+                'id'    => 53,
+                'title' => 'gallery_pass_edit',
+            ],
+            [
+                'id'    => 54,
+                'title' => 'gallery_pass_show',
+            ],
+            [
+                'id'    => 55,
+                'title' => 'gallery_pass_access',
+            ],
+            [
+                'id'    => 56,
+                'title' => 'group_person_create',
+            ],
+            [
+                'id'    => 57,
+                'title' => 'group_person_edit',
+            ],
+            [
+                'id'    => 58,
+                'title' => 'group_person_show',
+            ],
+            [
+                'id'    => 59,
+                'title' => 'group_person_delete',
+            ],
+            [
+                'id'    => 60,
+                'title' => 'group_person_access',
+            ],
+            [
+                'id'    => 61,
+                'title' => 'country_create',
+            ],
+            [
+                'id'    => 62,
+                'title' => 'country_edit',
+            ],
+            [
+                'id'    => 63,
+                'title' => 'country_show',
+            ],
+            [
+                'id'    => 64,
+                'title' => 'country_delete',
+            ],
+            [
+                'id'    => 65,
+                'title' => 'country_access',
+            ],
+            [
+                'id'    => 66,
+                'title' => 'guiding_officer_create',
+            ],
+            [
+                'id'    => 67,
+                'title' => 'guiding_officer_edit',
+            ],
+            [
+                'id'    => 68,
+                'title' => 'guiding_officer_show',
+            ],
+            [
+                'id'    => 69,
+                'title' => 'guiding_officer_delete',
+            ],
+            [
+                'id'    => 70,
+                'title' => 'guiding_officer_access',
+            ],
+            [
+                'id'    => 71,
+                'title' => 'locker_create',
+            ],
+            [
+                'id'    => 72,
+                'title' => 'locker_edit',
+            ],
+            [
+                'id'    => 73,
+                'title' => 'locker_show',
+            ],
+            [
+                'id'    => 74,
+                'title' => 'locker_delete',
+            ],
+            [
+                'id'    => 75,
+                'title' => 'locker_access',
+            ],
+            [
+                'id'    => 76,
+                'title' => 'locker_item_create',
+            ],
+            [
+                'id'    => 77,
+                'title' => 'locker_item_edit',
+            ],
+            [
+                'id'    => 78,
+                'title' => 'locker_item_show',
+            ],
+            [
+                'id'    => 79,
+                'title' => 'locker_item_delete',
+            ],
+            [
+                'id'    => 80,
+                'title' => 'locker_item_access',
+            ],
+            [
+                'id'    => 81,
+                'title' => 'locker_token_create',
+            ],
+            [
+                'id'    => 82,
+                'title' => 'locker_token_edit',
+            ],
+            [
+                'id'    => 83,
+                'title' => 'locker_token_show',
+            ],
+            [
+                'id'    => 84,
+                'title' => 'locker_token_delete',
+            ],
+            [
+                'id'    => 85,
+                'title' => 'locker_token_access',
+            ],
+            [
+                'id'    => 86,
+                'title' => 'state_create',
+            ],
+            [
+                'id'    => 87,
+                'title' => 'state_edit',
+            ],
+            [
+                'id'    => 88,
+                'title' => 'state_show',
+            ],
+            [
+                'id'    => 89,
+                'title' => 'state_delete',
+            ],
+            [
+                'id'    => 90,
+                'title' => 'state_access',
+            ],
+            [
+                'id'    => 91,
+                'title' => 'district_create',
+            ],
+            [
+                'id'    => 92,
+                'title' => 'district_edit',
+            ],
+            [
+                'id'    => 93,
+                'title' => 'district_show',
+            ],
+            [
+                'id'    => 94,
+                'title' => 'district_delete',
+            ],
+            [
+                'id'    => 95,
+                'title' => 'district_access',
+            ],
+            [
+                'id'    => 96,
+                'title' => 'post_office_detail_create',
+            ],
+            [
+                'id'    => 97,
+                'title' => 'post_office_detail_edit',
+            ],
+            [
+                'id'    => 98,
+                'title' => 'post_office_detail_show',
+            ],
+            [
+                'id'    => 99,
+                'title' => 'post_office_detail_delete',
+            ],
+            [
+                'id'    => 100,
+                'title' => 'post_office_detail_access',
+            ],
+            [
+                'id'    => 101,
+                'title' => 'session_create',
+            ],
+            [
+                'id'    => 102,
+                'title' => 'session_edit',
+            ],
+            [
+                'id'    => 103,
+                'title' => 'session_show',
+            ],
+            [
+                'id'    => 104,
+                'title' => 'session_delete',
+            ],
+            [
+                'id'    => 105,
+                'title' => 'session_access',
+            ],
+            [
+                'id'    => 106,
                 'title' => 'profile_password_edit',
             ],
         ];
