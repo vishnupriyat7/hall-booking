@@ -167,7 +167,7 @@ class PersonController extends Controller
     {
         abort_if(Gate::denies('person_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        $person->load('id_type', 'personVisitorPasses');
+        $person->load('id_type', 'personVisitorPasses', 'personGalleryPasses');
 
         return view('admin.people.show', compact('person'));
     }

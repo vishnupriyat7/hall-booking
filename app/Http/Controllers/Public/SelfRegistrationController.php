@@ -25,7 +25,7 @@ class SelfRegistrationController extends Controller
 
 
 
-    public function create()
+    public function create_visitor()
     {
 
         $id_types = IdType::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
@@ -33,10 +33,19 @@ class SelfRegistrationController extends Controller
         $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
 
 
-        return view('public.selfRegistrations.create', compact('id_types', 'visiting_office_categories'));
+        return view('public.selfRegistrations.create_visitor', compact('id_types', 'visiting_office_categories'));
     }
+    public function create_gallery()
+    {
 
-    public function store(Request $request)
+        $id_types = IdType::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+        $visiting_office_categories = VisitingOfficeCategory::pluck('title', 'id')->prepend(trans('global.pleaseSelect'), '');
+
+
+        return view('public.selfRegistrations.create_gallery', compact('id_types', 'visiting_office_categories'));
+    }
+    public function store_visitor(Request $request)
     {
         // 'name',
         // 'gender',
@@ -55,7 +64,7 @@ class SelfRegistrationController extends Controller
             'name' => 'required',
             'gender' => 'required',
             'dob' => 'required',
-            'mobile' => 'required|min:10|max:10',
+            'mobile' => 'required|min:10',
             'id_type_id' => 'required',
             'id_detail' => 'required',
             'address' => 'required',
@@ -66,7 +75,8 @@ class SelfRegistrationController extends Controller
         ]);
 
         if ($validator->fails()) {
-            return redirect('/')->withErrors($validator)->withInput();
+            return back()->withErrors($validator)->withInput();
+            // return redirect('/')->withErrors($validator)->withInput();
         }
 
         $person = Person::where('mobile', $request->mobile)

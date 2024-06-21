@@ -48,6 +48,7 @@ class SelfRegistration extends Model implements HasMedia
     ];
 
     protected $fillable = [
+        'pass_type',
         'name',
         'gender',
         'dob',
@@ -67,7 +68,7 @@ class SelfRegistration extends Model implements HasMedia
         'visiting_office_category_id',
         'visiting_office',
         'number',
-        'pass_type',
+        'group_persons',
         'created_at',
         'updated_at',
         'deleted_at',

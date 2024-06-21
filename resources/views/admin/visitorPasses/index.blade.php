@@ -1,12 +1,12 @@
 @extends('layouts.admin')
 @section('content')
 
-<div class="card">
-    <div class="card-header">
+<div class="">
+    <div class="">
         {{ trans('cruds.visitorPass.title_singular') }} {{ trans('global.list') }}
     </div>
 
-    <div class="card-body">
+    <div class="table-responsive">
         <table class=" table table-bordered table-striped table-hover ajaxTable datatable datatable-VisitorPass">
             <thead>
                 <tr>
@@ -17,7 +17,7 @@
                         {{ trans('cruds.visitorPass.fields.id') }}
                     </th>
                     <th>
-                        {{ trans('cruds.visitorPass.fields.number') }}
+                        TokNo
                     </th>
                     <th>
                         {{ trans('cruds.visitorPass.fields.person') }}
@@ -25,15 +25,16 @@
                     <th>
                         {{ trans('cruds.person.fields.mobile') }}
                     </th>
+                    
                     <th>
                         {{ trans('cruds.person.fields.id_detail') }}
                     </th>
-                    <th>
+                    <!-- <th>
                         {{ trans('cruds.visitorPass.fields.pass_valid_from') }}
                     </th>
                     <th>
                         {{ trans('cruds.visitorPass.fields.pass_valid_upto') }}
-                    </th>
+                    </th> -->
                     <th>
                         {{ trans('cruds.visitorPass.fields.issued_date') }}
                     </th>
@@ -87,8 +88,8 @@
 { data: 'person_name', name: 'person.name' },
 { data: 'person.mobile', name: 'person.mobile' },
 { data: 'person.id_detail', name: 'person.id_detail' },
-{ data: 'pass_valid_from', name: 'pass_valid_from' },
-{ data: 'pass_valid_upto', name: 'pass_valid_upto' },
+// { data: 'pass_valid_from', name: 'pass_valid_from' },
+// { data: 'pass_valid_upto', name: 'pass_valid_upto' },
 { data: 'issued_date', name: 'issued_date' },
 { data: 'date_of_visit', name: 'date_of_visit' },
 { data: 'purpose', name: 'purpose' },
