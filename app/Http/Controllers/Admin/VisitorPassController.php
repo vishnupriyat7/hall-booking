@@ -62,22 +62,71 @@ class VisitorPassController extends Controller
             $table->editColumn('purpose', function ($row) {
                 return $row->purpose ? VisitorPass::PURPOSE_SELECT[$row->purpose] : '';
             });
+            $table->editColumn('visiting_office', function ($row) {
+                return $row->visiting_office ? $row->visiting_office : '';
+            });
+            $table->editColumn('recommending_office', function ($row) {
+                return $row->recommending_office ? $row->recommending_office : '';
+            });
             $table->addColumn('visiting_office_category_title', function ($row) {
                 return $row->visiting_office_category ? $row->visiting_office_category->title : '';
             });
 
-            $table->editColumn('visiting_office', function ($row) {
-                return $row->visiting_office ? $row->visiting_office : '';
-            });
             $table->addColumn('recommending_office_category_title', function ($row) {
                 return $row->recommending_office_category ? $row->recommending_office_category->title : '';
             });
 
-            $table->editColumn('recommending_office', function ($row) {
-                return $row->recommending_office ? $row->recommending_office : '';
+            $table->editColumn('mobile', function ($row) {
+                return $row->mobile ? $row->mobile : '';
+            });
+            $table->editColumn('id_type', function ($row) {
+                return $row->id_type ? $row->id_type : '';
+            });
+            $table->editColumn('id_detail', function ($row) {
+                return $row->id_detail ? $row->id_detail : '';
+            });
+            $table->editColumn('address', function ($row) {
+                return $row->address ? $row->address : '';
+            });
+            $table->editColumn('country', function ($row) {
+                return $row->country ? $row->country : '';
+            });
+            $table->editColumn('state', function ($row) {
+                return $row->state ? $row->state : '';
+            });
+            $table->editColumn('district', function ($row) {
+                return $row->district ? $row->district : '';
+            });
+            $table->editColumn('post_office', function ($row) {
+                return $row->post_office ? $row->post_office : '';
+            });
+            $table->editColumn('pincode', function ($row) {
+                return $row->pincode ? $row->pincode : '';
+            });
+            $table->editColumn('print_count', function ($row) {
+                return $row->print_count ? $row->print_count : '';
+            });
+            $table->editColumn('photo', function ($row) {
+                return $row->photo ? $row->photo : '';
+            });
+            $table->editColumn('camera_allowed', function ($row) {
+                return '<input type="checkbox" disabled ' . ($row->camera_allowed ? 'checked' : null) . '>';
+            });
+            $table->editColumn('name', function ($row) {
+                return $row->name ? $row->name : '';
+            });
+            $table->editColumn('gender', function ($row) {
+                return $row->gender ? $row->gender : '';
             });
 
-            $table->rawColumns(['actions', 'placeholder', 'person', 'visiting_office_category', 'recommending_office_category']);
+            $table->editColumn('age', function ($row) {
+                return $row->age ? $row->age : '';
+            });
+            $table->editColumn('email', function ($row) {
+                return $row->email ? $row->email : '';
+            });
+
+            $table->rawColumns(['actions', 'placeholder', 'person', 'visiting_office_category', 'recommending_office_category', 'camera_allowed']);
 
             return $table->make(true);
         }

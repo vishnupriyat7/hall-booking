@@ -23,6 +23,12 @@ class CreateGalleryPassesTable extends Migration
             $table->string('post_office')->nullable();
             $table->string('pincode')->nullable();
             $table->string('photo')->nullable();
+            $table->string('name')->nullable();
+            $table->string('gender')->nullable();
+            $table->date('dob')->nullable();
+            $table->integer('age')->nullable();
+            $table->string('mobile')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
         });
     }

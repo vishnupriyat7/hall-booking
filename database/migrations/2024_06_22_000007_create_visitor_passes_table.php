@@ -29,6 +29,12 @@ class CreateVisitorPassesTable extends Migration
             $table->string('pincode')->nullable();
             $table->integer('print_count')->nullable();
             $table->string('photo')->nullable();
+            $table->boolean('camera_allowed')->default(0)->nullable();
+            $table->string('name')->nullable();
+            $table->string('gender')->nullable();
+            $table->date('dob')->nullable();
+            $table->integer('age')->nullable();
+            $table->string('email')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

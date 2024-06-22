@@ -47,19 +47,6 @@ class SelfRegistrationController extends Controller
     }
     public function store_visitor(Request $request)
     {
-        // 'name',
-        // 'gender',
-        // 'age',
-        // 'mobile',
-        // 'id_type_id',
-        // 'id_detail',
-        // 'address',
-        // 'country',
-        // 'state',
-        // 'pincode',
-
-
-
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'gender' => 'required',
@@ -73,37 +60,59 @@ class SelfRegistrationController extends Controller
             'district' => 'required',
             'pincode' => 'required',
         ]);
+        $validator->after(function ($validator) use ($request) {
 
-        if ($validator->fails()) {
-            return back()->withErrors($validator)->withInput();
-            // return redirect('/')->withErrors($validator)->withInput();
-        }
-
-        $person = Person::where('mobile', $request->mobile)
-            ->when($request->id_type_id != -1, function($query) use ($request) {
-                return $query->orwhere('id_detail', $request->id_detail);
+            $person = Person:://where('mobile', $request->mobile)->
+            when($request->id_type_id != -1, function($query) use ($request, ) {
+                return $query->where('id_type_id', $request->id_type_id)
+                        ->where('id_detail', $request->id_detail);
+                //return $query->orwhere('id_detail', $request->id_detail);
             })
             ->first();
 
-        if($person) {
-           // return response()->json( [ 'errors' => ['personid' => 'Person already exists with same mobile number or id number'] ], 401 );
-        }
+            if ($person) {
 
-        //check if the user is already registered with same mobile number
-        //or same card type and number
-        $selfRegistration = SelfRegistration::where('mobile', $request->mobile)
-            ->orWhere(function ($query) use ($request) {
+                $validator->errors()->add(
+                    'id_detail', 'Person already exists with same id detail'
+                );
+            }
+
+            $selfRegistration = SelfRegistration:://where('mobile', $request->mobile)->
+            orWhere(function ($query) use ($request) {
                 $query->where('id_type_id', $request->id_type_id)
                     ->where('id_detail', $request->id_detail);
             })->first();
 
-        $alreadyRegistered = false;
-        if ($selfRegistration) {
-            $alreadyRegistered = true;
-            return view('public.selfRegistrations.show', compact('selfRegistration', 'alreadyRegistered', 'person') );
+            if ($selfRegistration) {
+                $validator->errors()->add(
+                    'id_detail', 'Registration already exists with same id detail'
+                );
+            }
+
+            $idType = IdType::find($request->id_type_id);
+            if ($idType && $idType->name == 'AADHAAR') {
+
+                if (($idType->min_length && strlen($request->id_detail) < $idType->min_length) ) {
+                    $validator->errors()->add(
+                        'id_detail', "Should be at least {$idType->min_length} digits"
+                    );
+                }
+
+                if (($idType->max_length && strlen($request->id_detail) > $idType->max_length) ) {
+                    $validator->errors()->add(
+                        'id_detail', "Should be at most {$idType->max_length} digits"
+                    );
+                }
+            }
+
+
+        });
+
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
         }
-
-
+        $selfRegistration = null;
 
         \DB::transaction(function () use ($request, &$selfRegistration) {
             \Log::info($request->all());
@@ -117,11 +126,99 @@ class SelfRegistrationController extends Controller
                 + ['age' => $age, 'pass_type' => 'visitor', 'number' => $number]);
         });
 
-        return view('public.selfRegistrations.show', compact('selfRegistration', 'alreadyRegistered', 'person') );
+        return view('public.selfRegistrations.show_visitor', compact('selfRegistration') );
 
     }
 
+    public function store_gallery(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => 'required',
+            'gender' => 'required',
+            'dob' => 'required',
+            'mobile' => 'required|min:10',
+            'id_type_id' => 'required',
+            'id_detail' => 'required',
+            'address' => 'required',
+            'country' => 'required',
+            'state' => 'required',
+            'district' => 'required',
+            'pincode' => 'required',
+            'post_office' => 'required',
+            'group_persons' => 'required',
+        ]);
 
+        $validator->after(function ($validator) use ($request) {
+
+            $person = Person:://where('mobile', $request->mobile)->
+            when($request->id_type_id != -1, function($query) use ($request, ) {
+                return $query->where('id_type_id', $request->id_type_id)
+                        ->where('id_detail', $request->id_detail);
+                //return $query->orwhere('id_detail', $request->id_detail);
+            })
+            ->first();
+
+            if ($person) {
+
+                $validator->errors()->add(
+                    'id_detail', 'Person already exists with same id detail'
+                );
+            }
+
+            $selfRegistration = SelfRegistration:://where('mobile', $request->mobile)->
+            orWhere(function ($query) use ($request) {
+                $query->where('id_type_id', $request->id_type_id)
+                    ->where('id_detail', $request->id_detail);
+            })->first();
+
+            if ($selfRegistration) {
+                $validator->errors()->add(
+                    'id_detail', 'Registration already exists with same id detail'
+                );
+            }
+
+
+            $idType = IdType::find($request->id_type_id);
+            if ($idType && $idType->name == 'AADHAAR') {
+
+                if (($idType->min_length && strlen($request->id_detail) < $idType->min_length) ) {
+                    $validator->errors()->add(
+                        'id_detail', "Should be at least {$idType->min_length} digits"
+                    );
+                }
+
+                if (($idType->max_length && strlen($request->id_detail) > $idType->max_length) ) {
+                    $validator->errors()->add(
+                        'id_detail', "Should be at most {$idType->max_length} digits"
+                    );
+                }
+            }
+
+        });
+
+
+
+        if ($validator->fails()) {
+            return back()->withErrors($validator)->withInput();
+            // return redirect('/')->withErrors($validator)->withInput();
+        }
+
+        $selfRegistration = null;
+        \DB::transaction(function () use ($request, &$selfRegistration) {
+            \Log::info($request->all());
+            $age = Carbon::createFromFormat('Y-m-d', $request->dob)->age;
+            $lastNumberOfToday = SelfRegistration::whereDate('created_at', Carbon::today())->orderBy('id', 'desc')->first();
+            $lastNumber = $lastNumberOfToday ? $lastNumberOfToday->number : 0;
+            $number = $lastNumber + 1;
+
+            $selfRegistration = SelfRegistration::create(
+                $request->all()
+                + ['age' => $age, 'pass_type' => 'gallery', 'number' => $number]);
+        });
+
+        return view('public.selfRegistrations.show_gallery', compact('selfRegistration') );
+
+    }
     // public function update(UpdateSelfRegistrationRequest $request, SelfRegistration $selfRegistration)
     // {
     //     $selfRegistration->update($request->all());

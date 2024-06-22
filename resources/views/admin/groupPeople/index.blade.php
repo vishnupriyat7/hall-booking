@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('content')
-@can('group_person_create')
+<!-- @can('group_person_create')
     <div style="margin-bottom: 10px;" class="row">
         <div class="col-lg-12">
             <a class="btn btn-success" href="{{ route('admin.group-people.create') }}">
@@ -8,7 +8,7 @@
             </a>
         </div>
     </div>
-@endcan
+@endcan -->
 <div class="card">
     <div class="card-header">
         {{ trans('cruds.groupPerson.title_singular') }} {{ trans('global.list') }}
@@ -136,7 +136,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 })
 
 </script>

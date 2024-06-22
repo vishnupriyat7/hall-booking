@@ -16,6 +16,7 @@ class GalleryPass extends Model
     protected $dates = [
         'issued_date',
         'date_of_visit',
+        'dob',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -37,6 +38,12 @@ class GalleryPass extends Model
         'post_office',
         'pincode',
         'photo',
+        'name',
+        'gender',
+        'dob',
+        'age',
+        'mobile',
+        'email',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -52,25 +59,25 @@ class GalleryPass extends Model
         return $this->belongsTo(Person::class, 'person_id');
     }
 
-    public function getIssuedDateAttribute($value)
-    {
-        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
-    }
+    // public function getIssuedDateAttribute($value)
+    // {
+    //     return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    // }
 
-    public function setIssuedDateAttribute($value)
-    {
-        $this->attributes['issued_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
-    }
+    // public function setIssuedDateAttribute($value)
+    // {
+    //     $this->attributes['issued_date'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    // }
 
-    public function getDateOfVisitAttribute($value)
-    {
-        return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
-    }
+    // public function getDateOfVisitAttribute($value)
+    // {
+    //     return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    // }
 
-    public function setDateOfVisitAttribute($value)
-    {
-        $this->attributes['date_of_visit'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
-    }
+    // public function setDateOfVisitAttribute($value)
+    // {
+    //     $this->attributes['date_of_visit'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    // }
 
     public function guide()
     {

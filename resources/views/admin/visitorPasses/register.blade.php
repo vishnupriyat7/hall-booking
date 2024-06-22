@@ -36,7 +36,7 @@
 
     .modal-dialog {
         width: auto !important;
-    max-width: 850px; 
+    max-width: 850px;
     }
 
 
@@ -115,7 +115,7 @@
 <div class="card" id="app">
 
     <div class="card-body">
-        <form id="registerForm" method="POST" action="{{ route('admin.self-registrations.store') }}" enctype="multipart/form-data">
+        <form id="registerForm" method="POST" action="{{ route('admin.visitor-passes.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="form-group col-4">
@@ -752,6 +752,7 @@
             let gender = $(this).data('gender');
             let age = $(this).data('age');
             let dob = $(this).data('dob');
+            dob = moment(dob, 'YYYY-MM-DD').format("DD.MM.YYYY");
             let mobile = $(this).data('mobile')?.toString();
             let email = $(this).data('email');
             let id_type_id = $(this).data('id_type_id');
@@ -771,7 +772,7 @@
             }
             //reset old passid
             $('#passid').val('');
-            
+
 
             $('#name').val(name);
             $('#mobile').val(mobile);
