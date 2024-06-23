@@ -7,7 +7,7 @@ Route::redirect('/pubregister_visitor', 'public/self-registrations/create_visito
 Route::redirect('/pubregister_gallery', 'public/self-registrations/create_gallery');
 Auth::routes(['register' => false]);
 
-// Route::get('api/pindetails/{pincode}', [VisitorPassControllerCustom::class, 'fetchPinDetails']);
+Route::get('api/pindetails/{pincode}', [VisitorPassControllerCustom::class, 'fetchPinDetails']);
 
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth', 'admin']], function () {
@@ -83,18 +83,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Guiding Officer
     Route::delete('guiding-officers/destroy', 'GuidingOfficerController@massDestroy')->name('guiding-officers.massDestroy');
     Route::resource('guiding-officers', 'GuidingOfficerController');
-
-    // Locker
-    Route::delete('lockers/destroy', 'LockerController@massDestroy')->name('lockers.massDestroy');
-    Route::resource('lockers', 'LockerController');
-
-    // Locker Item
-    Route::delete('locker-items/destroy', 'LockerItemController@massDestroy')->name('locker-items.massDestroy');
-    Route::resource('locker-items', 'LockerItemController');
-
-    // Locker Token
-    Route::delete('locker-tokens/destroy', 'LockerTokenController@massDestroy')->name('locker-tokens.massDestroy');
-    Route::resource('locker-tokens', 'LockerTokenController');
 
     // State
     Route::delete('states/destroy', 'StateController@massDestroy')->name('states.massDestroy');

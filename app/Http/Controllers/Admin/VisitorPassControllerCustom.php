@@ -2,18 +2,20 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use Gate;
+use Carbon\Carbon;
 use App\Models\IdType;
 use App\Models\Member;
 use App\Models\Person;
+use App\Models\Country;
 use App\Models\VisitorPass;
-use App\Models\RecommendingOfficeCategory;
-use App\Models\VisitingOfficeCategory;
-use Gate;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
+use App\Models\PostOfficeDetail;
+use App\Http\Controllers\Controller;
+use App\Models\VisitingOfficeCategory;
 use Illuminate\Support\Facades\Storage;
+use App\Models\RecommendingOfficeCategory;
+use Symfony\Component\HttpFoundation\Response;
 
 class VisitorPassControllerCustom extends Controller
 {
@@ -30,8 +32,8 @@ class VisitorPassControllerCustom extends Controller
         $mlas = Member::where('status', 'mla')->get();
         $ministers = Member::where('status', 'minister')->get();
         $date_of_visit = date('d.m.Y');
-
-        return view('admin.visitorPasses.register', compact('id_types', 'visiting_office_categories', 'recommending_office_categories', 'mlas', 'ministers'));
+        $countries  = Country::all()->pluck('country_name', 'id')->prepend( trans('global.pleaseSelect'), '');
+        return view('admin.visitorPasses.register', compact( 'countries', 'id_types', 'visiting_office_categories', 'recommending_office_categories', 'mlas', 'ministers'));
     }
     public function print(Request $request)
     {
@@ -50,22 +52,6 @@ class VisitorPassControllerCustom extends Controller
 
     public function store(Request $request)
     {
-        //$selfRegistration = SelfRegistration::create($request->all());
-
-        // $validator = Validator::make( $request->all(),
-        // [
-        //     'company_name' => 'required|string|max:255',
-        // ],
-        // [
-        //     'company_name.required' => 'Company name is required',
-        //     'company_name.string' => 'Company name should be string',
-        //     'company_name.max' => 'Company name should not exceed 255 characters',
-        // ]);
-
-        // if ( $validator->fails() ) {
-        //     return response()->json( [ 'errors' => $validator->errors() ] );
-        // }
-        //check if personid exists
 
         $personid = $request->personid;
         $person = null;
@@ -121,6 +107,11 @@ class VisitorPassControllerCustom extends Controller
             }
         }
 
+        $postOffice =  $request->post_office ??  $request->post_office_select;
+        if(!$postOffice ) {
+            return response()->json( [ 'errors' => ['post_office' => 'postOffice is required'] ], 401 );
+        }
+
         if(!$request->visiting_office_category_id ) {
             return response()->json( [ 'errors' => ['visiting_office' => 'Visiting office Category is required'] ], 401 );
         }
@@ -152,6 +143,7 @@ class VisitorPassControllerCustom extends Controller
         }
         $dob = Carbon::createFromFormat( 'd.m.Y', $request->dob)->format( 'Y-m-d' );
 
+
         $person->name = $request->name;
         $person->gender = $request->gender;
         $person->age = $request->age;
@@ -164,7 +156,7 @@ class VisitorPassControllerCustom extends Controller
         $person->state = $request->state;
         $person->pincode = $request->pincode;
         $person->district = $request->district;
-        $person->post_office = $request->post_office;
+        $person->post_office = $postOffice;
         $person->save();
 
 
@@ -205,7 +197,7 @@ class VisitorPassControllerCustom extends Controller
 
 
         $visitorPass = null;
-        \DB::transaction( function() use ($request, $person, $visitingOffice, $recommendingOffice, &$visitorPass, $dob)
+        \DB::transaction( function() use ($request, $person, $visitingOffice, $recommendingOffice, &$visitorPass, $dob, $postOffice)
         {
             if($request->passid) {
                 $visitorPass = VisitorPass::find($request->passid);
@@ -238,7 +230,7 @@ class VisitorPassControllerCustom extends Controller
             $visitorPass->state = $request->state;
             $visitorPass->pincode = $request->pincode;
             $visitorPass->district = $request->district;
-            $visitorPass->post_office = $request->post_office;
+            $visitorPass->post_office = $postOffice;
             $visitorPass->photo = $person->getMedia('photo')->last()?->getUrl() ?? null;
 
             $visitorPass->purpose = $request->purpose;
@@ -258,6 +250,22 @@ class VisitorPassControllerCustom extends Controller
 
 
         return response()->json( [ 'success' => 'Pass created successfully', 'pass'=>$visitorPass ] );
+    }
+
+    public function fetchPinDetails(Request $request)
+    {
+        //$pincode = $request->pincode;
+        $pincode = $request->route('pincode');
+        $pincodeDetails = PostOfficeDetail::with(['state','district'])->where('pincode', $pincode)->get();
+
+        if($pincodeDetails->count() > 0) {
+
+            return response()->json( [ 'success' => 'Pincode details fetched successfully',
+            'pincodeDetails' => $pincodeDetails ]);
+        } else {
+            return response()->json( [ 'errors' => ['pincode' => 'Pincode not found'] ], 404);
+        }
+
     }
 
 

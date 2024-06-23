@@ -21,7 +21,7 @@ class State extends Model
 
     protected $fillable = [
         'country_id',
-        'state_cd',
+       // 'state_cd',
         'state_abbr',
         'state_name',
         'default_state',

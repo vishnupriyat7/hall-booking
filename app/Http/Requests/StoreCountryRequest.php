@@ -25,9 +25,6 @@ class StoreCountryRequest extends FormRequest
                 'string',
                 'required',
             ],
-            'is_default_country' => [
-                'required',
-            ],
             'iso_3' => [
                 'string',
                 'nullable',
@@ -41,6 +38,10 @@ class StoreCountryRequest extends FormRequest
                 'nullable',
             ],
             'iso' => [
+                'string',
+                'nullable',
+            ],
+            'phonecode' => [
                 'string',
                 'nullable',
             ],

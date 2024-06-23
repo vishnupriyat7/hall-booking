@@ -11,6 +11,7 @@ use App\Models\GalleryPass;
 use Illuminate\Http\Request;
 use App\Models\GuidingOfficer;
 use App\Http\Controllers\Controller;
+use App\Models\Country;
 use App\Models\VisitingOfficeCategory;
 use Illuminate\Support\Facades\Storage;
 use App\Models\RecommendingOfficeCategory;
@@ -30,11 +31,12 @@ class GalleryPassControllerCustom extends Controller
         $recommending_office_categories = RecommendingOfficeCategory::all()->pluck('title', 'id')->prepend( trans('global.pleaseSelect'), '');
         $mlas = Member::where('status', 'mla')->get();
         $ministers = Member::where('status', 'minister')->get();
-        $date_of_visit = date('d.m.Y');
+      //  $date_of_visit = date('d.m.Y');
 
         $guides = GuidingOfficer::all();
+        $countries  = Country::all()->pluck('country_name', 'id')->prepend( trans('global.pleaseSelect'), '');
 
-        return view('admin.galleryPasses.register', compact('id_types', 'recommending_office_categories', 'mlas', 'ministers', 'guides'));
+        return view('admin.galleryPasses.register', compact('id_types', 'recommending_office_categories', 'mlas', 'ministers', 'guides','countries'));
     }
     public function print(Request $request)
     {
@@ -112,6 +114,12 @@ class GalleryPassControllerCustom extends Controller
         }
         */
 
+        $postOffice =  $request->post_office ??  $request->post_office_select;
+        if(!$postOffice ) {
+            return response()->json( [ 'errors' => ['post_office' => 'postOffice is required'] ], 401 );
+        }
+
+
 
         //create person
         if(!$person) {
@@ -131,7 +139,7 @@ class GalleryPassControllerCustom extends Controller
         $person->state = $request->state;
         $person->pincode = $request->pincode;
         $person->district = $request->district;
-        $person->post_office = $request->post_office;
+        $person->post_office = $postOffice;
         $person->save();
 
 
@@ -165,7 +173,7 @@ class GalleryPassControllerCustom extends Controller
         //use transaction here to make sure number is unique
 
         $galleryPass = null;
-        \DB::transaction( function() use ($request, $person, $recommendingOffice, &$galleryPass, $dob)
+        \DB::transaction( function() use ($request, $person, $recommendingOffice, &$galleryPass, $dob, $postOffice)
         {
             if($request->passid) {
                 $galleryPass = GalleryPass::find($request->passid);
@@ -201,7 +209,7 @@ class GalleryPassControllerCustom extends Controller
             $galleryPass->state = $request->state;
             $galleryPass->pincode = $request->pincode;
             $galleryPass->district = $request->district;
-            $galleryPass->post_office = $request->post_office;
+            $galleryPass->post_office = $postOffice;
             $galleryPass->photo = $person->getMedia('photo')->last()?->getUrl() ?? null;
 
            // $galleryPass->recommending_office_category_id = $request->recommending_office_category_id;

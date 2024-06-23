@@ -36,6 +36,7 @@ class GalleryPass extends Model
         'state',
         'district',
         'post_office',
+        'post_office_select',
         'pincode',
         'photo',
         'name',

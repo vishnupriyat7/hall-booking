@@ -274,8 +274,9 @@
                         @if($errors->has('post_office'))
                         <span class="text-danger">{{ $errors->first('post_office') }}</span>
                         @endif
-                        <span class="help-block">{{ trans('cruds.selfRegistration.fields.post_office_helper') }}</span>
-                    </div>
+                        <select class="form-control {{ $errors->has('post_office_select') ? 'is-invalid' : '' }}" name="post_office_select" id="post_office_select" required hidden>
+                        <!-- <option disabled>Please Select</optionld> -->
+                       </select>                    </div>
                     </div>
 
                     <!-- country and state  -->
@@ -374,6 +375,23 @@
                 <button class="ml-2 btn btn-warning" type='button' id="startbutton">Take photo</button>
 
             </div>
+
+
+            <div class="row">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="">Number of Accompanying Persons:</span>
+                    </div>
+                       <input type="number" id="num_persons" name="num_persons" class="form-control" required>
+                    <div class="input-group-append">
+                    <button type="button" id="generate-fields-btn" class="btn btn-dark">Generate Fields</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="accompanying-persons" class="form-group"></div>
+
             <input type="hidden" name="personid" id="personid">
             <input type="hidden" name="passid" id="passid">
             <input type="hidden" name="photo" id="captured_photo">
@@ -405,44 +423,80 @@
 <script src="{{ asset('js/camera.js') }}"></script>
 <script src="{{ asset('js/country.js') }}"></script>
 <script src="{{ asset('js/jquery.form.min.js') }}"></script>
+<script src="{{ asset('js/pin.js') }}"></script>
+
 <script>
-    var pass_issued = null;
+        document.addEventListener('DOMContentLoaded', function () {
+            const accompanyingPersons = @json($form->accompanyingPersons ?? []);
+            const generateFieldsButton = document.getElementById('generate-fields-btn');
+            const numPersonsInput = document.getElementById('num_persons');
+            const accompanyingPersonsContainer = document.getElementById('accompanying-persons');
 
-    function fetchPin(pin) {
+            const generateAccompanyingPersonsFields = () => {
+                const numPersons = numPersonsInput.value;
+                // Keep track of existing filled data
+                const filledData = [];
+                accompanyingPersonsContainer.querySelectorAll('.accompanying-person').forEach((personDiv) => {
+                    const nameInput = personDiv.querySelector('input[name^="accompanyingPersonsName"]');
+                    const ageInput = personDiv.querySelector('input[name^="accompanyingPersonsAge"]');
+                    const genderSelect = personDiv.querySelector('select[name^="accompanyingPersonsGender"]');
+                    if (nameInput && ageInput && genderSelect) {
+                        filledData.push({
+                            name: nameInput.value,
+                            age: ageInput.value,
+                            gender: genderSelect.value
+                        });
+                    }
+                });
 
-        // Creating Our XMLHttpRequest object
-        let xhr = new XMLHttpRequest();
-        //let pin = e.target.value
-        if (pin.length != 6) {
-            //alert("Pincode should be 6 digits" + pin.length + " " + pin);
-            return;
-        }
-        document.getElementById("post_office").value = "";
-        document.getElementById("district").value = "";
-        document.getElementById("state").value = "";
-        // Making our connection
-        let url = 'https://api.postalpincode.in/pincode/' + pin;
-        xhr.open("GET", url, true);
+                accompanyingPersonsContainer.innerHTML = '';
+                for (let i = 0; i < numPersons; i++) {
+                    const person = accompanyingPersons[i] || (filledData[i] || {});
+                    const personDiv = document.createElement('div');
+                    personDiv.classList.add('accompanying-person');
 
-        // function execute after request is successful
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
-                let data = JSON.parse(this.responseText);
-                if (data[0].Status == "Success") {
-                    let postOffice = data[0].PostOffice[0];
-                    document.getElementById("post_office").value = postOffice.Name;
-                    document.getElementById("district").value = postOffice.District;
-                    document.getElementById("state").value = postOffice.State;
+                    personDiv.innerHTML = `
+                        <div class='row input-group '>
+                            <span class="input-group-text"># ${i + 1}</span>
+                            <input type="text" placeholder="name" name="accompanyingPersonsName[${i}][name]" class="form-control" required value="${person.name || ''}">
+
+                            <input type="number"  placeholder="age"  name="accompanyingPersonsAge[${i}][age]" class="form-control" required value="${person.age || ''}">
+
+                            <select name="accompanyingPersonsGender[${i}][gender]" class="form-control" required>
+                                <option value="Male" ${person.gender === 'Male' ? 'selected' : ''}>Male</option>
+                                <option value="Female" ${person.gender === 'Female' ? 'selected' : ''}>Female</option>
+                                <option value="Transgender" ${person.gender === 'Transgender' ? 'selected' : ''}>Transgender</option>
+                            </select>
+
+                        </div>
+                    `;
+
+                    accompanyingPersonsContainer.appendChild(personDiv);
                 }
+            };
+
+            generateFieldsButton.addEventListener('click', generateAccompanyingPersonsFields);
+
+            numPersonsInput.addEventListener('change', generateAccompanyingPersonsFields);
+
+            if (accompanyingPersons.length > 0) {
+                numPersonsInput.value = accompanyingPersons.length;
+                generateAccompanyingPersonsFields();
             }
-        }
-        // Sending our request
-        xhr.send();
-    }
+
+            // document.addEventListener('click', function (event) {
+            //     if (event.target.classList.contains('remove-btn')) {
+            //         event.target.closest('.accompanying-person').remove();
+            //         numPersonsInput.value = document.querySelectorAll('.accompanying-person').length;
+            //     }
+            // });
+
+        });
+
 </script>
 
 <script>
+    var pass_issued = null;
     $(document).ready(function() {
         document.getElementById('searchSelfRegDate').valueAsDate = new Date();
         $('#searchForm').on('submit', function(e) {
@@ -577,6 +631,7 @@
             }
         });
 
+
         $('#registerForm').ajaxForm({
             beforeSend: function() {
                 var percentage = '0';
@@ -703,28 +758,28 @@
             }
         });
 
-        recommending_office_category.addEventListener("input", function(e) {
-            // let office = e.target.value
-            let office = recommending_office_category.options[recommending_office_category.selectedIndex].innerHTML;
-            recommendingOfficeSelectMLA.selectpicker('hide');
-            recommendingOfficeSelectMinister.selectpicker('hide');
-            recommending_office_input.style.display = 'none';
-            recommending_office_input.removeAttribute('required');
-            if ('MLA' == office) {
-                recommendingOfficeSelectMLA.selectpicker('show');
-            } else if ('Minister' == office) {
-                recommendingOfficeSelectMinister.selectpicker('show');
-            } else {
-                recommending_office_input.style.display = 'block';
-                recommending_office_input.hidden = false;
-                recommending_office_input.setAttribute("required", "");
-                recommending_office_input.value = "";
-                if (['Legislature Secretary', 'Speaker', 'Deputy Speaker', 'Chief Minister', 'Leader of Opposition'].indexOf(office) !== -1) {
-                    let officename = 'O/o ' + office;
-                    recommending_office_input.value = officename;
-                }
-            }
-        });
+        // recommending_office_category.addEventListener("input", function(e) {
+        //     // let office = e.target.value
+        //     let office = recommending_office_category.options[recommending_office_category.selectedIndex].innerHTML;
+        //     recommendingOfficeSelectMLA.selectpicker('hide');
+        //     recommendingOfficeSelectMinister.selectpicker('hide');
+        //     recommending_office_input.style.display = 'none';
+        //     recommending_office_input.removeAttribute('required');
+        //     if ('MLA' == office) {
+        //         recommendingOfficeSelectMLA.selectpicker('show');
+        //     } else if ('Minister' == office) {
+        //         recommendingOfficeSelectMinister.selectpicker('show');
+        //     } else {
+        //         recommending_office_input.style.display = 'block';
+        //         recommending_office_input.hidden = false;
+        //         recommending_office_input.setAttribute("required", "");
+        //         recommending_office_input.value = "";
+        //         if (['Legislature Secretary', 'Speaker', 'Deputy Speaker', 'Chief Minister', 'Leader of Opposition'].indexOf(office) !== -1) {
+        //             let officename = 'O/o ' + office;
+        //             recommending_office_input.value = officename;
+        //         }
+        //     }
+        // });
 
 
     };

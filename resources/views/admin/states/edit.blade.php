@@ -23,14 +23,6 @@
                 <span class="help-block">{{ trans('cruds.state.fields.country_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="state_cd">{{ trans('cruds.state.fields.state_cd') }}</label>
-                <input class="form-control {{ $errors->has('state_cd') ? 'is-invalid' : '' }}" type="text" name="state_cd" id="state_cd" value="{{ old('state_cd', $state->state_cd) }}">
-                @if($errors->has('state_cd'))
-                    <span class="text-danger">{{ $errors->first('state_cd') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.state.fields.state_cd_helper') }}</span>
-            </div>
-            <div class="form-group">
                 <label for="state_abbr">{{ trans('cruds.state.fields.state_abbr') }}</label>
                 <input class="form-control {{ $errors->has('state_abbr') ? 'is-invalid' : '' }}" type="text" name="state_abbr" id="state_abbr" value="{{ old('state_abbr', $state->state_abbr) }}">
                 @if($errors->has('state_abbr'))

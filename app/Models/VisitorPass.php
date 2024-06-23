@@ -51,6 +51,7 @@ class VisitorPass extends Model
         'state',
         'district',
         'post_office',
+        'post_office_select',
         'pincode',
         'print_count',
         'photo',

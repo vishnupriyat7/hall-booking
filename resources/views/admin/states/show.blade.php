@@ -33,14 +33,6 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.state.fields.state_cd') }}
-                        </th>
-                        <td>
-                            {{ $state->state_cd }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
                             {{ trans('cruds.state.fields.state_abbr') }}
                         </th>
                         <td>

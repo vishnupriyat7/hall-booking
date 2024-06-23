@@ -56,7 +56,7 @@
                                 {{ $district->id ?? '' }}
                             </td>
                             <td>
-                                {{ $district->state_cd->state_cd ?? '' }}
+                                {{ $district->state_cd->state_name ?? '' }}
                             </td>
                             <td>
                                 {{ $district->district_abbr ?? '' }}

@@ -28,7 +28,7 @@
                             {{ trans('cruds.district.fields.state_cd') }}
                         </th>
                         <td>
-                            {{ $district->state_cd->state_cd ?? '' }}
+                            {{ $district->state_cd->state_name ?? '' }}
                         </td>
                     </tr>
                     <tr>

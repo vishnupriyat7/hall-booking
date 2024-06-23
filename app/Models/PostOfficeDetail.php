@@ -20,7 +20,7 @@ class PostOfficeDetail extends Model
 
     protected $fillable = [
         'pincode',
-        'epost_delivery_status',
+      //  'epost_delivery_status',
         'default_post_flag',
         'post_office_name',
         'post_office_status',

@@ -33,9 +33,6 @@
                             {{ trans('cruds.state.fields.country') }}
                         </th>
                         <th>
-                            {{ trans('cruds.state.fields.state_cd') }}
-                        </th>
-                        <th>
                             {{ trans('cruds.state.fields.state_abbr') }}
                         </th>
                         <th>
@@ -60,9 +57,6 @@
                             </td>
                             <td>
                                 {{ $state->country->country_abbr ?? '' }}
-                            </td>
-                            <td>
-                                {{ $state->state_cd ?? '' }}
                             </td>
                             <td>
                                 {{ $state->state_abbr ?? '' }}
