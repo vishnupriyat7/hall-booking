@@ -30,6 +30,7 @@ class CreateGalleryPassesTable extends Migration
             $table->string('mobile')->nullable();
             $table->string('email')->nullable();
             $table->string('recommending_office')->nullable();
+            $table->integer('num_persons')->nullable();
             $table->timestamps();
         });
     }

@@ -199,7 +199,7 @@
                 </div>
                 <div class="form-group col">
                     <label for="id_detail">{{ trans('cruds.selfRegistration.fields.id_detail') }}</label>
-                    <input autocomplete="new-password" class="form-control {{ $errors->has('id_detail') ? 'is-invalid' : '' }}" type="text" name="id_detail" id="id_detail" value="{{ old('id_detail', '') }}">
+                    <input required autocomplete="new-password" class="form-control {{ $errors->has('id_detail') ? 'is-invalid' : '' }}" type="text" name="id_detail" id="id_detail" value="{{ old('id_detail', '') }}">
                     @if($errors->has('id_detail'))
                     <span class="text-danger">{{ $errors->first('id_detail') }}</span>
                     @endif
@@ -743,20 +743,20 @@
         });
 
 
-        idType.addEventListener("change", function(e) {
-            // alert(e.target.value);
-            let id = e.target.value
-            let id_detail = document.getElementById("id_detail");
-            if (id != -1) {
-                id_detail.setAttribute("required", "");
-                recommending_office_category.removeAttribute('required');
+        // idType.addEventListener("change", function(e) {
+        //     // alert(e.target.value);
+        //     let id = e.target.value
+        //     let id_detail = document.getElementById("id_detail");
+        //     if (id != -1) {
+        //         id_detail.setAttribute("required", "");
+        //         recommending_office_category.removeAttribute('required');
 
-            } else {
-                id_detail.removeAttribute('required');
-                recommending_office_category.setAttribute("required", "");
+        //     } else {
+        //         id_detail.removeAttribute('required');
+        //         recommending_office_category.setAttribute("required", "");
 
-            }
-        });
+        //     }
+        // });
 
         // recommending_office_category.addEventListener("input", function(e) {
         //     // let office = e.target.value

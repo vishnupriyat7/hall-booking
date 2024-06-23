@@ -45,6 +45,8 @@ class GalleryPass extends Model
         'age',
         'mobile',
         'email',
+        'num_persons',
+        'accompanying_persons',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -84,4 +86,10 @@ class GalleryPass extends Model
     {
         return $this->belongsTo(GuidingOfficer::class, 'guide_id');
     }
+
+    public function accompanyingPersons()
+    {
+        return $this->hasMany(GroupPerson::class, 'gallery_pass_id', 'id');
+    }
+
 }

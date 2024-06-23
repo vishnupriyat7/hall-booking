@@ -23,8 +23,8 @@ class GalleryPassControllerCustom extends Controller
     {
         abort_if(Gate::denies('visitor_pass_create'), Response::HTTP_FORBIDDEN, '403 Forbidden');
 
-        // $people = Person::pluck('name', 'id')->prepend(trans('global.pleaseSelect'), '');
-        $id_types = IdType::pluck('name', 'id')->prepend('RECOMMENDED BY', '-1')
+        $id_types = IdType::pluck('name', 'id')
+            //->prepend('RECOMMENDED BY', '-1')
             ->prepend(trans('global.pleaseSelect'), '');
 
 
@@ -170,10 +170,15 @@ class GalleryPassControllerCustom extends Controller
 
         }
 
+        //get all accompanying persons
+        $accompanyingPersons = $request->num_persons ? $request->accompanyingPersons : null;
+        \Log::info($accompanyingPersons);
+
+
         //use transaction here to make sure number is unique
 
         $galleryPass = null;
-        \DB::transaction( function() use ($request, $person, $recommendingOffice, &$galleryPass, $dob, $postOffice)
+        \DB::transaction( function() use ($request, $person, $recommendingOffice, &$galleryPass, $dob, $postOffice, $accompanyingPersons)
         {
             if($request->passid) {
                 $galleryPass = GalleryPass::find($request->passid);
@@ -219,6 +224,12 @@ class GalleryPassControllerCustom extends Controller
             $galleryPass->issued_date = Carbon::now()->format('Y-m-d');
 
             $galleryPass->date_of_visit = Carbon::createFromFormat( 'd.m.Y', $request->date_of_visit)->format( 'Y-m-d' );
+
+            $galleryPass->num_persons = $request->num_persons;
+            $galleryPass->accompanyingPersons()->delete();
+            if($accompanyingPersons){
+                $galleryPass->accompanyingPersons()->saveMany( $accompanyingPersons );
+            }
 
             $galleryPass->save();
            // return response()->json( [ 'success' => 'Pass created successfully', 'pass'=> $galleryPass ] );

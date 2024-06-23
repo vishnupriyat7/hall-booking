@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('content')
-<!-- @can('group_person_create')
+@can('group_person_create')
     <div style="margin-bottom: 10px;" class="row">
         <div class="col-lg-12">
             <a class="btn btn-success" href="{{ route('admin.group-people.create') }}">
@@ -8,7 +8,7 @@
             </a>
         </div>
     </div>
-@endcan -->
+@endcan
 <div class="card">
     <div class="card-header">
         {{ trans('cruds.groupPerson.title_singular') }} {{ trans('global.list') }}
@@ -35,6 +35,12 @@
                             {{ trans('cruds.groupPerson.fields.gender') }}
                         </th>
                         <th>
+                            {{ trans('cruds.groupPerson.fields.gallery_pass') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.galleryPass.fields.issued_date') }}
+                        </th>
+                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -56,6 +62,12 @@
                             </td>
                             <td>
                                 {{ App\Models\GroupPerson::GENDER_SELECT[$groupPerson->gender] ?? '' }}
+                            </td>
+                            <td>
+                                {{ $groupPerson->gallery_pass->number ?? '' }}
+                            </td>
+                            <td>
+                                {{ $groupPerson->gallery_pass->issued_date ?? '' }}
                             </td>
                             <td>
                                 @can('group_person_show')
@@ -136,7 +148,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-
+  
 })
 
 </script>
