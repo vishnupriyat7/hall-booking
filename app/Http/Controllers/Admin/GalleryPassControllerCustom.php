@@ -172,7 +172,9 @@ class GalleryPassControllerCustom extends Controller
 
         //get all accompanying persons
         $accompanyingPersons = $request->num_persons ? $request->accompanyingPersons : null;
+        \Log::info('accompanyingPersons');
         \Log::info($accompanyingPersons);
+        \Log::info($request->all() );
 
 
         //use transaction here to make sure number is unique
@@ -226,12 +228,13 @@ class GalleryPassControllerCustom extends Controller
             $galleryPass->date_of_visit = Carbon::createFromFormat( 'd.m.Y', $request->date_of_visit)->format( 'Y-m-d' );
 
             $galleryPass->num_persons = $request->num_persons;
+            $galleryPass->save();
+
             $galleryPass->accompanyingPersons()->delete();
             if($accompanyingPersons){
-                $galleryPass->accompanyingPersons()->saveMany( $accompanyingPersons );
+                $galleryPass->accompanyingPersons()->createMany( $accompanyingPersons );
             }
 
-            $galleryPass->save();
            // return response()->json( [ 'success' => 'Pass created successfully', 'pass'=> $galleryPass ] );
         });
 

@@ -37,7 +37,7 @@
             </div>
             <div class="form-group">
                 <label class="required" for="dob">Date of Birth</label>
-                <input id="startDate" class="form-control" name="dob" id="dob" type="date" required/>
+                <input id="startDate" class="form-control" name="dob" id="dob" type="date"  value="{{ old('dob', '') }}"  required/>
 
                 @if($errors->has('dob'))
                     <span class="text-danger">{{ $errors->first('dob') }}</span>

@@ -437,9 +437,9 @@
                 // Keep track of existing filled data
                 const filledData = [];
                 accompanyingPersonsContainer.querySelectorAll('.accompanying-person').forEach((personDiv) => {
-                    const nameInput = personDiv.querySelector('input[name^="accompanyingPersonsName"]');
-                    const ageInput = personDiv.querySelector('input[name^="accompanyingPersonsAge"]');
-                    const genderSelect = personDiv.querySelector('select[name^="accompanyingPersonsGender"]');
+                    const nameInput = personDiv.querySelector('input[name$="[name]"]');
+                    const ageInput = personDiv.querySelector('input[name$="[age]"]');
+                    const genderSelect = personDiv.querySelector('select[name$="[gender]"]');
                     if (nameInput && ageInput && genderSelect) {
                         filledData.push({
                             name: nameInput.value,
@@ -458,14 +458,14 @@
                     personDiv.innerHTML = `
                         <div class='row input-group '>
                             <span class="input-group-text"># ${i + 1}</span>
-                            <input type="text" placeholder="name" name="accompanyingPersonsName[${i}][name]" class="form-control" required value="${person.name || ''}">
+                            <input type="text" placeholder="name" name="accompanyingPersons[${i}][name]" class="form-control" required value="${person.name || ''}">
 
-                            <input type="number"  placeholder="age"  name="accompanyingPersonsAge[${i}][age]" class="form-control" required value="${person.age || ''}">
+                            <input type="number"  placeholder="age"  name="accompanyingPersons[${i}][age]" class="form-control" required value="${person.age || ''}">
 
-                            <select name="accompanyingPersonsGender[${i}][gender]" class="form-control" required>
-                                <option value="Male" ${person.gender === 'Male' ? 'selected' : ''}>Male</option>
-                                <option value="Female" ${person.gender === 'Female' ? 'selected' : ''}>Female</option>
-                                <option value="Transgender" ${person.gender === 'Transgender' ? 'selected' : ''}>Transgender</option>
+                            <select name="accompanyingPersons[${i}][gender]" class="form-control" required>
+                                <option value="male" ${person.gender === 'male' ? 'selected' : ''}>Male</option>
+                                <option value="female" ${person.gender === 'female' ? 'selected' : ''}>Female</option>
+                                <option value="transgender" ${person.gender === 'transgender' ? 'selected' : ''}>Transgender</option>
                             </select>
 
                         </div>
@@ -557,7 +557,9 @@
                                             data-id_type_id="${item.id_type_id}"
                                             data-id_detail="${item.id_detail}"
                                             data-address="${item.address}"
-                                            data-pincode="${item.pincode}">
+                                            data-pincode="${item.pincode}"
+                                            data-group_persons="${item.group_persons}"
+                                            >
                                             Select
                                         </button>
                                     </td>
@@ -583,7 +585,7 @@
             let id_detail = $(this).data('id_detail')?.toString();
             let address = $(this).data('address');
             let pincode = $(this).data('pincode')?.toString();
-
+            let group_persons = $(this).data('group_persons') || 0;
             let person_visitor_passes_count = $(this).data('person_visitor_passes_count') || 0;
             let person_visitor_pass_latest_date = $(this).data('person_visitor_pass_latest_date') || null;
             let person_visitor_pass_latest_id = $(this).data('person_visitor_pass_latest_id') || null;
@@ -608,6 +610,7 @@
             $('#id_detail').val(id_detail);
             $('#address').val(address);
             $('#pincode').val(pincode);
+            $('#num_persons').val(group_persons);
             $('#resultsModal').modal('hide');
             fetchPin(pincode);
 

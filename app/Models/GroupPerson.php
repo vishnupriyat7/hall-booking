@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class GroupPerson extends Model
 {
-    use SoftDeletes, HasFactory;
+    use HasFactory;
 
     public $table = 'group_people';
 
@@ -23,6 +23,7 @@ class GroupPerson extends Model
         'name',
         'age',
         'gender',
+        'gallery_pass_id',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -37,5 +38,10 @@ class GroupPerson extends Model
     protected function serializeDate(DateTimeInterface $date)
     {
         return $date->format('Y-m-d H:i:s');
+    }
+
+    public function gallery_pass()
+    {
+        return $this->belongsTo(GalleryPass::class, 'gallery_pass_id');
     }
 }

@@ -205,6 +205,7 @@ class SelfRegistrationController extends Controller
                     $person->district = $selfReg->district;
                     $person->post_office = $selfReg->post_office;
                     $person->pincode = $selfReg->pincode;
+                    $person->group_persons = $selfReg->group_persons;
                     return $person;
                 });
             }

@@ -85,6 +85,16 @@ class SelfRegistration extends Model implements HasMedia
         $this->addMediaConversion('preview')->fit('crop', 120, 120);
     }
 
+    // public function getDobAttribute($value)
+    // {
+    //     return $value ? Carbon::parse($value)->format(config('panel.date_format')) : null;
+    // }
+
+    // public function setDobAttribute($value)
+    // {
+    //     $this->attributes['dob'] = $value ? Carbon::createFromFormat(config('panel.date_format'), $value)->format('Y-m-d') : null;
+    // }
+
     public function id_type()
     {
         return $this->belongsTo(IdType::class, 'id_type_id');
