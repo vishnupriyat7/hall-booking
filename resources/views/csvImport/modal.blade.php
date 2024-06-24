@@ -35,6 +35,15 @@
                                     </div>
                                 </div>
                             </div>
+                            <!-- <div class="form-group">
+                                <div class="col-md-6 col-md-offset-4">
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" name="idfield" checked> Has 'id' field (update, not insert new)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div> -->
 
                             <div class="form-group">
                                 <div class="col-md-8 col-md-offset-4">

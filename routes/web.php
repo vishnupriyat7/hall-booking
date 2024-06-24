@@ -7,7 +7,7 @@ Route::redirect('/pubregister_visitor', 'public/self-registrations/create_visito
 Route::redirect('/pubregister_gallery', 'public/self-registrations/create_gallery');
 Auth::routes(['register' => false]);
 
-// Route::get('api/pindetails/{pincode}', [VisitorPassControllerCustom::class, 'fetchPinDetails']);
+Route::get('api/pindetails/{pincode}', [VisitorPassControllerCustom::class, 'fetchPinDetails']);
 
 
 Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'middleware' => ['auth', 'admin']], function () {
@@ -39,7 +39,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Visitor Pass
     Route::get('visitor-passes/print/{id}', 'VisitorPassControllerCustom@print')->name('visitor-passes.print');;
     Route::get('visitor-passes/register', 'VisitorPassControllerCustom@register')->name('visitor-passes.register');;
-    Route::resource('visitor-passes', 'VisitorPassController', ['except' => ['destroy']]);
+    //Route::resource('visitor-passes', 'VisitorPassController', ['except' => ['destroy']]);
+    Route::get('visitor-passes/{id}', 'VisitorPassController@show')->name('visitor-passes.show');
+    Route::post('visitor-passes/store', 'VisitorPassControllerCustom@store')->name('visitor-passes.store');;
+    Route::get('visitor-passes', 'VisitorPassController@index')->name('visitor-passes.index');
 
     // Visiting Office Category
     Route::delete('visiting-office-categories/destroy', 'VisitingOfficeCategoryController@massDestroy')->name('visiting-office-categories.massDestroy');
@@ -62,7 +65,10 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Gallery Pass
     Route::get('gallery-passes/print/{id}', 'GalleryPassControllerCustom@print')->name('gallery-passes.print');;
     Route::get('gallery-passes/register', 'GalleryPassControllerCustom@register')->name('gallery-passes.register');;
-      Route::resource('gallery-passes', 'GalleryPassController', ['except' => ['destroy']]);
+    Route::post('gallery-passes/store', 'GalleryPassControllerCustom@store')->name('gallery-passes.store');;
+    Route::get('gallery-passes/{id}', 'GalleryPassController@show')->name('gallery-passes.show');
+    Route::get('gallery-passes', 'GalleryPassController@index')->name('gallery-passes.index');
+    // Route::resource('gallery-passes', 'GalleryPassController', ['except' => ['destroy']]);
 
     // Group Person
     Route::delete('group-people/destroy', 'GroupPersonController@massDestroy')->name('group-people.massDestroy');
@@ -77,18 +83,6 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Guiding Officer
     Route::delete('guiding-officers/destroy', 'GuidingOfficerController@massDestroy')->name('guiding-officers.massDestroy');
     Route::resource('guiding-officers', 'GuidingOfficerController');
-
-    // Locker
-    Route::delete('lockers/destroy', 'LockerController@massDestroy')->name('lockers.massDestroy');
-    Route::resource('lockers', 'LockerController');
-
-    // Locker Item
-    Route::delete('locker-items/destroy', 'LockerItemController@massDestroy')->name('locker-items.massDestroy');
-    Route::resource('locker-items', 'LockerItemController');
-
-    // Locker Token
-    Route::delete('locker-tokens/destroy', 'LockerTokenController@massDestroy')->name('locker-tokens.massDestroy');
-    Route::resource('locker-tokens', 'LockerTokenController');
 
     // State
     Route::delete('states/destroy', 'StateController@massDestroy')->name('states.massDestroy');
@@ -171,7 +165,7 @@ Route::group(['as' => 'frontend.', 'namespace' => 'Frontend', 'middleware' => ['
     Route::resource('members', 'MemberController');
 
 
-    
+
     Route::get('frontend/profile', 'ProfileController@index')->name('profile.index');
     Route::post('frontend/profile', 'ProfileController@update')->name('profile.update');
     Route::post('frontend/profile/destroy', 'ProfileController@destroy')->name('profile.destroy');

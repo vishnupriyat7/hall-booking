@@ -29,7 +29,7 @@
 <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.perfect-scrollbar/1.5.0/perfect-scrollbar.min.js"></script> -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/js/bootstrap-datetimepicker.min.js"></script>
-<script src="{{ asset('js/main.js') }}"></script>
+<!-- <script src="{{ asset('js/main.js') }}"></script> -->
     @yield('scripts')
 
 </body>

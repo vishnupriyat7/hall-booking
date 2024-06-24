@@ -27,16 +27,6 @@
                 <span class="help-block">{{ trans('cruds.country.fields.country_name_helper') }}</span>
             </div>
             <div class="form-group">
-                <div class="form-check {{ $errors->has('is_default_country') ? 'is-invalid' : '' }}">
-                    <input class="form-check-input" type="checkbox" name="is_default_country" id="is_default_country" value="1" {{ $country->is_default_country || old('is_default_country', 0) === 1 ? 'checked' : '' }} required>
-                    <label class="required form-check-label" for="is_default_country">{{ trans('cruds.country.fields.is_default_country') }}</label>
-                </div>
-                @if($errors->has('is_default_country'))
-                    <span class="text-danger">{{ $errors->first('is_default_country') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.country.fields.is_default_country_helper') }}</span>
-            </div>
-            <div class="form-group">
                 <label for="iso_3">{{ trans('cruds.country.fields.iso_3') }}</label>
                 <input class="form-control {{ $errors->has('iso_3') ? 'is-invalid' : '' }}" type="text" name="iso_3" id="iso_3" value="{{ old('iso_3', $country->iso_3) }}">
                 @if($errors->has('iso_3'))
@@ -67,6 +57,14 @@
                     <span class="text-danger">{{ $errors->first('iso') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.country.fields.iso_helper') }}</span>
+            </div>
+            <div class="form-group">
+                <label for="phonecode">{{ trans('cruds.country.fields.phonecode') }}</label>
+                <input class="form-control {{ $errors->has('phonecode') ? 'is-invalid' : '' }}" type="text" name="phonecode" id="phonecode" value="{{ old('phonecode', $country->phonecode) }}">
+                @if($errors->has('phonecode'))
+                    <span class="text-danger">{{ $errors->first('phonecode') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.country.fields.phonecode_helper') }}</span>
             </div>
             <div class="form-group">
                 <button class="btn btn-danger" type="submit">

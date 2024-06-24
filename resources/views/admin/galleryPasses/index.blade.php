@@ -1,14 +1,6 @@
 @extends('layouts.admin')
 @section('content')
-@can('gallery_pass_create')
-    <div style="margin-bottom: 10px;" class="row">
-        <div class="col-lg-12">
-            <a class="btn btn-success" href="{{ route('admin.gallery-passes.create') }}">
-                {{ trans('global.add') }} {{ trans('cruds.galleryPass.title_singular') }}
-            </a>
-        </div>
-    </div>
-@endcan
+
 <div class="card">
     <div class="card-header">
         {{ trans('cruds.galleryPass.title_singular') }} {{ trans('global.list') }}
@@ -76,6 +68,24 @@
                         {{ trans('cruds.galleryPass.fields.photo') }}
                     </th>
                     <th>
+                        {{ trans('cruds.galleryPass.fields.name') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.galleryPass.fields.gender') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.galleryPass.fields.dob') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.galleryPass.fields.age') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.galleryPass.fields.mobile') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.galleryPass.fields.email') }}
+                    </th>
+                    <th>
                         &nbsp;
                     </th>
                 </tr>
@@ -92,7 +102,7 @@
 <script>
     $(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
-  
+
   let dtOverrideGlobals = {
     buttons: dtButtons,
     processing: true,
@@ -120,6 +130,12 @@
 { data: 'post_office', name: 'post_office' },
 { data: 'pincode', name: 'pincode' },
 { data: 'photo', name: 'photo' },
+{ data: 'name', name: 'name' },
+{ data: 'gender', name: 'gender' },
+{ data: 'dob', name: 'dob' },
+{ data: 'age', name: 'age' },
+{ data: 'mobile', name: 'mobile' },
+{ data: 'email', name: 'email' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,
@@ -131,7 +147,7 @@
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
-  
+
 });
 
 </script>

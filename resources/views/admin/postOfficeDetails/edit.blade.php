@@ -19,14 +19,6 @@
                 <span class="help-block">{{ trans('cruds.postOfficeDetail.fields.pincode_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="epost_delivery_status">{{ trans('cruds.postOfficeDetail.fields.epost_delivery_status') }}</label>
-                <input class="form-control {{ $errors->has('epost_delivery_status') ? 'is-invalid' : '' }}" type="text" name="epost_delivery_status" id="epost_delivery_status" value="{{ old('epost_delivery_status', $postOfficeDetail->epost_delivery_status) }}">
-                @if($errors->has('epost_delivery_status'))
-                    <span class="text-danger">{{ $errors->first('epost_delivery_status') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.postOfficeDetail.fields.epost_delivery_status_helper') }}</span>
-            </div>
-            <div class="form-group">
                 <label for="default_post_flag">{{ trans('cruds.postOfficeDetail.fields.default_post_flag') }}</label>
                 <input class="form-control {{ $errors->has('default_post_flag') ? 'is-invalid' : '' }}" type="text" name="default_post_flag" id="default_post_flag" value="{{ old('default_post_flag', $postOfficeDetail->default_post_flag) }}">
                 @if($errors->has('default_post_flag'))

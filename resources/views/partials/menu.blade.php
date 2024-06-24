@@ -248,30 +248,6 @@
                                     </a>
                                 </li>
                             @endcan
-                            @can('locker_item_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.locker-items.index") }}" class="nav-link {{ request()->is("admin/locker-items") || request()->is("admin/locker-items/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fas fa-cogs">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.lockerItem.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
-                            @can('locker_token_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.locker-tokens.index") }}" class="nav-link {{ request()->is("admin/locker-tokens") || request()->is("admin/locker-tokens/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fas fa-cogs">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.lockerToken.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
                             @can('state_access')
                                 <li class="nav-item">
                                     <a href="{{ route("admin.states.index") }}" class="nav-link {{ request()->is("admin/states") || request()->is("admin/states/*") ? "active" : "" }}">

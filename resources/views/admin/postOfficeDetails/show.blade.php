@@ -33,14 +33,6 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.postOfficeDetail.fields.epost_delivery_status') }}
-                        </th>
-                        <td>
-                            {{ $postOfficeDetail->epost_delivery_status }}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
                             {{ trans('cruds.postOfficeDetail.fields.default_post_flag') }}
                         </th>
                         <td>
@@ -68,7 +60,7 @@
                             {{ trans('cruds.postOfficeDetail.fields.state') }}
                         </th>
                         <td>
-                            {{ $postOfficeDetail->state->state_cd ?? '' }}
+                            {{ $postOfficeDetail->state->state_abbr ?? '' }}
                         </td>
                     </tr>
                     <tr>

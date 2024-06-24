@@ -36,7 +36,7 @@
 
     .modal-dialog {
         width: auto !important;
-    max-width: 850px; 
+    max-width: 850px;
     }
 
 
@@ -115,7 +115,7 @@
 <div class="card" id="app">
 
     <div class="card-body">
-        <form id="registerForm" method="POST" action="{{ route('admin.self-registrations.store') }}" enctype="multipart/form-data">
+        <form id="registerForm" method="POST" action="{{ route('admin.gallery-passes.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="form-group col-4">
@@ -179,10 +179,10 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.person.fields.email_helper') }}</span>
             </div>
-            </div>
+            <!-- </div> -->
 
 
-            <div class="row">
+            <!-- <div class="row"> -->
 
 
                 <div class="form-group col ">
@@ -199,14 +199,14 @@
                 </div>
                 <div class="form-group col">
                     <label for="id_detail">{{ trans('cruds.selfRegistration.fields.id_detail') }}</label>
-                    <input autocomplete="new-password" class="form-control {{ $errors->has('id_detail') ? 'is-invalid' : '' }}" type="text" name="id_detail" id="id_detail" value="{{ old('id_detail', '') }}">
+                    <input required autocomplete="new-password" class="form-control {{ $errors->has('id_detail') ? 'is-invalid' : '' }}" type="text" name="id_detail" id="id_detail" value="{{ old('id_detail', '') }}">
                     @if($errors->has('id_detail'))
                     <span class="text-danger">{{ $errors->first('id_detail') }}</span>
                     @endif
                     <span class="help-block">{{ trans('cruds.selfRegistration.fields.id_detail_helper') }}</span>
                 </div>
 
-
+<!--
                 <div class="form-group col">
                     <label for="recommending_office_category_id">Recommendation</label>
                     <select class="form-control {{ $errors->has('recommending_office_category') ? 'is-invalid' : '' }}" name="recommending_office_category_id" id="recommending_office_category_id">
@@ -217,8 +217,8 @@
                     @if($errors->has('recommending_office_category'))
                     <span class="text-danger">{{ $errors->first('recommending_office_category') }}</span>
                     @endif
-                </div>
-                <div class="form-group col">
+                </div> -->
+                <!-- <div class="form-group col">
                     <label for="recommending_office">Recommending Office</label>
 
                     <select data-live-search="true" class="form-control selectpicker {{ $errors->has('recommending_office_mla') ? 'is-invalid' : '' }}" name="recommending_office_mla" id="recommending_office_mla">
@@ -239,7 +239,7 @@
                     @if($errors->has('recommending_office'))
                     <span class="text-danger">{{ $errors->first('recommending_office') }}</span>
                     @endif
-                </div>
+                </div> -->
 
             </div>
 
@@ -274,8 +274,9 @@
                         @if($errors->has('post_office'))
                         <span class="text-danger">{{ $errors->first('post_office') }}</span>
                         @endif
-                        <span class="help-block">{{ trans('cruds.selfRegistration.fields.post_office_helper') }}</span>
-                    </div>
+                        <select class="form-control {{ $errors->has('post_office_select') ? 'is-invalid' : '' }}" name="post_office_select" id="post_office_select" required hidden>
+                        <!-- <option disabled>Please Select</optionld> -->
+                       </select>                    </div>
                     </div>
 
                     <!-- country and state  -->
@@ -317,17 +318,16 @@
 
 
                 <div class="form-group col-3">
-                    <label class="required">{{ trans('cruds.selfRegistration.fields.purpose') }}</label>
-                    <select class="form-control {{ $errors->has('purpose') ? 'is-invalid' : '' }}" name="purpose" id="purpose" required>
-                        <option value disabled {{ old('purpose', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
-                        @foreach(App\Models\SelfRegistration::PURPOSE_SELECT as $key => $label)
-                        <option value="{{ $key }}" {{ old('purpose', '') === (string) $key ? 'selected' : '' }}>{{ $label }}</option>
+                    <label class="required">Guide</label>
+                    <select class="form-control {{ $errors->has('purpose') ? 'is-invalid' : '' }}" name="guide" id="purpose" required>
+                        <option value disabled {{ old('guide', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option>
+                        @foreach($guides as $id => $entry)
+                        <option value="{{ $entry->id }}" {{ old('guide') == $id ? 'selected' : '' }}>{{ $entry->name. ',' .$entry->pen }}</option>
                         @endforeach
                     </select>
-                    @if($errors->has('purpose'))
-                    <span class="text-danger">{{ $errors->first('purpose') }}</span>
+                    @if($errors->has('guide'))
+                    <span class="text-danger">{{ $errors->first('guide') }}</span>
                     @endif
-                    <span class="help-block">{{ trans('cruds.selfRegistration.fields.purpose_helper') }}</span>
                 </div>
                 <div class="form-group col-3">
                     <label for="date_of_visit">{{ trans('cruds.selfRegistration.fields.date_of_visit') }}</label>
@@ -348,45 +348,7 @@
                         </div>
 
             </div>
-            <div class="row">
 
-                <div class="form-group col">
-                    <label class="required" for="visiting_office_category_id">{{ trans('cruds.selfRegistration.fields.visiting_office_category') }}</label>
-                    <select class="form-control {{ $errors->has('visiting_office_category') ? 'is-invalid' : '' }}" name="visiting_office_category_id" id="visiting_office_category_id" required>
-                        <!-- <option disabled>Please Select</optionld> -->
-
-                        @foreach($visiting_office_categories as $id => $entry)
-                        <option value="{{ $id }}" {{ old('visiting_office_category_id') == $id ? 'selected' : '' }}>{{ $entry }}</option>
-                        @endforeach
-                    </select>
-                    @if($errors->has('visiting_office_category'))
-                    <span class="text-danger">{{ $errors->first('visiting_office_category') }}</span>
-                    @endif
-                    <span class="help-block">{{ trans('cruds.selfRegistration.fields.visiting_office_category_helper') }}</span>
-                </div>
-                <div class="form-group col">
-                    <label class="required" for="visiting_office">{{ trans('cruds.selfRegistration.fields.visiting_office') }}</label>
-                    <select data-live-search="true" class="form-control selectpicker {{ $errors->has('visiting_office_mla') ? 'is-invalid' : '' }}" name="visiting_office_mla" id="visiting_office_mla">
-                        <option value="Select">Select</option>
-                        @foreach($mlas as $id => $entry)
-                        <option value="{{ $entry->name }}">{{ $entry->name }}</option>
-                        @endforeach
-                    </select>
-                    <select data-live-search="true" class="form-control selectpicker {{ $errors->has('visiting_office_minister') ? 'is-invalid' : '' }}" name="visiting_office_minister" id="visiting_office_minister">
-                        <option value="Select">Select</option>
-                        @foreach($ministers as $id => $entry)
-                        <option value="{{ $entry->name }}">{{ $entry->name }}</option>
-                        @endforeach
-                    </select>
-                    <input class="form-control {{ $errors->has('visiting_office') ? 'is-invalid' : '' }}" name="visiting_office_input" id="visiting_office_input">
-
-                    @if($errors->has('visiting_office'))
-                    <span class="text-danger">{{ $errors->first('visiting_office') }}</span>
-                    @endif
-                    <span class="help-block">{{ trans('cruds.selfRegistration.fields.visiting_office_helper') }}</span>
-                </div>
-
-            </div>
 
             <div class="row d-flex justify-content-center">
 
@@ -413,6 +375,23 @@
                 <button class="ml-2 btn btn-warning" type='button' id="startbutton">Take photo</button>
 
             </div>
+
+
+            <div class="row">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text" id="">Number of Accompanying Persons:</span>
+                    </div>
+                       <input type="number" id="num_persons" name="num_persons" class="form-control" required>
+                    <div class="input-group-append">
+                    <button type="button" id="generate-fields-btn" class="btn btn-dark">Generate Fields</button>
+                    </div>
+                </div>
+
+            </div>
+
+            <div id="accompanying-persons" class="form-group"></div>
+
             <input type="hidden" name="personid" id="personid">
             <input type="hidden" name="passid" id="passid">
             <input type="hidden" name="photo" id="captured_photo">
@@ -441,239 +420,83 @@
 @section('scripts')
 
 
+<script src="{{ asset('js/camera.js') }}"></script>
+<script src="{{ asset('js/country.js') }}"></script>
+<script src="{{ asset('js/jquery.form.min.js') }}"></script>
+<script src="{{ asset('js/pin.js') }}"></script>
+
 <script>
-    (() => {
-        // The width and height of the captured photo. We will set the
-        // width to the value defined here, but the height will be
-        // calculated based on the aspect ratio of the input stream.
+        document.addEventListener('DOMContentLoaded', function () {
+            const accompanyingPersons = @json($form->accompanyingPersons ?? []);
+            const generateFieldsButton = document.getElementById('generate-fields-btn');
+            const numPersonsInput = document.getElementById('num_persons');
+            const accompanyingPersonsContainer = document.getElementById('accompanying-persons');
 
-        const width = 600; // We will scale the photo width to this
-        let height = 0; // This will be computed based on the input stream
+            const generateAccompanyingPersonsFields = () => {
+                const numPersons = numPersonsInput.value;
+                // Keep track of existing filled data
+                const filledData = [];
+                accompanyingPersonsContainer.querySelectorAll('.accompanying-person').forEach((personDiv) => {
+                    const nameInput = personDiv.querySelector('input[name$="[name]"]');
+                    const ageInput = personDiv.querySelector('input[name$="[age]"]');
+                    const genderSelect = personDiv.querySelector('select[name$="[gender]"]');
+                    if (nameInput && ageInput && genderSelect) {
+                        filledData.push({
+                            name: nameInput.value,
+                            age: ageInput.value,
+                            gender: genderSelect.value
+                        });
+                    }
+                });
 
-        // |streaming| indicates whether or not we're currently streaming
-        // video from the camera. Obviously, we start at false.
+                accompanyingPersonsContainer.innerHTML = '';
+                for (let i = 0; i < numPersons; i++) {
+                    const person = accompanyingPersons[i] || (filledData[i] || {});
+                    const personDiv = document.createElement('div');
+                    personDiv.classList.add('accompanying-person');
 
-        let streaming = false;
+                    personDiv.innerHTML = `
+                        <div class='row input-group '>
+                            <span class="input-group-text"># ${i + 1}</span>
+                            <input type="text" placeholder="name" name="accompanyingPersons[${i}][name]" class="form-control" required value="${person.name || ''}">
 
-        // The various HTML elements we need to configure or control. These
-        // will be set by the startup() function.
+                            <input type="number"  placeholder="age"  name="accompanyingPersons[${i}][age]" class="form-control" required value="${person.age || ''}">
 
-        let video = null;
-        let canvas = null;
-        let photo = null;
-        let startbutton = null;
+                            <select name="accompanyingPersons[${i}][gender]" class="form-control" required>
+                                <option value="male" ${person.gender === 'male' ? 'selected' : ''}>Male</option>
+                                <option value="female" ${person.gender === 'female' ? 'selected' : ''}>Female</option>
+                                <option value="transgender" ${person.gender === 'transgender' ? 'selected' : ''}>Transgender</option>
+                            </select>
 
-        let localStream = null;
+                        </div>
+                    `;
 
-        function startup() {
-
-            video = document.getElementById("video");
-            canvas = document.getElementById("canvas");
-            photo = document.getElementById("photo");
-            startbutton = document.getElementById("startbutton");
-
-            // Media constraints
-            const constraints = {
-                audio: false,
-                video: {
-                    //  facingMode: { exact: 'environment' },   // Use the back camera (otherwise the front camera will be used by default)
-                    //  width: { ideal: 1024 },
-                    //   height: { ideal: 768 }
+                    accompanyingPersonsContainer.appendChild(personDiv);
                 }
             };
 
-            navigator.mediaDevices
-                .getUserMedia(constraints)
-                .then((stream) => {
-                    video.srcObject = stream;
-                    video.play();
-                    localStream = stream;
-                })
-                .catch((err) => {
-                    console.error(`An error occurred: ${err}`);
-                });
+            generateFieldsButton.addEventListener('click', generateAccompanyingPersonsFields);
 
-            video.addEventListener(
-                "canplay",
-                (ev) => {
-                    if (!streaming) {
-                        height = video.videoHeight / (video.videoWidth / width);
+            numPersonsInput.addEventListener('change', generateAccompanyingPersonsFields);
 
-                        // Firefox currently has a bug where the height can't be read from
-                        // the video, so we will make assumptions if this happens.
-
-                        if (isNaN(height)) {
-                            height = width / (4 / 3);
-                        }
-
-                        video.setAttribute("width", width);
-                        video.setAttribute("height", height);
-                        canvas.setAttribute("width", width);
-                        canvas.setAttribute("height", height);
-                        streaming = true;
-                    }
-                },
-                false,
-            );
-
-            startbutton.addEventListener(
-                "click",
-                (ev) => {
-                    takepicture();
-                   // takePhotoUsingImageCaptureApi();
-                    ev.preventDefault();
-                },
-                false,
-            );
-
-            clearphoto();
-        }
-
-        // Fill the photo with an indication that none has been
-        // captured.
-
-        function clearphoto() {
-            const context = canvas.getContext("2d");
-            context.fillStyle = "#AAA";
-            context.fillRect(0, 0, canvas.width, canvas.height);
-
-            const data = canvas.toDataURL("image/png");
-            photo.setAttribute("src", data);
-        }
-
-        // Capture a photo by fetching the current contents of the video
-        // and drawing it into a canvas, then converting that to a PNG
-        // format data URL. By drawing it on an offscreen canvas and then
-        // drawing that to the screen, we can change its size and/or apply
-        // other changes before drawing it.
-
-        function takepicture() {
-            const context = canvas.getContext("2d");
-            if (width && height) {
-
-                canvas.width = width;
-                canvas.height = height;
-                context.drawImage(video, 0, 0, width, height);
-
-                const data = canvas.toDataURL("image/jpeg");
-                photo.setAttribute("src", data);
-                document.getElementById("captured_photo").value = data;
-            } else {
-                clearphoto();
-            }
-        }
-
-        function takePhotoUsingImageCaptureApi() {
-
-            let src;
-            if ("ImageCapture" in window) {
-                try {
-                    const track = localStream.getVideoTracks()[0];
-                    let imageCapture = new ImageCapture(track);
-                    imageCapture.takePhoto().then(blob => {
-                        const data = URL.createObjectURL(blob);
-                        photo.setAttribute("src", data);
-                        //convert blob to base64
-                        blobToBase64(blob).then(res => {
-                            document.getElementById("captured_photo").value = res;
-                        console.log(res); // res is base64 now
-                        });
-
-                       //
-                    });
-
-                    //src = URL.createObjectURL(blob);
-                   // photo.setAttribute("src", data);
-                } catch (e) {
-                    //alert("takePhoto failed: " + e);
-                  //  takepicture()
-                }
-            } else {
-                alert("ImageCapture is not supported in this browser");
-               // takepicture()
+            if (accompanyingPersons.length > 0) {
+                numPersonsInput.value = accompanyingPersons.length;
+                generateAccompanyingPersonsFields();
             }
 
+            // document.addEventListener('click', function (event) {
+            //     if (event.target.classList.contains('remove-btn')) {
+            //         event.target.closest('.accompanying-person').remove();
+            //         numPersonsInput.value = document.querySelectorAll('.accompanying-person').length;
+            //     }
+            // });
 
-        }
-        const blobToBase64 = blob => {
-            const reader = new FileReader();
-            reader.readAsDataURL(blob);
-            return new Promise(resolve => {
-                reader.onloadend = () => {
-                resolve(reader.result);
-                };
-            });
-        }
+        });
 
-        function stop() {
-            try {
-                if (localStream) {
-                    const tracks = localStream.getTracks();
-                    for (let i = 0; i < tracks.length; i++) {
-                        const track = tracks[i];
-                        track.stop();
-                    }
-                }
-            } catch (e) {
-                alert(e.message);
-            }
-        };
-
-        // Set up our event listener to run the startup process
-        // once loading is complete.
-        window.addEventListener("load", startup, false);
-
-        document.getElementById("photo").onload = function() {
-            let img = document.getElementById("photo");
-            document.getElementById("info").innerText = "Image Width: " + img.naturalWidth + ". Image Height: " + img.naturalHeight;
-        }
-
-
-
-
-    })();
 </script>
 
-<script src="{{ asset('js/country.js') }}"></script>
-<script src="{{ asset('js/jquery.form.min.js') }}"></script>
 <script>
     var pass_issued = null;
-
-    function fetchPin(pin) {
-
-        // Creating Our XMLHttpRequest object
-        let xhr = new XMLHttpRequest();
-        //let pin = e.target.value
-        if (pin.length != 6) {
-            //alert("Pincode should be 6 digits" + pin.length + " " + pin);
-            return;
-        }
-        document.getElementById("post_office").value = "";
-        document.getElementById("district").value = "";
-        document.getElementById("state").value = "";
-        // Making our connection
-        let url = 'https://api.postalpincode.in/pincode/' + pin;
-        xhr.open("GET", url, true);
-
-        // function execute after request is successful
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
-                let data = JSON.parse(this.responseText);
-                if (data[0].Status == "Success") {
-                    let postOffice = data[0].PostOffice[0];
-                    document.getElementById("post_office").value = postOffice.Name;
-                    document.getElementById("district").value = postOffice.District;
-                    document.getElementById("state").value = postOffice.State;
-                }
-            }
-        }
-        // Sending our request
-        xhr.send();
-    }
-</script>
-
-<script>
     $(document).ready(function() {
         document.getElementById('searchSelfRegDate').valueAsDate = new Date();
         $('#searchForm').on('submit', function(e) {
@@ -734,7 +557,9 @@
                                             data-id_type_id="${item.id_type_id}"
                                             data-id_detail="${item.id_detail}"
                                             data-address="${item.address}"
-                                            data-pincode="${item.pincode}">
+                                            data-pincode="${item.pincode}"
+                                            data-group_persons="${item.group_persons}"
+                                            >
                                             Select
                                         </button>
                                     </td>
@@ -752,13 +577,15 @@
             let gender = $(this).data('gender');
             let age = $(this).data('age');
             let dob = $(this).data('dob');
+            dob = moment(dob, 'YYYY-MM-DD').format("DD.MM.YYYY");
+
             let mobile = $(this).data('mobile')?.toString();
             let email = $(this).data('email');
             let id_type_id = $(this).data('id_type_id');
             let id_detail = $(this).data('id_detail')?.toString();
             let address = $(this).data('address');
             let pincode = $(this).data('pincode')?.toString();
-
+            let group_persons = $(this).data('group_persons') || 0;
             let person_visitor_passes_count = $(this).data('person_visitor_passes_count') || 0;
             let person_visitor_pass_latest_date = $(this).data('person_visitor_pass_latest_date') || null;
             let person_visitor_pass_latest_id = $(this).data('person_visitor_pass_latest_id') || null;
@@ -771,7 +598,7 @@
             }
             //reset old passid
             $('#passid').val('');
-            
+
 
             $('#name').val(name);
             $('#mobile').val(mobile);
@@ -783,6 +610,7 @@
             $('#id_detail').val(id_detail);
             $('#address').val(address);
             $('#pincode').val(pincode);
+            $('#num_persons').val(group_persons);
             $('#resultsModal').modal('hide');
             fetchPin(pincode);
 
@@ -791,7 +619,7 @@
           //  alert(person_visitor_passes_count);
             if(person_visitor_passes_count > 0){
                 //add a button to view pass details
-                let link = "{{ route('admin.visitor-passes.show', ':id') }}";
+                let link = "{{ route('admin.gallery-passes.show', ':id') }}";
                 link = link.replace(':id', person_visitor_pass_latest_id);
 
                 $('#pass_issed_to_this_person').html(`
@@ -805,6 +633,7 @@
 
             }
         });
+
 
         $('#registerForm').ajaxForm({
             beforeSend: function() {
@@ -862,7 +691,7 @@
                     $('#register-print-btn').html(`Update and RePrint (No:${pass_issued.number})`);
                     //go to a pass print page with pass id
                    // localStorage.setItem('pass_issued', JSON.stringify(pass_issued));
-                    window.open('/admin/visitor-passes/print/' + pass_issued.id , '_blank');
+                    window.open('/admin/gallery-passes/print/' + pass_issued.id , '_blank');
                     //window.location.href = "{{URL::to('admin/visitor-passes/print/' . ':id')}}" . replace(':id', pass_issued.id) ;
 
                 }
@@ -880,11 +709,6 @@
 
     window.onload = function() {
         const selectCountry = document.getElementById("country");
-        const visiting_office_category = document.getElementById("visiting_office_category_id");
-        const visiting_office_minister = document.getElementById("visiting_office_minister");
-        const visiting_office_mla = document.getElementById("visiting_office_mla");
-
-        const visiting_office_input = document.getElementById("visiting_office_input");
 
         const recommending_office_category = document.getElementById("recommending_office_category_id");
         const recommending_office = document.getElementById("recommending_office");
@@ -893,18 +717,15 @@
         const date_of_visit = document.getElementById("date_of_visit");
         date_of_visit.value = moment().format("DD.MM.YYYY");
 
+
         const selectDistrict = document.getElementById("district");
         const pinCtrl = document.getElementById("pincode");
         const idType = document.getElementById("id_type_id");
 
-        const visitingOfficeSelectMLA = $('#visiting_office_mla');
-        const visitingOfficeSelectMinister = $('#visiting_office_minister');
         const recommendingOfficeSelectMLA = $('#recommending_office_mla');
         const recommendingOfficeSelectMinister = $('#recommending_office_minister');
 
 
-        visitingOfficeSelectMLA.selectpicker('hide');
-        visitingOfficeSelectMinister.selectpicker('hide');
         recommendingOfficeSelectMLA.selectpicker('hide');
         recommendingOfficeSelectMinister.selectpicker('hide');
 
@@ -925,69 +746,43 @@
         });
 
 
-        idType.addEventListener("change", function(e) {
-            // alert(e.target.value);
-            let id = e.target.value
-            let id_detail = document.getElementById("id_detail");
-            if (id != -1) {
-                id_detail.setAttribute("required", "");
-                recommending_office_category.removeAttribute('required');
+        // idType.addEventListener("change", function(e) {
+        //     // alert(e.target.value);
+        //     let id = e.target.value
+        //     let id_detail = document.getElementById("id_detail");
+        //     if (id != -1) {
+        //         id_detail.setAttribute("required", "");
+        //         recommending_office_category.removeAttribute('required');
 
-            } else {
-                id_detail.removeAttribute('required');
-                recommending_office_category.setAttribute("required", "");
+        //     } else {
+        //         id_detail.removeAttribute('required');
+        //         recommending_office_category.setAttribute("required", "");
 
-            }
-        });
+        //     }
+        // });
 
-        visiting_office_category.addEventListener("input", function(e) {
-            // let office = e.target.value
-            let office = visiting_office_category.options[visiting_office_category.selectedIndex].innerHTML;
-
-            visitingOfficeSelectMLA.selectpicker('hide');
-            visitingOfficeSelectMinister.selectpicker('hide');
-            visiting_office_input.style.display = 'none';
-            visiting_office_input.removeAttribute('required');
-            if ('MLA' == office) {
-                visitingOfficeSelectMLA.selectpicker('show');
-            } else if ('Minister' == office) {
-                visitingOfficeSelectMinister.selectpicker('show');
-            } else {
-                visiting_office_input.style.display = 'block';
-                visiting_office_input.hidden = false;
-                visiting_office_input.setAttribute("required", "");
-                visiting_office_input.value = "";
-                if (['Legislature Secretary', 'Speaker', 'Deputy Speaker', 'Chief Minister', 'Leader of Opposition'].indexOf(office) !== -1) {
-                    let officename = 'O/o ' + office;
-                    visiting_office_input.value = officename;
-                }
-            }
-
-        });
-
-
-        recommending_office_category.addEventListener("input", function(e) {
-            // let office = e.target.value
-            let office = recommending_office_category.options[recommending_office_category.selectedIndex].innerHTML;
-            recommendingOfficeSelectMLA.selectpicker('hide');
-            recommendingOfficeSelectMinister.selectpicker('hide');
-            recommending_office_input.style.display = 'none';
-            recommending_office_input.removeAttribute('required');
-            if ('MLA' == office) {
-                recommendingOfficeSelectMLA.selectpicker('show');
-            } else if ('Minister' == office) {
-                recommendingOfficeSelectMinister.selectpicker('show');
-            } else {
-                recommending_office_input.style.display = 'block';
-                recommending_office_input.hidden = false;
-                recommending_office_input.setAttribute("required", "");
-                recommending_office_input.value = "";
-                if (['Legislature Secretary', 'Speaker', 'Deputy Speaker', 'Chief Minister', 'Leader of Opposition'].indexOf(office) !== -1) {
-                    let officename = 'O/o ' + office;
-                    recommending_office_input.value = officename;
-                }
-            }
-        });
+        // recommending_office_category.addEventListener("input", function(e) {
+        //     // let office = e.target.value
+        //     let office = recommending_office_category.options[recommending_office_category.selectedIndex].innerHTML;
+        //     recommendingOfficeSelectMLA.selectpicker('hide');
+        //     recommendingOfficeSelectMinister.selectpicker('hide');
+        //     recommending_office_input.style.display = 'none';
+        //     recommending_office_input.removeAttribute('required');
+        //     if ('MLA' == office) {
+        //         recommendingOfficeSelectMLA.selectpicker('show');
+        //     } else if ('Minister' == office) {
+        //         recommendingOfficeSelectMinister.selectpicker('show');
+        //     } else {
+        //         recommending_office_input.style.display = 'block';
+        //         recommending_office_input.hidden = false;
+        //         recommending_office_input.setAttribute("required", "");
+        //         recommending_office_input.value = "";
+        //         if (['Legislature Secretary', 'Speaker', 'Deputy Speaker', 'Chief Minister', 'Leader of Opposition'].indexOf(office) !== -1) {
+        //             let officename = 'O/o ' + office;
+        //             recommending_office_input.value = officename;
+        //         }
+        //     }
+        // });
 
 
     };

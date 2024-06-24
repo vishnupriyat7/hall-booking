@@ -21,11 +21,11 @@ class Country extends Model
     protected $fillable = [
         'country_abbr',
         'country_name',
-        'is_default_country',
         'iso_3',
         'numcode',
         'default_country',
         'iso',
+        'phonecode',
         'created_at',
         'updated_at',
         'deleted_at',

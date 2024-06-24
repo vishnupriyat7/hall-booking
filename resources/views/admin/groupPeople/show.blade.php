@@ -47,6 +47,14 @@
                             {{ App\Models\GroupPerson::GENDER_SELECT[$groupPerson->gender] ?? '' }}
                         </td>
                     </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.groupPerson.fields.gallery_pass') }}
+                        </th>
+                        <td>
+                            {{ $groupPerson->gallery_pass->number ?? '' }}
+                        </td>
+                    </tr>
                 </tbody>
             </table>
             <div class="form-group">

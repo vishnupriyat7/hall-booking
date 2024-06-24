@@ -37,7 +37,7 @@
             </div>
             <div class="form-group">
                 <label class="required" for="dob">Date of Birth</label>
-                <input id="startDate" class="form-control" name="dob" id="dob" type="date" required/>
+                <input id="startDate" class="form-control" name="dob" id="dob" type="date"  value="{{ old('dob', '') }}"  required/>
 
                 @if($errors->has('dob'))
                     <span class="text-danger">{{ $errors->first('dob') }}</span>
@@ -111,7 +111,7 @@
                 <span class="help-block">{{ trans('cruds.selfRegistration.fields.state_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="district">{{ trans('cruds.selfRegistration.fields.district') }}</label>
+                <label class="required" for="district">{{ trans('cruds.selfRegistration.fields.district') }}</label>
                 <input required class="form-control {{ $errors->has('district') ? 'is-invalid' : '' }}" type="text" name="district" id="district" value="{{ old('district', '') }}">
                 @if($errors->has('district'))
                     <span class="text-danger">{{ $errors->first('district') }}</span>
@@ -127,16 +127,16 @@
                 <span class="help-block">{{ trans('cruds.selfRegistration.fields.pincode_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="post_office">{{ trans('cruds.selfRegistration.fields.post_office') }}</label>
-                <input  class="form-control {{ $errors->has('post_office') ? 'is-invalid' : '' }}" type="text" name="post_office" id="post_office" value="{{ old('post_office', '') }}">
+                <label class="required" for="post_office">{{ trans('cruds.selfRegistration.fields.post_office') }}</label>
+                <input required class="form-control {{ $errors->has('post_office') ? 'is-invalid' : '' }}" type="text" name="post_office" id="post_office" value="{{ old('post_office', '') }}">
                 @if($errors->has('post_office'))
                     <span class="text-danger">{{ $errors->first('post_office') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.selfRegistration.fields.post_office_helper') }}</span>
             </div>
             <div class="form-group">
-                <label for="group_persons">{{ trans('cruds.selfRegistration.fields.group_persons') }}</label>
-                <input class="form-control {{ $errors->has('group_persons') ? 'is-invalid' : '' }}" type="number" name="group_persons" id="group_persons" value="{{ old('group_persons', '') }}" step="1">
+                <label class="required" for="group_persons">Total no of persons in group</label>
+                <input required class="form-control {{ $errors->has('group_persons') ? 'is-invalid' : '' }}" type="number" name="group_persons" id="group_persons" value="{{ old('group_persons', '') }}" step="1">
                 @if($errors->has('group_persons'))
                     <span class="text-danger">{{ $errors->first('group_persons') }}</span>
                 @endif

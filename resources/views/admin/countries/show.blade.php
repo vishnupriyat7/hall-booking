@@ -41,14 +41,6 @@
                     </tr>
                     <tr>
                         <th>
-                            {{ trans('cruds.country.fields.is_default_country') }}
-                        </th>
-                        <td>
-                            <input type="checkbox" disabled="disabled" {{ $country->is_default_country ? 'checked' : '' }}>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th>
                             {{ trans('cruds.country.fields.iso_3') }}
                         </th>
                         <td>
@@ -77,6 +69,14 @@
                         </th>
                         <td>
                             {{ $country->iso }}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            {{ trans('cruds.country.fields.phonecode') }}
+                        </th>
+                        <td>
+                            {{ $country->phonecode }}
                         </td>
                     </tr>
                 </tbody>

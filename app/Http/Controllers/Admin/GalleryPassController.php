@@ -32,7 +32,7 @@ class GalleryPassController extends Controller
                 $deleteGate    = 'visitor_pass_delete';
                 $crudRoutePart = 'gallery-passes';
 
-                return view('partials.datatablesActions', compact(
+                return view('partials.visitorPassActions', compact(
                     'viewGate',
                     'editGate',
                     'deleteGate',
@@ -91,6 +91,22 @@ class GalleryPassController extends Controller
             });
             $table->editColumn('photo', function ($row) {
                 return $row->photo ? $row->photo : '';
+            });
+            $table->editColumn('name', function ($row) {
+                return $row->name ? $row->name : '';
+            });
+            $table->editColumn('gender', function ($row) {
+                return $row->gender ? $row->gender : '';
+            });
+
+            $table->editColumn('age', function ($row) {
+                return $row->age ? $row->age : '';
+            });
+            $table->editColumn('mobile', function ($row) {
+                return $row->mobile ? $row->mobile : '';
+            });
+            $table->editColumn('email', function ($row) {
+                return $row->email ? $row->email : '';
             });
 
             $table->rawColumns(['actions', 'placeholder', 'person', 'guide']);

@@ -40,6 +40,18 @@
                 <span class="help-block">{{ trans('cruds.groupPerson.fields.gender_helper') }}</span>
             </div>
             <div class="form-group">
+                <label for="gallery_pass_id">{{ trans('cruds.groupPerson.fields.gallery_pass') }}</label>
+                <select class="form-control select2 {{ $errors->has('gallery_pass') ? 'is-invalid' : '' }}" name="gallery_pass_id" id="gallery_pass_id">
+                    @foreach($gallery_passes as $id => $entry)
+                        <option value="{{ $id }}" {{ (old('gallery_pass_id') ? old('gallery_pass_id') : $groupPerson->gallery_pass->id ?? '') == $id ? 'selected' : '' }}>{{ $entry }}</option>
+                    @endforeach
+                </select>
+                @if($errors->has('gallery_pass'))
+                    <span class="text-danger">{{ $errors->first('gallery_pass') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.groupPerson.fields.gallery_pass_helper') }}</span>
+            </div>
+            <div class="form-group">
                 <button class="btn btn-danger" type="submit">
                     {{ trans('global.save') }}
                 </button>

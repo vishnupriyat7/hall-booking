@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class VisitorPass extends Model
 {
-    use SoftDeletes, HasFactory;
+    use HasFactory;
 
     public $table = 'visitor_passes';
 
@@ -25,6 +25,7 @@ class VisitorPass extends Model
         'pass_valid_upto',
         'issued_date',
         'date_of_visit',
+        'dob',
         'created_at',
         'updated_at',
         'deleted_at',
@@ -50,9 +51,16 @@ class VisitorPass extends Model
         'state',
         'district',
         'post_office',
+        'post_office_select',
         'pincode',
         'print_count',
         'photo',
+        'camera_allowed',
+        'name',
+        'gender',
+        'dob',
+        'age',
+        'email',
         'created_at',
         'updated_at',
         'deleted_at',

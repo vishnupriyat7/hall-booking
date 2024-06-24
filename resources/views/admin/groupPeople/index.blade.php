@@ -35,6 +35,12 @@
                             {{ trans('cruds.groupPerson.fields.gender') }}
                         </th>
                         <th>
+                            {{ trans('cruds.groupPerson.fields.gallery_pass') }}
+                        </th>
+                        <th>
+                            {{ trans('cruds.galleryPass.fields.issued_date') }}
+                        </th>
+                        <th>
                             &nbsp;
                         </th>
                     </tr>
@@ -56,6 +62,12 @@
                             </td>
                             <td>
                                 {{ App\Models\GroupPerson::GENDER_SELECT[$groupPerson->gender] ?? '' }}
+                            </td>
+                            <td>
+                                {{ $groupPerson->gallery_pass->number ?? '' }}
+                            </td>
+                            <td>
+                                {{ $groupPerson->gallery_pass->issued_date ?? '' }}
                             </td>
                             <td>
                                 @can('group_person_show')

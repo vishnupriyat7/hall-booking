@@ -19,112 +19,45 @@
     </div>
 
     <div class="card-body">
-        <div class="table-responsive">
-            <table class=" table table-bordered table-striped table-hover datatable datatable-PostOfficeDetail">
-                <thead>
-                    <tr>
-                        <th width="10">
+        <table class=" table table-bordered table-striped table-hover ajaxTable datatable datatable-PostOfficeDetail">
+            <thead>
+                <tr>
+                    <th width="10">
 
-                        </th>
-                        <th>
-                            {{ trans('cruds.postOfficeDetail.fields.id') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.postOfficeDetail.fields.pincode') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.postOfficeDetail.fields.epost_delivery_status') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.postOfficeDetail.fields.default_post_flag') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.postOfficeDetail.fields.post_office_name') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.postOfficeDetail.fields.post_office_status') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.postOfficeDetail.fields.state') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.postOfficeDetail.fields.district') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.postOfficeDetail.fields.district_name') }}
-                        </th>
-                        <th>
-                            {{ trans('cruds.postOfficeDetail.fields.postal_circle') }}
-                        </th>
-                        <th>
-                            &nbsp;
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach($postOfficeDetails as $key => $postOfficeDetail)
-                        <tr data-entry-id="{{ $postOfficeDetail->id }}">
-                            <td>
-
-                            </td>
-                            <td>
-                                {{ $postOfficeDetail->id ?? '' }}
-                            </td>
-                            <td>
-                                {{ $postOfficeDetail->pincode ?? '' }}
-                            </td>
-                            <td>
-                                {{ $postOfficeDetail->epost_delivery_status ?? '' }}
-                            </td>
-                            <td>
-                                {{ $postOfficeDetail->default_post_flag ?? '' }}
-                            </td>
-                            <td>
-                                {{ $postOfficeDetail->post_office_name ?? '' }}
-                            </td>
-                            <td>
-                                {{ $postOfficeDetail->post_office_status ?? '' }}
-                            </td>
-                            <td>
-                                {{ $postOfficeDetail->state->state_cd ?? '' }}
-                            </td>
-                            <td>
-                                {{ $postOfficeDetail->district->district_abbr ?? '' }}
-                            </td>
-                            <td>
-                                {{ $postOfficeDetail->district_name ?? '' }}
-                            </td>
-                            <td>
-                                {{ $postOfficeDetail->postal_circle ?? '' }}
-                            </td>
-                            <td>
-                                @can('post_office_detail_show')
-                                    <a class="btn btn-xs btn-primary" href="{{ route('admin.post-office-details.show', $postOfficeDetail->id) }}">
-                                        {{ trans('global.view') }}
-                                    </a>
-                                @endcan
-
-                                @can('post_office_detail_edit')
-                                    <a class="btn btn-xs btn-info" href="{{ route('admin.post-office-details.edit', $postOfficeDetail->id) }}">
-                                        {{ trans('global.edit') }}
-                                    </a>
-                                @endcan
-
-                                @can('post_office_detail_delete')
-                                    <form action="{{ route('admin.post-office-details.destroy', $postOfficeDetail->id) }}" method="POST" onsubmit="return confirm('{{ trans('global.areYouSure') }}');" style="display: inline-block;">
-                                        <input type="hidden" name="_method" value="DELETE">
-                                        <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                        <input type="submit" class="btn btn-xs btn-danger" value="{{ trans('global.delete') }}">
-                                    </form>
-                                @endcan
-
-                            </td>
-
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-        </div>
+                    </th>
+                    <th>
+                        {{ trans('cruds.postOfficeDetail.fields.id') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.postOfficeDetail.fields.pincode') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.postOfficeDetail.fields.default_post_flag') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.postOfficeDetail.fields.post_office_name') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.postOfficeDetail.fields.post_office_status') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.postOfficeDetail.fields.state') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.postOfficeDetail.fields.district') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.postOfficeDetail.fields.district_name') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.postOfficeDetail.fields.postal_circle') }}
+                    </th>
+                    <th>
+                        &nbsp;
+                    </th>
+                </tr>
+            </thead>
+        </table>
     </div>
 </div>
 
@@ -137,14 +70,14 @@
     $(function () {
   let dtButtons = $.extend(true, [], $.fn.dataTable.defaults.buttons)
 @can('post_office_detail_delete')
-  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}'
+  let deleteButtonTrans = '{{ trans('global.datatables.delete') }}';
   let deleteButton = {
     text: deleteButtonTrans,
     url: "{{ route('admin.post-office-details.massDestroy') }}",
     className: 'btn-danger',
     action: function (e, dt, node, config) {
-      var ids = $.map(dt.rows({ selected: true }).nodes(), function (entry) {
-          return $(entry).data('entry-id')
+      var ids = $.map(dt.rows({ selected: true }).data(), function (entry) {
+          return entry.id
       });
 
       if (ids.length === 0) {
@@ -166,18 +99,37 @@
   dtButtons.push(deleteButton)
 @endcan
 
-  $.extend(true, $.fn.dataTable.defaults, {
+  let dtOverrideGlobals = {
+    buttons: dtButtons,
+    processing: true,
+    serverSide: true,
+    retrieve: true,
+    aaSorting: [],
+    ajax: "{{ route('admin.post-office-details.index') }}",
+    columns: [
+      { data: 'placeholder', name: 'placeholder' },
+{ data: 'id', name: 'id' },
+{ data: 'pincode', name: 'pincode' },
+{ data: 'default_post_flag', name: 'default_post_flag' },
+{ data: 'post_office_name', name: 'post_office_name' },
+{ data: 'post_office_status', name: 'post_office_status' },
+{ data: 'state_state_abbr', name: 'state.state_abbr' },
+{ data: 'district_district_abbr', name: 'district.district_abbr' },
+{ data: 'district_name', name: 'district_name' },
+{ data: 'postal_circle', name: 'postal_circle' },
+{ data: 'actions', name: '{{ trans('global.actions') }}' }
+    ],
     orderCellsTop: true,
     order: [[ 1, 'desc' ]],
     pageLength: 100,
-  });
-  let table = $('.datatable-PostOfficeDetail:not(.ajaxTable)').DataTable({ buttons: dtButtons })
+  };
+  let table = $('.datatable-PostOfficeDetail').DataTable(dtOverrideGlobals);
   $('a[data-toggle="tab"]').on('shown.bs.tab click', function(e){
       $($.fn.dataTable.tables(true)).DataTable()
           .columns.adjust();
   });
   
-})
+});
 
 </script>
 @endsection

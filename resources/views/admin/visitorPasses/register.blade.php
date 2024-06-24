@@ -36,7 +36,7 @@
 
     .modal-dialog {
         width: auto !important;
-    max-width: 850px; 
+    max-width: 850px;
     }
 
 
@@ -115,7 +115,7 @@
 <div class="card" id="app">
 
     <div class="card-body">
-        <form id="registerForm" method="POST" action="{{ route('admin.self-registrations.store') }}" enctype="multipart/form-data">
+        <form id="registerForm" method="POST" action="{{ route('admin.visitor-passes.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="row">
                 <div class="form-group col-4">
@@ -274,7 +274,9 @@
                         @if($errors->has('post_office'))
                         <span class="text-danger">{{ $errors->first('post_office') }}</span>
                         @endif
-                        <span class="help-block">{{ trans('cruds.selfRegistration.fields.post_office_helper') }}</span>
+                        <select class="form-control {{ $errors->has('post_office_select') ? 'is-invalid' : '' }}" name="post_office_select" id="post_office_select" required hidden>
+                        <!-- <option disabled>Please Select</optionld> -->
+                       </select>
                     </div>
                     </div>
 
@@ -285,8 +287,8 @@
                     <label>{{ trans('cruds.selfRegistration.fields.country') }}</label>
                     <select class="form-control {{ $errors->has('country') ? 'is-invalid' : '' }}" name="country" id="country">
                         <!-- <option value disabled {{ old('country', null) === null ? 'selected' : '' }}>{{ trans('global.pleaseSelect') }}</option> -->
-                        @foreach(App\Models\SelfRegistration::COUNTRY_SELECT as $key => $label)
-                        <option value="{{ $label }}" {{ old('country', 'India') === (string) $label ? 'selected' : '' }}>{{ $label }}</option>
+                        @foreach($countries as $key => $label)
+                        <option value="{{ $label }}" {{ old('country', 'INDIA') === (string) $label ? 'selected' : '' }}>{{ $label }}</option>
                         @endforeach
                     </select>
                     @if($errors->has('country'))
@@ -440,240 +442,14 @@
 
 @section('scripts')
 
+<script src="{{ asset('js/camera.js') }}"></script>
 
-<script>
-    (() => {
-        // The width and height of the captured photo. We will set the
-        // width to the value defined here, but the height will be
-        // calculated based on the aspect ratio of the input stream.
-
-        const width = 600; // We will scale the photo width to this
-        let height = 0; // This will be computed based on the input stream
-
-        // |streaming| indicates whether or not we're currently streaming
-        // video from the camera. Obviously, we start at false.
-
-        let streaming = false;
-
-        // The various HTML elements we need to configure or control. These
-        // will be set by the startup() function.
-
-        let video = null;
-        let canvas = null;
-        let photo = null;
-        let startbutton = null;
-
-        let localStream = null;
-
-        function startup() {
-
-            video = document.getElementById("video");
-            canvas = document.getElementById("canvas");
-            photo = document.getElementById("photo");
-            startbutton = document.getElementById("startbutton");
-
-            // Media constraints
-            const constraints = {
-                audio: false,
-                video: {
-                    //  facingMode: { exact: 'environment' },   // Use the back camera (otherwise the front camera will be used by default)
-                    //  width: { ideal: 1024 },
-                    //   height: { ideal: 768 }
-                }
-            };
-
-            navigator.mediaDevices
-                .getUserMedia(constraints)
-                .then((stream) => {
-                    video.srcObject = stream;
-                    video.play();
-                    localStream = stream;
-                })
-                .catch((err) => {
-                    console.error(`An error occurred: ${err}`);
-                });
-
-            video.addEventListener(
-                "canplay",
-                (ev) => {
-                    if (!streaming) {
-                        height = video.videoHeight / (video.videoWidth / width);
-
-                        // Firefox currently has a bug where the height can't be read from
-                        // the video, so we will make assumptions if this happens.
-
-                        if (isNaN(height)) {
-                            height = width / (4 / 3);
-                        }
-
-                        video.setAttribute("width", width);
-                        video.setAttribute("height", height);
-                        canvas.setAttribute("width", width);
-                        canvas.setAttribute("height", height);
-                        streaming = true;
-                    }
-                },
-                false,
-            );
-
-            startbutton.addEventListener(
-                "click",
-                (ev) => {
-                    takepicture();
-                   // takePhotoUsingImageCaptureApi();
-                    ev.preventDefault();
-                },
-                false,
-            );
-
-            clearphoto();
-        }
-
-        // Fill the photo with an indication that none has been
-        // captured.
-
-        function clearphoto() {
-            const context = canvas.getContext("2d");
-            context.fillStyle = "#AAA";
-            context.fillRect(0, 0, canvas.width, canvas.height);
-
-            const data = canvas.toDataURL("image/png");
-            photo.setAttribute("src", data);
-        }
-
-        // Capture a photo by fetching the current contents of the video
-        // and drawing it into a canvas, then converting that to a PNG
-        // format data URL. By drawing it on an offscreen canvas and then
-        // drawing that to the screen, we can change its size and/or apply
-        // other changes before drawing it.
-
-        function takepicture() {
-            const context = canvas.getContext("2d");
-            if (width && height) {
-
-                canvas.width = width;
-                canvas.height = height;
-                context.drawImage(video, 0, 0, width, height);
-
-                const data = canvas.toDataURL("image/jpeg");
-                photo.setAttribute("src", data);
-                document.getElementById("captured_photo").value = data;
-            } else {
-                clearphoto();
-            }
-        }
-
-        function takePhotoUsingImageCaptureApi() {
-
-            let src;
-            if ("ImageCapture" in window) {
-                try {
-                    const track = localStream.getVideoTracks()[0];
-                    let imageCapture = new ImageCapture(track);
-                    imageCapture.takePhoto().then(blob => {
-                        const data = URL.createObjectURL(blob);
-                        photo.setAttribute("src", data);
-                        //convert blob to base64
-                        blobToBase64(blob).then(res => {
-                            document.getElementById("captured_photo").value = res;
-                        console.log(res); // res is base64 now
-                        });
-
-                       //
-                    });
-
-                    //src = URL.createObjectURL(blob);
-                   // photo.setAttribute("src", data);
-                } catch (e) {
-                    //alert("takePhoto failed: " + e);
-                  //  takepicture()
-                }
-            } else {
-                alert("ImageCapture is not supported in this browser");
-               // takepicture()
-            }
-
-
-        }
-        const blobToBase64 = blob => {
-            const reader = new FileReader();
-            reader.readAsDataURL(blob);
-            return new Promise(resolve => {
-                reader.onloadend = () => {
-                resolve(reader.result);
-                };
-            });
-        }
-
-        function stop() {
-            try {
-                if (localStream) {
-                    const tracks = localStream.getTracks();
-                    for (let i = 0; i < tracks.length; i++) {
-                        const track = tracks[i];
-                        track.stop();
-                    }
-                }
-            } catch (e) {
-                alert(e.message);
-            }
-        };
-
-        // Set up our event listener to run the startup process
-        // once loading is complete.
-        window.addEventListener("load", startup, false);
-
-        document.getElementById("photo").onload = function() {
-            let img = document.getElementById("photo");
-            document.getElementById("info").innerText = "Image Width: " + img.naturalWidth + ". Image Height: " + img.naturalHeight;
-        }
-
-
-
-
-    })();
-</script>
-
-<script src="{{ asset('js/country.js') }}"></script>
+<!-- <script src="{{ asset('js/country.js') }}"></script> -->
 <script src="{{ asset('js/jquery.form.min.js') }}"></script>
+<script src="{{ asset('js/pin.js') }}"></script>
 <script>
     var pass_issued = null;
 
-    function fetchPin(pin) {
-
-        // Creating Our XMLHttpRequest object
-        let xhr = new XMLHttpRequest();
-        //let pin = e.target.value
-        if (pin.length != 6) {
-            //alert("Pincode should be 6 digits" + pin.length + " " + pin);
-            return;
-        }
-        document.getElementById("post_office").value = "";
-        document.getElementById("district").value = "";
-        document.getElementById("state").value = "";
-        // Making our connection
-        let url = 'https://api.postalpincode.in/pincode/' + pin;
-        xhr.open("GET", url, true);
-
-        // function execute after request is successful
-        xhr.onreadystatechange = function() {
-            if (this.readyState == 4 && this.status == 200) {
-                console.log(this.responseText);
-                let data = JSON.parse(this.responseText);
-                if (data[0].Status == "Success") {
-                    let postOffice = data[0].PostOffice[0];
-                    document.getElementById("post_office").value = postOffice.Name;
-                    document.getElementById("district").value = postOffice.District;
-                    document.getElementById("state").value = postOffice.State;
-                }
-            }
-        }
-        // Sending our request
-        xhr.send();
-    }
-</script>
-
-<script>
     $(document).ready(function() {
         document.getElementById('searchSelfRegDate').valueAsDate = new Date();
         $('#searchForm').on('submit', function(e) {
@@ -752,6 +528,7 @@
             let gender = $(this).data('gender');
             let age = $(this).data('age');
             let dob = $(this).data('dob');
+            dob = moment(dob, 'YYYY-MM-DD').format("DD.MM.YYYY");
             let mobile = $(this).data('mobile')?.toString();
             let email = $(this).data('email');
             let id_type_id = $(this).data('id_type_id');
@@ -771,7 +548,7 @@
             }
             //reset old passid
             $('#passid').val('');
-            
+
 
             $('#name').val(name);
             $('#mobile').val(mobile);

@@ -46,7 +46,18 @@ trait CsvImportTrait
             $for_insert = array_chunk($insert, 100);
 
             foreach ($for_insert as $insert_item) {
-                $model::insert($insert_item);
+
+                if(array_key_exists('id',$insert_item )){
+                    $id = $insert_item['id'];
+                    unset($insert_item['id']);
+                    $model::where('id',$id)->update($insert_item);
+                } else {
+                    //dd('no id field found');
+                    $model::insert($insert_item);
+
+                }
+
+             //   $model::insert($insert_item);
             }
 
             $rows  = count($insert);
@@ -91,9 +102,17 @@ trait CsvImportTrait
         $model     = new $fullModelName();
         $fillables = $model->getFillable();
 
+        $hasid = $request->input('idfield', false) ? true : false;
+        //if($hasid)
+        { //for update
+            array_unshift($fillables, "id");
+        }
+
         $redirect = url()->previous();
 
         $routeName = 'admin.' . strtolower(Str::plural(Str::kebab($modelName))) . '.processCsvImport';
+
+
 
         return view('csvImport.parseInput', compact('headers', 'filename', 'fillables', 'hasHeader', 'modelName', 'lines', 'redirect', 'routeName'));
     }
