@@ -225,7 +225,7 @@ class GalleryPassControllerCustom extends Controller
             //$galleryPass->pass_valid_upto = $request->pass_valid_upto;
             $galleryPass->issued_date = Carbon::now()->format('Y-m-d');
 
-            $galleryPass->date_of_visit = Carbon::createFromFormat( 'd.m.Y', $request->date_of_visit)->format( 'Y-m-d' );
+          //  $galleryPass->date_of_visit = Carbon::createFromFormat( 'd.m.Y', $request->date_of_visit)->format( 'Y-m-d' );
 
             $galleryPass->num_persons = $request->num_persons;
             $galleryPass->save();

@@ -88,6 +88,14 @@
                 <span class="help-block">{{ trans('cruds.selfRegistration.fields.address_helper') }}</span>
             </div>
 
+            <div class="form-group">
+                <label class="required" for="pincode">PIN</label>
+                <input class="form-control {{ $errors->has('pincode') ? 'is-invalid' : '' }}" type="text" name="pincode" id="pincode" value="{{ old('pincode', '') }}" required>
+                @if($errors->has('pincode'))
+                    <span class="text-danger">{{ $errors->first('pincode') }}</span>
+                @endif
+                <span class="help-block">{{ trans('cruds.selfRegistration.fields.pincode_helper') }}</span>
+            </div>
 
             <div class="form-group">
                 <label class="required">{{ trans('cruds.selfRegistration.fields.country') }}</label>
@@ -118,24 +126,19 @@
                 @endif
                 <span class="help-block">{{ trans('cruds.selfRegistration.fields.district_helper') }}</span>
             </div>
-            <div class="form-group">
-                <label class="required" for="pincode">PIN</label>
-                <input class="form-control {{ $errors->has('pincode') ? 'is-invalid' : '' }}" type="text" name="pincode" id="pincode" value="{{ old('pincode', '') }}" required>
-                @if($errors->has('pincode'))
-                    <span class="text-danger">{{ $errors->first('pincode') }}</span>
-                @endif
-                <span class="help-block">{{ trans('cruds.selfRegistration.fields.pincode_helper') }}</span>
-            </div>
+          
             <div class="form-group">
                 <label class="required" for="post_office">{{ trans('cruds.selfRegistration.fields.post_office') }}</label>
-                <input required class="form-control {{ $errors->has('post_office') ? 'is-invalid' : '' }}" type="text" name="post_office" id="post_office" value="{{ old('post_office', '') }}">
+                <select class="form-control {{ $errors->has('post_office') ? 'is-invalid' : '' }}" name="post_office" id="post_office">
+                        <!-- <option disabled>Please Select</optionld> -->
+                       </select>     
                 @if($errors->has('post_office'))
                     <span class="text-danger">{{ $errors->first('post_office') }}</span>
                 @endif
                 <span class="help-block">{{ trans('cruds.selfRegistration.fields.post_office_helper') }}</span>
             </div>
             <div class="form-group">
-                <label class="required" for="group_persons">Total no of persons in group</label>
+                <label class="required" for="group_persons"> Number of Accompanying Persons</label>
                 <input required class="form-control {{ $errors->has('group_persons') ? 'is-invalid' : '' }}" type="number" name="group_persons" id="group_persons" value="{{ old('group_persons', '') }}" step="1">
                 @if($errors->has('group_persons'))
                     <span class="text-danger">{{ $errors->first('group_persons') }}</span>
@@ -161,6 +164,37 @@
 @section('scripts')
 <script>
 
+</script>
+<script src="{{ asset('js/pin.js') }}"></script>
+
+
+<script>
+
+    //  var visiting_office_instance =  NiceSelect.bind(document.getElementById("visiting_office"), {searchable: true});
+
+
+    window.onload = function() {
+        const selectCountry = document.getElementById("country");
+
+        const selectDistrict = document.getElementById("district");
+        const pinCtrl = document.getElementById("pincode");
+
+        //Create New Option Tag With Value
+        function createOption(displayMember, valueMember) {
+            const newOption = document.createElement("option");
+            newOption.value = valueMember;
+            newOption.text = displayMember;
+            return newOption;
+        }
+
+        pinCtrl.addEventListener("input", function(e) {
+            fetchPinPublic(e.target.value);
+        });
+        pinCtrl.addEventListener("change", function(e) {
+            fetchPinPublic(e.target.value);
+        });
+
+    };
 </script>
 
 
