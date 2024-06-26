@@ -64,7 +64,7 @@
                 <input autocomplete="new-password" placeholder="Self Reg Date" class="form-control {{ $errors->has('searchSelfRegDate') ? 'is-invalid' : '' }}" type="date" name="searchSelfRegDate" id="searchSelfRegDate">
             </div>
             <div class="form-group ">
-                <input autocomplete="new-password" placeholder="Token No" class="form-control {{ $errors->has('searchSelfRegNum') ? 'is-invalid' : '' }}" type="number" name="searchTokNum" id="searchTokNum">
+                <input autocomplete="new-password" placeholder="Pass Token No" class="form-control {{ $errors->has('searchSelfRegNum') ? 'is-invalid' : '' }}" type="number" name="searchTokNum" id="searchTokNum">
             </div>
             <div class="form-group ">
                 <input autocomplete="new-password" placeholder="Self Reg No" class="form-control {{ $errors->has('searchSelfRegNum') ? 'is-invalid' : '' }}" type="number" name="searchSelfRegNum" id="searchSelfRegNum">
@@ -482,7 +482,7 @@
             };
 
             generateFieldsButton.addEventListener('click', generateAccompanyingPersonsFields);
-
+           
             numPersonsInput.addEventListener('change', generateAccompanyingPersonsFields);
 
             if (accompanyingPersons.length > 0) {
@@ -588,7 +588,7 @@
                                             data-address="${item.address}"
                                             data-pincode="${item.pincode}"
                                             data-postoffice="${item.post_office}"
-                                            data-group_persons="${item.group_persons}"
+                                            data-num_persons="${item.num_persons}"
                                             >
                                             Select
                                         </button>
@@ -602,7 +602,8 @@
         });
 
         $(document).on('click', '.select-record', function() {
-            let personid = $(this).data('personid');
+          //  let personid = $(this).data('personid');
+            let id = $(this).data('id');
             let name = $(this).data('name');
             let gender = $(this).data('gender');
             let age = $(this).data('age');
@@ -616,20 +617,20 @@
             let address = $(this).data('address');
             let pincode = $(this).data('pincode')?.toString();
             let postoffice = $(this).data('postoffice');
-            let group_persons = $(this).data('group_persons') || 0;
+            let num_persons = $(this).data('num_persons') || 0;
             let person_visitor_passes_count = $(this).data('person_visitor_passes_count') || 0;
             let person_visitor_pass_latest_date = $(this).data('person_visitor_pass_latest_date') || null;
             let person_visitor_pass_latest_id = $(this).data('person_visitor_pass_latest_id') || null;
 
             $('#register-print-btn').html(`Register and Print`);
 
-            if(-1 !== personid){ // -1 means self registration
-                $('#personid').val(personid);
+             //reset old passid
+             $('#passid').val('');
+            if(-1 !== id){ // -1 means self registration
+                $('#passid').val(id);
                 $('#register-print-btn').html(`ReIssue and Print`);
             }
-            //reset old passid
-            $('#passid').val('');
-
+           
 
             $('#name').val(name);
             $('#mobile').val(mobile);
@@ -641,11 +642,14 @@
             $('#id_detail').val(id_detail);
             $('#address').val(address);
             $('#pincode').val(pincode);
-            $('#num_persons').val(group_persons);
+            $('#num_persons').val(num_persons);
             $('#resultsModal').modal('hide');
             //alert(postoffice)
             fetchPin(pincode, postoffice);
             //select post office if it exists
+
+            //load accompanying persons
+            $('#generate-fields-btn').click();
 
 
             //check if pass is issued to this person
@@ -721,7 +725,7 @@
                     // window.location = window.location.href.substr(0, i)
                     pass_issued = jsonResponse.pass
                     $('#passid').val(pass_issued.id);
-                    $('#personid').val(pass_issued.person_id);
+                    //$('#personid').val(pass_issued.person_id);
                     $('#register-print-btn').html(`Update and RePrint (No:${pass_issued.number})`);
                     //go to a pass print page with pass id
                    // localStorage.setItem('pass_issued', JSON.stringify(pass_issued));

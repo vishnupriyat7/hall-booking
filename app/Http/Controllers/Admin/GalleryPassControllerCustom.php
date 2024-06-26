@@ -307,6 +307,7 @@ class GalleryPassControllerCustom extends Controller
            
 
             $selfRegs = SelfRegistration::with('id_type')
+            ->where('pass_type', 'gallery')
             ->when($queryMob, function($query) use ($queryMob) {
                 return $query->where('mobile', 'like', '%'.$queryMob.'%');
             })
