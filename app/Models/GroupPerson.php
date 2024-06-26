@@ -20,6 +20,7 @@ class GroupPerson extends Model
     ];
 
     protected $fillable = [
+        'sl_no',
         'name',
         'age',
         'gender',

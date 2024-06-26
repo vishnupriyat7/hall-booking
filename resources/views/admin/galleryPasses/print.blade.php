@@ -92,12 +92,13 @@
 
 				</tr>
 
-
-
-
 				<tr>
   					<td colspan='2'  style='font-size:16px;'>Tok No:{{$galleryPass->number}}<label class='printed'></label></td>
 				</tr>
+                <tr>
+  					<td style='font-size:16px;'>Accompanying :{{$galleryPass->num_persons}}<label class='printed'></label></td>
+				</tr>
+
 				<tr>
 					<td colspan='3' style='font-size:16px;'>Date:{{ $issued_on}}, {{  $issued_at }}</td>
 				</tr>
@@ -109,13 +110,13 @@
 
 				<tr>
 				<td colspan='3' style='font-size:12px;'>
-					Visitor's Name: {{ $galleryPass->person->name }}
+					Visitor's Name: {{ $galleryPass->name }}
 				</td>
 				</tr>
 
 				<tr>
 				<td colspan='3' style='font-size:12px;'>
-						Address: {{ $galleryPass->person->address }}
+						Address: {{ $galleryPass->address }}
 				</td>
 				</tr>
 				<tr>

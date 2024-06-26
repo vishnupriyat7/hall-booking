@@ -368,7 +368,7 @@
                     Register and Print
                 </button>
 
-                <a class="ml-2 btn btn-success" href="{{ route('admin.visitor-passes.register') }}">
+                <a class="ml-2 btn btn-success" href="{{ route('admin.gallery-passes.register') }}">
                     New Registration
                 </a>
 
@@ -455,9 +455,11 @@
                     const personDiv = document.createElement('div');
                     personDiv.classList.add('accompanying-person');
 
+                    // add a print button to each person
                     personDiv.innerHTML = `
-                        <div class='row input-group '>
-                            <span class="input-group-text"># ${i + 1}</span>
+                        <div class='mt-1 row input-group' id="person_${i+1}">
+                            <input readonly type="number" placeholder="sl_no" name="accompanyingPersons[${i}][sl_no]" class="form-control" value="${person.sl_no || (i + 1)}">
+
                             <input type="text" placeholder="name" name="accompanyingPersons[${i}][name]" class="form-control" required value="${person.name || ''}">
 
                             <input type="number"  placeholder="age"  name="accompanyingPersons[${i}][age]" class="form-control" required value="${person.age || ''}">
@@ -467,6 +469,9 @@
                                 <option value="female" ${person.gender === 'female' ? 'selected' : ''}>Female</option>
                                 <option value="transgender" ${person.gender === 'transgender' ? 'selected' : ''}>Transgender</option>
                             </select>
+
+
+                            <a class="btn btn-danger print-btn">Print</a>
 
                         </div>
                     `;
@@ -484,10 +489,31 @@
                 generateAccompanyingPersonsFields();
             }
 
+            document.addEventListener('click', function (event) {
+                if (event.target.classList.contains('print-btn')) {
+                    //alert(event.target.parentElement.id);
+                    const personId = event.target.parentElement.id;
+                    //remove person_ from id
+                    const personIndex = personId.replace('person_', '');
+                    //alert(personIndex);
+
+                    const passId = $('#passid').val();
+
+                    if (!passId) {
+                        alert('Please save the pass first');
+                        return;
+                    }
+
+                    window.open('/admin/gallery-passes/print_companion/' + pass_issued.id + '/' + personIndex, '_blank');
+
+                    //numPersonsInput.value = document.querySelectorAll('.accompanying-person').length;
+                }
+            });
+
             // document.addEventListener('click', function (event) {
-            //     if (event.target.classList.contains('remove-btn')) {
-            //         event.target.closest('.accompanying-person').remove();
-            //         numPersonsInput.value = document.querySelectorAll('.accompanying-person').length;
+            //     if (event.target.classList.contains('print-btn')) {
+            //         //event.target.closest('.accompanying-person').remove();
+            //         //numPersonsInput.value = document.querySelectorAll('.accompanying-person').length;
             //     }
             // });
 
@@ -617,7 +643,7 @@
             //alert(postoffice)
             fetchPin(pincode, postoffice);
             //select post office if it exists
-            
+
 
             //check if pass is issued to this person
             $('#pass_issed_to_this_person').html('');
