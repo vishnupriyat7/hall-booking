@@ -261,6 +261,12 @@ class GalleryPassControllerCustom extends Controller
 
         return response()->json( [ 'success' => 'Pass created successfully', 'pass'=>$galleryPass ] );
     }
+    public function getAjax(Request $request)
+    {
+        $id = $request->id;
+        $pass = GalleryPass::with(['person', 'accompanyingPersons'])->findOrFail($id);
+        return response()->json( $pass );
+    }
 
     public function search(Request $request)
     {
@@ -295,7 +301,11 @@ class GalleryPassControllerCustom extends Controller
             // ->when($queryName, function($query) use ($queryName) {
             //     return $query->where('name', 'like', '%'.$queryName.'%');
             // })
-            ->get();
+            ->get()->transform( function($pass) {
+                $idtype = IdType::where( 'name', $pass->id_type)->first();
+                $pass->id_type_id = $idtype->id;
+                return $pass;
+            });;
         }
 
         \Log::info($passes);
@@ -322,6 +332,8 @@ class GalleryPassControllerCustom extends Controller
                 ->whereDate('created_at', $querySelfRegDate);
             })
             ->get();
+                
+
             \Log::info($selfRegs);
 
             //if results found, convert them to person

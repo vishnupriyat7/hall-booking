@@ -427,8 +427,41 @@
 <script src="{{ asset('js/pin.js') }}"></script>
 
 <script>
+
+
+function loadAccompanyingPerson(person, i)
+{
+    const accompanyingPersonsContainer = document.getElementById('accompanying-persons');
+    
+    const personDiv = document.createElement('div');
+                    personDiv.classList.add('accompanying-person');
+                    // add a print button to each person
+                    personDiv.innerHTML = `
+                        <div class='mt-1 row input-group' id="person_${i+1}">
+                            <input readonly type="number" placeholder="sl_no" name="accompanyingPersons[${i}][sl_no]" class="form-control" value="${person.sl_no || (i + 1)}">
+
+                            <input type="text" placeholder="name" name="accompanyingPersons[${i}][name]" class="form-control" required value="${person.name || ''}">
+
+                            <input type="number"  placeholder="age"  name="accompanyingPersons[${i}][age]" class="form-control" required value="${person.age || ''}">
+
+                            <select name="accompanyingPersons[${i}][gender]" class="form-control" required>
+                                <option value="male" ${person.gender === 'male' ? 'selected' : ''}>Male</option>
+                                <option value="female" ${person.gender === 'female' ? 'selected' : ''}>Female</option>
+                                <option value="transgender" ${person.gender === 'transgender' ? 'selected' : ''}>Transgender</option>
+                            </select>
+
+
+                            <a class="btn btn-danger print-btn">Print</a>
+
+                        </div>
+                    `;
+     accompanyingPersonsContainer.appendChild(personDiv);
+}
+</script>
+
+<script>
         document.addEventListener('DOMContentLoaded', function () {
-            const accompanyingPersons = @json($form->accompanyingPersons ?? []);
+            var accompanyingPersons = @json($form->accompanyingPersons ?? []);
             const generateFieldsButton = document.getElementById('generate-fields-btn');
             const numPersonsInput = document.getElementById('num_persons');
             const accompanyingPersonsContainer = document.getElementById('accompanying-persons');
@@ -453,31 +486,8 @@
                 accompanyingPersonsContainer.innerHTML = '';
                 for (let i = 0; i < numPersons; i++) {
                     const person = accompanyingPersons[i] || (filledData[i] || {});
-                    const personDiv = document.createElement('div');
-                    personDiv.classList.add('accompanying-person');
-
-                    // add a print button to each person
-                    personDiv.innerHTML = `
-                        <div class='mt-1 row input-group' id="person_${i+1}">
-                            <input readonly type="number" placeholder="sl_no" name="accompanyingPersons[${i}][sl_no]" class="form-control" value="${person.sl_no || (i + 1)}">
-
-                            <input type="text" placeholder="name" name="accompanyingPersons[${i}][name]" class="form-control" required value="${person.name || ''}">
-
-                            <input type="number"  placeholder="age"  name="accompanyingPersons[${i}][age]" class="form-control" required value="${person.age || ''}">
-
-                            <select name="accompanyingPersons[${i}][gender]" class="form-control" required>
-                                <option value="male" ${person.gender === 'male' ? 'selected' : ''}>Male</option>
-                                <option value="female" ${person.gender === 'female' ? 'selected' : ''}>Female</option>
-                                <option value="transgender" ${person.gender === 'transgender' ? 'selected' : ''}>Transgender</option>
-                            </select>
-
-
-                            <a class="btn btn-danger print-btn">Print</a>
-
-                        </div>
-                    `;
-
-                    accompanyingPersonsContainer.appendChild(personDiv);
+                    
+                    loadAccompanyingPerson(person, i);
                 }
             };
 
@@ -576,7 +586,7 @@
                                             data-person_visitor_passes_count="${item.person_visitor_passes_count}"
                                             data-person_visitor_pass_latest_date="${item.person_visitor_pass_latest?.created_at}"
                                             data-person_visitor_pass_latest_id="${item.person_visitor_pass_latest?.id}"
-                                            data-personid="${item.id}"
+                                            data-id="${item.id}"
                                             data-name="${item.name}"
                                             data-age="${item.age}"
                                             data-dob="${item.dob}"
@@ -648,8 +658,29 @@
             fetchPin(pincode, postoffice);
             //select post office if it exists
 
-            //load accompanying persons
-            $('#generate-fields-btn').click();
+            //get pass using ajax  using passid
+
+            $.ajax({
+                url: "{{ route('admin.gallery-passes.getAjax') }}",
+                type: 'GET',  data: { id: id },
+                success: function(data) {
+                    passItem = data;
+                    pass_issued = passItem;
+                   // alert(JSON.stringify(passItem));
+                    accompanyingPersons = passItem.accompanying_persons || [];
+                    //load accompanying persons
+                    const accompanyingPersonsContainer = document.getElementById('accompanying-persons');
+                    accompanyingPersonsContainer.innerHTML = '';
+                    accompanyingPersons.forEach((person, i) => {
+                        loadAccompanyingPerson(person, i);
+                    });
+                    
+
+                    $('#generate-fields-btn').click();
+                }
+            });
+
+
 
 
             //check if pass is issued to this person
