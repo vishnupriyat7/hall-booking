@@ -7,11 +7,12 @@ use Carbon\Carbon;
 use App\Models\IdType;
 use App\Models\Member;
 use App\Models\Person;
+use App\Models\Country;
 use App\Models\GalleryPass;
+use App\Models\GroupPerson;
 use Illuminate\Http\Request;
 use App\Models\GuidingOfficer;
 use App\Http\Controllers\Controller;
-use App\Models\Country;
 use App\Models\VisitingOfficeCategory;
 use Illuminate\Support\Facades\Storage;
 use App\Models\RecommendingOfficeCategory;
@@ -52,6 +53,27 @@ class GalleryPassControllerCustom extends Controller
 
         return view('admin.galleryPasses.print', compact('galleryPass', 'issued_at', 'issued_on'));
     }
+    public function printCompanion(Request $request)
+    {
+
+        \Log::info($request->all());
+        $passid = $request->id;
+        $person_index = $request->person_index;
+        $galleryPass = GalleryPass::with(['person', 'person.id_type:id,name'])
+        ->findOrFail($passid);
+        \Log::info($galleryPass);
+        $issued_date = Carbon::createFromFormat('Y-m-d H:i:s', $galleryPass->created_at, 'UTC')->setTimezone('Asia/Kolkata');
+        $issued_on =  $issued_date->format('d.m.Y');
+        $issued_at =  $issued_date->format('H:i a');
+        $companion = GroupPerson::where('gallery_pass_id', $passid)->where('sl_no', $person_index)->first();
+        if(!$companion) {
+            dd ('Companion not found');
+        }
+
+        return view('admin.galleryPasses.print_companion', compact('galleryPass', 'issued_at', 'issued_on', 'companion'));
+    }
+
+
     public function store(Request $request)
     {
 
@@ -126,10 +148,10 @@ class GalleryPassControllerCustom extends Controller
             $person = new Person();
         }
         $dob = Carbon::createFromFormat( 'd.m.Y', $request->dob)->format( 'Y-m-d' );
-
+        $age =  $request->age ?  $request->age : Carbon::parse($dob)->age;
         $person->name = $request->name;
         $person->gender = $request->gender;
-        $person->age = $request->age;
+        $person->age = $age;
         $person->dob = $dob;
         $person->mobile = $request->mobile;
         $person->id_type_id = $request->id_type_id == -1 || $request->id_type_id == '' ? null : $request->id_type_id;
@@ -180,7 +202,7 @@ class GalleryPassControllerCustom extends Controller
         //use transaction here to make sure number is unique
 
         $galleryPass = null;
-        \DB::transaction( function() use ($request, $person, $recommendingOffice, &$galleryPass, $dob, $postOffice, $accompanyingPersons)
+        \DB::transaction( function() use ($request, $person, $age, &$galleryPass, $dob, $postOffice, $accompanyingPersons)
         {
             if($request->passid) {
                 $galleryPass = GalleryPass::find($request->passid);
@@ -207,7 +229,7 @@ class GalleryPassControllerCustom extends Controller
             $galleryPass->gender = $request->gender;
 
             $galleryPass->dob = $dob;
-            $galleryPass->age = $request->age;
+            $galleryPass->age = $age;
             $galleryPass->mobile = $request->mobile;
             $galleryPass->id_type =  $idtype;
             $galleryPass->id_detail = $request->id_detail;
@@ -225,7 +247,7 @@ class GalleryPassControllerCustom extends Controller
             //$galleryPass->pass_valid_upto = $request->pass_valid_upto;
             $galleryPass->issued_date = Carbon::now()->format('Y-m-d');
 
-            $galleryPass->date_of_visit = Carbon::createFromFormat( 'd.m.Y', $request->date_of_visit)->format( 'Y-m-d' );
+          //  $galleryPass->date_of_visit = Carbon::createFromFormat( 'd.m.Y', $request->date_of_visit)->format( 'Y-m-d' );
 
             $galleryPass->num_persons = $request->num_persons;
             $galleryPass->save();

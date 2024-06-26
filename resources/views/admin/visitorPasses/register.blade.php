@@ -510,7 +510,9 @@
                                             data-id_type_id="${item.id_type_id}"
                                             data-id_detail="${item.id_detail}"
                                             data-address="${item.address}"
-                                            data-pincode="${item.pincode}">
+                                            data-pincode="${item.pincode}"
+					    data-postoffice="${item.post_office}"
+					    >
                                             Select
                                         </button>
                                     </td>
@@ -535,6 +537,7 @@
             let id_detail = $(this).data('id_detail')?.toString();
             let address = $(this).data('address');
             let pincode = $(this).data('pincode')?.toString();
+            let postoffice = $(this).data('postoffice');
 
             let person_visitor_passes_count = $(this).data('person_visitor_passes_count') || 0;
             let person_visitor_pass_latest_date = $(this).data('person_visitor_pass_latest_date') || null;
@@ -561,7 +564,7 @@
             $('#address').val(address);
             $('#pincode').val(pincode);
             $('#resultsModal').modal('hide');
-            fetchPin(pincode);
+            fetchPin(pincode, postoffice);
 
             //check if pass is issued to this person
             $('#pass_issed_to_this_person').html('');
@@ -695,10 +698,10 @@
 
 
         pinCtrl.addEventListener("input", function(e) {
-            fetchPin(e.target.value);
+            fetchPin(e.target.value, null);
         });
         pinCtrl.addEventListener("change", function(e) {
-            fetchPin(e.target.value);
+            fetchPin(e.target.value, null);
         });
 
 

@@ -155,12 +155,13 @@ class GalleryPassController extends Controller
         return redirect()->route('admin.gallery-passes.index');
     }
 
-    public function show(GalleryPass $galleryPass)
+    public function show(Request $request)
     {
+
         abort_if(Gate::denies('visitor_pass_show'), Response::HTTP_FORBIDDEN, '403 Forbidden');
-
-        $galleryPass->load('person', 'guide');
-
+        $galleryPass = GalleryPass::find($request->id);
+        $galleryPass->load('person', 'guide', 'accompanyingPersons');
+       // dd ($galleryPass);
         return view('admin.galleryPasses.show', compact('galleryPass'));
     }
 }

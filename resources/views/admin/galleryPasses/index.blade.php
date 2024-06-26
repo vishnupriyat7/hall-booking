@@ -19,27 +19,32 @@
                     <th>
                         {{ trans('cruds.galleryPass.fields.number') }}
                     </th>
-                    <th>
-                        {{ trans('cruds.galleryPass.fields.person') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.person.fields.mobile') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.person.fields.id_detail') }}
-                    </th>
+
                     <th>
                         {{ trans('cruds.galleryPass.fields.issued_date') }}
                     </th>
                     <th>
-                        {{ trans('cruds.galleryPass.fields.date_of_visit') }}
+                        Accompnaying
+                    </th>
+
+                    <th>
+                        {{ trans('cruds.galleryPass.fields.name') }}
                     </th>
                     <th>
-                        {{ trans('cruds.galleryPass.fields.guide') }}
+                        {{ trans('cruds.galleryPass.fields.gender') }}
                     </th>
                     <th>
-                        {{ trans('cruds.galleryPass.fields.print_count') }}
+                        {{ trans('cruds.galleryPass.fields.dob') }}
                     </th>
+                    <th>
+                        {{ trans('cruds.galleryPass.fields.age') }}
+                    </th>
+                    <th>
+                        {{ trans('cruds.galleryPass.fields.mobile') }}
+                    </th>
+
+
+
                     <th>
                         {{ trans('cruds.galleryPass.fields.id_type') }}
                     </th>
@@ -67,24 +72,7 @@
                     <th>
                         {{ trans('cruds.galleryPass.fields.photo') }}
                     </th>
-                    <th>
-                        {{ trans('cruds.galleryPass.fields.name') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.galleryPass.fields.gender') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.galleryPass.fields.dob') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.galleryPass.fields.age') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.galleryPass.fields.mobile') }}
-                    </th>
-                    <th>
-                        {{ trans('cruds.galleryPass.fields.email') }}
-                    </th>
+
                     <th>
                         &nbsp;
                     </th>
@@ -114,13 +102,19 @@
       { data: 'placeholder', name: 'placeholder' },
 { data: 'id', name: 'id' },
 { data: 'number', name: 'number' },
-{ data: 'person_name', name: 'person.name' },
-{ data: 'person.mobile', name: 'person.mobile' },
-{ data: 'person.id_detail', name: 'person.id_detail' },
+// { data: 'person_name', name: 'person.name' },
+// { data: 'person.mobile', name: 'person.mobile' },
+// { data: 'person.id_detail', name: 'person.id_detail' },
 { data: 'issued_date', name: 'issued_date' },
-{ data: 'date_of_visit', name: 'date_of_visit' },
-{ data: 'guide_name', name: 'guide.name' },
-{ data: 'print_count', name: 'print_count' },
+{ data: 'num_persons', name: 'num_persons' },
+// { data: 'date_of_visit', name: 'date_of_visit' },
+// { data: 'guide_name', name: 'guide.name' },
+// { data: 'print_count', name: 'print_count' },
+{ data: 'name', name: 'name' },
+{ data: 'gender', name: 'gender' },
+{ data: 'dob', name: 'dob' },
+{ data: 'age', name: 'age' },
+{ data: 'mobile', name: 'mobile' },
 { data: 'id_type', name: 'id_type' },
 { data: 'id_detail', name: 'id_detail' },
 { data: 'address', name: 'address' },
@@ -130,12 +124,8 @@
 { data: 'post_office', name: 'post_office' },
 { data: 'pincode', name: 'pincode' },
 { data: 'photo', name: 'photo' },
-{ data: 'name', name: 'name' },
-{ data: 'gender', name: 'gender' },
-{ data: 'dob', name: 'dob' },
-{ data: 'age', name: 'age' },
-{ data: 'mobile', name: 'mobile' },
-{ data: 'email', name: 'email' },
+
+// { data: 'email', name: 'email' },
 { data: 'actions', name: '{{ trans('global.actions') }}' }
     ],
     orderCellsTop: true,

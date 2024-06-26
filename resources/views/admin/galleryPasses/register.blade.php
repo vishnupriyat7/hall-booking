@@ -329,14 +329,14 @@
                     <span class="text-danger">{{ $errors->first('guide') }}</span>
                     @endif
                 </div>
-                <div class="form-group col-3">
+                <!-- <div class="form-group col-3">
                     <label for="date_of_visit">{{ trans('cruds.selfRegistration.fields.date_of_visit') }}</label>
                     <input class="form-control date {{ $errors->has('date_of_visit') ? 'is-invalid' : '' }}" type="text" name="date_of_visit" id="date_of_visit" value="{{ old('date_of_visit') }}">
                     @if($errors->has('date_of_visit'))
                     <span class="text-danger">{{ $errors->first('date_of_visit') }}</span>
                     @endif
                     <span class="help-block">{{ trans('cruds.selfRegistration.fields.date_of_visit_helper') }}</span>
-                </div>
+                </div> -->
 
                 <div class="form-group col-6">
                             <label for="district">{{ trans('cruds.selfRegistration.fields.district') }}</label>
@@ -368,7 +368,7 @@
                     Register and Print
                 </button>
 
-                <a class="ml-2 btn btn-success" href="{{ route('admin.visitor-passes.register') }}">
+                <a class="ml-2 btn btn-success" href="{{ route('admin.gallery-passes.register') }}">
                     New Registration
                 </a>
 
@@ -455,9 +455,11 @@
                     const personDiv = document.createElement('div');
                     personDiv.classList.add('accompanying-person');
 
+                    // add a print button to each person
                     personDiv.innerHTML = `
-                        <div class='row input-group '>
-                            <span class="input-group-text"># ${i + 1}</span>
+                        <div class='mt-1 row input-group' id="person_${i+1}">
+                            <input readonly type="number" placeholder="sl_no" name="accompanyingPersons[${i}][sl_no]" class="form-control" value="${person.sl_no || (i + 1)}">
+
                             <input type="text" placeholder="name" name="accompanyingPersons[${i}][name]" class="form-control" required value="${person.name || ''}">
 
                             <input type="number"  placeholder="age"  name="accompanyingPersons[${i}][age]" class="form-control" required value="${person.age || ''}">
@@ -467,6 +469,9 @@
                                 <option value="female" ${person.gender === 'female' ? 'selected' : ''}>Female</option>
                                 <option value="transgender" ${person.gender === 'transgender' ? 'selected' : ''}>Transgender</option>
                             </select>
+
+
+                            <a class="btn btn-danger print-btn">Print</a>
 
                         </div>
                     `;
@@ -484,10 +489,31 @@
                 generateAccompanyingPersonsFields();
             }
 
+            document.addEventListener('click', function (event) {
+                if (event.target.classList.contains('print-btn')) {
+                    //alert(event.target.parentElement.id);
+                    const personId = event.target.parentElement.id;
+                    //remove person_ from id
+                    const personIndex = personId.replace('person_', '');
+                    //alert(personIndex);
+
+                    const passId = $('#passid').val();
+
+                    if (!passId) {
+                        alert('Please save the pass first');
+                        return;
+                    }
+
+                    window.open('/admin/gallery-passes/print_companion/' + pass_issued.id + '/' + personIndex, '_blank');
+
+                    //numPersonsInput.value = document.querySelectorAll('.accompanying-person').length;
+                }
+            });
+
             // document.addEventListener('click', function (event) {
-            //     if (event.target.classList.contains('remove-btn')) {
-            //         event.target.closest('.accompanying-person').remove();
-            //         numPersonsInput.value = document.querySelectorAll('.accompanying-person').length;
+            //     if (event.target.classList.contains('print-btn')) {
+            //         //event.target.closest('.accompanying-person').remove();
+            //         //numPersonsInput.value = document.querySelectorAll('.accompanying-person').length;
             //     }
             // });
 
@@ -558,6 +584,7 @@
                                             data-id_detail="${item.id_detail}"
                                             data-address="${item.address}"
                                             data-pincode="${item.pincode}"
+                                            data-postoffice="${item.post_office}"
                                             data-group_persons="${item.group_persons}"
                                             >
                                             Select
@@ -585,6 +612,7 @@
             let id_detail = $(this).data('id_detail')?.toString();
             let address = $(this).data('address');
             let pincode = $(this).data('pincode')?.toString();
+            let postoffice = $(this).data('postoffice');
             let group_persons = $(this).data('group_persons') || 0;
             let person_visitor_passes_count = $(this).data('person_visitor_passes_count') || 0;
             let person_visitor_pass_latest_date = $(this).data('person_visitor_pass_latest_date') || null;
@@ -612,7 +640,10 @@
             $('#pincode').val(pincode);
             $('#num_persons').val(group_persons);
             $('#resultsModal').modal('hide');
-            fetchPin(pincode);
+            //alert(postoffice)
+            fetchPin(pincode, postoffice);
+            //select post office if it exists
+
 
             //check if pass is issued to this person
             $('#pass_issed_to_this_person').html('');
@@ -710,39 +741,39 @@
     window.onload = function() {
         const selectCountry = document.getElementById("country");
 
-        const recommending_office_category = document.getElementById("recommending_office_category_id");
-        const recommending_office = document.getElementById("recommending_office");
-        const recommending_office_input = document.getElementById("recommending_office_input");
+      //  const recommending_office_category = document.getElementById("recommending_office_category_id");
+      //  const recommending_office = document.getElementById("recommending_office");
+      //  const recommending_office_input = document.getElementById("recommending_office_input");
 
-        const date_of_visit = document.getElementById("date_of_visit");
-        date_of_visit.value = moment().format("DD.MM.YYYY");
+     //   const date_of_visit = document.getElementById("date_of_visit");
+       // date_of_visit.value = moment().format("DD.MM.YYYY");
 
 
         const selectDistrict = document.getElementById("district");
         const pinCtrl = document.getElementById("pincode");
         const idType = document.getElementById("id_type_id");
 
-        const recommendingOfficeSelectMLA = $('#recommending_office_mla');
-        const recommendingOfficeSelectMinister = $('#recommending_office_minister');
+      //  const recommendingOfficeSelectMLA = $('#recommending_office_mla');
+      //  const recommendingOfficeSelectMinister = $('#recommending_office_minister');
 
 
-        recommendingOfficeSelectMLA.selectpicker('hide');
-        recommendingOfficeSelectMinister.selectpicker('hide');
+      //  recommendingOfficeSelectMLA.selectpicker('hide');
+      //  recommendingOfficeSelectMinister.selectpicker('hide');
 
         //Create New Option Tag With Value
-        function createOption(displayMember, valueMember) {
-            const newOption = document.createElement("option");
-            newOption.value = valueMember;
-            newOption.text = displayMember;
-            return newOption;
-        }
+        // function createOption(displayMember, valueMember) {
+        //     const newOption = document.createElement("option");
+        //     newOption.value = valueMember;
+        //     newOption.text = displayMember;
+        //     return newOption;
+        // }
 
 
         pinCtrl.addEventListener("input", function(e) {
-            fetchPin(e.target.value);
+            fetchPin(e.target.value, null);
         });
         pinCtrl.addEventListener("change", function(e) {
-            fetchPin(e.target.value);
+            fetchPin(e.target.value, null);
         });
 
 

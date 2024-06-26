@@ -92,12 +92,12 @@ class VisitorPassControllerCustom extends Controller
                 if(!$request->recommending_office_mla || 'Select' == $request->recommending_office_mla) {
                     return response()->json( [ 'errors' => ['recommending_office' => 'Recommending office is required'] ], 401 );
                 }
-                $recommendingOffice = $request->recommending_office_mla;
+                $recommendingOffice = $request->recommending_office_mla . ' (MLA)';
             } else if( $recommendingOfficeCat->title == 'Minister' ) {
                 if(!$request->recommending_office_minister || 'Select' == $request->recommending_office_minister) {
                     return response()->json( [ 'errors' => ['recommending_office' => 'Recommending office is required'] ], 401 );
                 }
-                $recommendingOffice = $request->recommending_office_minister;
+                $recommendingOffice =  'Minister: ' . $request->recommending_office_minister;
             }
             else{
                if(!$request->recommending_office_input) {
