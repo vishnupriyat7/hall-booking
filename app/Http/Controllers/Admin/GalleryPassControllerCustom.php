@@ -13,7 +13,7 @@ use App\Models\GroupPerson;
 use Illuminate\Http\Request;
 use App\Models\GuidingOfficer;
 use App\Http\Controllers\Controller;
-use App\Models\VisitingOfficeCategory;
+use App\Models\SelfRegistration;
 use Illuminate\Support\Facades\Storage;
 use App\Models\RecommendingOfficeCategory;
 use Symfony\Component\HttpFoundation\Response;
@@ -76,8 +76,6 @@ class GalleryPassControllerCustom extends Controller
 
     public function store(Request $request)
     {
-
-
         $personid = $request->personid;
         $person = null;
         if($personid && $personid != -1) {
@@ -263,5 +261,97 @@ class GalleryPassControllerCustom extends Controller
 
         return response()->json( [ 'success' => 'Pass created successfully', 'pass'=>$galleryPass ] );
     }
+
+    public function search(Request $request)
+    {
+        \Log::info('searching in Pass');
+
+        \Log::info($request->all());
+        // $queryName = $request->queryName;
+        $queryMob = $request->queryMob;
+        $queryId = $request->queryId;
+        $querySelfRegDate = $request->querySelfRegDate;
+        $querySelfRegNum = $request->querySelfRegNum;
+        $querysearchTokNum = $request->querysearchTokNum;
+        $querySelfRegDate = str_replace( ['.', '/'], '-', $querySelfRegDate);
+        if( !$querySelfRegDate) {
+            $querySelfRegDate = Carbon::today()->format('Y-m-d');
+        }
+
+        $passes = null;
+        if(($queryMob || $queryId || $querysearchTokNum ) && $querySelfRegNum == '') {
+
+            $passes = GalleryPass::with(['person', 'accompanyingPersons'])
+            ->when($queryMob, function($query) use ($queryMob) {
+                return $query->where('mobile', 'like', '%'.$queryMob.'%');
+            })
+            ->when($queryId, function($query) use ($queryId) {
+                return $query->where('id_detail', 'like', '%'.$queryId.'%');
+            })
+            ->when($querysearchTokNum, function($query) use ($querysearchTokNum, $querySelfRegDate) {
+                return $query->where('number', $querysearchTokNum)
+                ->whereDate('created_at', $querySelfRegDate);
+            })
+            // ->when($queryName, function($query) use ($queryName) {
+            //     return $query->where('name', 'like', '%'.$queryName.'%');
+            // })
+            ->get();
+        }
+
+        \Log::info($passes);
+        //also search in self registrations if no results found in person
+        $selfRegs = [];
+        if( !$passes || ($passes && $passes->count() == 0)) {
+            \Log::info('searching in self registrations');
+            //replace dots and slashes in $querySelfRegDate with dashes
+           
+
+            $selfRegs = SelfRegistration::with('id_type')
+            ->when($queryMob, function($query) use ($queryMob) {
+                return $query->where('mobile', 'like', '%'.$queryMob.'%');
+            })
+            ->when($queryId, function($query) use ($queryId) {
+                return $query->where('id_detail', 'like', '%'.$queryId.'%');
+            })
+            // ->when($queryName, function($query) use ($queryName) {
+            //     return $query->where('name', 'like', '%'.$queryName.'%');
+            // })
+            ->when($querySelfRegNum &&  $querySelfRegDate, function($query) use ($querySelfRegNum, $querySelfRegDate) {
+                return $query->where('number', $querySelfRegNum)
+                ->whereDate('created_at', $querySelfRegDate);
+            })
+            ->get();
+            \Log::info($selfRegs);
+
+            //if results found, convert them to person
+            if($selfRegs->count() > 0) {
+                $passes = $selfRegs->map( function($selfReg) {
+                    $pass = new GalleryPass();
+                    $pass->id = -1; //this denotes pass is not in gallery passes table
+                    $pass->name = $selfReg->name;
+                    $pass->gender = $selfReg->gender;
+                    $pass->dob = $selfReg->dob;
+                    $pass->age = $selfReg->age;
+                    $pass->mobile = $selfReg->mobile;
+                    $pass->email = $selfReg->email;
+                    $pass->id_type_id = $selfReg->id_type_id;
+                    $pass->id_detail = $selfReg->id_detail;
+                    $pass->address = $selfReg->address;
+                    $pass->country = $selfReg->country;
+                    $pass->state = $selfReg->state;
+                    $pass->district = $selfReg->district;
+                    $pass->post_office = $selfReg->post_office;
+                    $pass->pincode = $selfReg->pincode;
+                    $pass->num_persons = $selfReg->group_persons;
+                    return $pass;
+                });
+            }
+        }
+        if(!$passes) {
+            $passes = [];
+        }
+        return response()->json( $passes );
+    }
+
 
 }
