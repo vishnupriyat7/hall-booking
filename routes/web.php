@@ -65,7 +65,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     // Gallery Pass
     Route::get('gallery-passes/print/{id}', 'GalleryPassControllerCustom@print')->name('gallery-passes.print');;
     Route::get('gallery-passes/print_companion/{id}/{person_index}', 'GalleryPassControllerCustom@printCompanion')->name('gallery-passes.print_companion');;
-
+    Route::get('gallery-passes/search', 'GalleryPassControllerCustom@search')->name('gallery-passes.search');
     Route::get('gallery-passes/register', 'GalleryPassControllerCustom@register')->name('gallery-passes.register');;
     Route::post('gallery-passes/store', 'GalleryPassControllerCustom@store')->name('gallery-passes.store');;
     Route::get('gallery-passes/{id}', 'GalleryPassController@show')->name('gallery-passes.show');

@@ -56,14 +56,15 @@
             </div> -->
             <div class="form-group ">
                 <input autocomplete="new-password" placeholder="Mobile" class="form-control {{ $errors->has('searchMob') ? 'is-invalid' : '' }}" type="text" name="searchMob" id="searchMob">
-
             </div>
             <div class="form-group ">
-                <input autocomplete="new-password" placeholder="ID" class="form-control {{ $errors->has('searchId') ? 'is-invalid' : '' }}" type="text" name="searchId" id="searchId">
-
+                <input autocomplete="new-password" placeholder="IDCard Number" class="form-control {{ $errors->has('searchId') ? 'is-invalid' : '' }}" type="text" name="searchId" id="searchId">
             </div>
             <div class="form-group ">
                 <input autocomplete="new-password" placeholder="Self Reg Date" class="form-control {{ $errors->has('searchSelfRegDate') ? 'is-invalid' : '' }}" type="date" name="searchSelfRegDate" id="searchSelfRegDate">
+            </div>
+            <div class="form-group ">
+                <input autocomplete="new-password" placeholder="Token No" class="form-control {{ $errors->has('searchSelfRegNum') ? 'is-invalid' : '' }}" type="number" name="searchTokNum" id="searchTokNum">
             </div>
             <div class="form-group ">
                 <input autocomplete="new-password" placeholder="Self Reg No" class="form-control {{ $errors->has('searchSelfRegNum') ? 'is-invalid' : '' }}" type="number" name="searchSelfRegNum" id="searchSelfRegNum">
@@ -532,20 +533,22 @@
             let queryMob = $('#searchMob').val();
             let querySelfRegDate = $('#searchSelfRegDate').val();
             let querySelfRegNum = $('#searchSelfRegNum').val();
+            let querysearchTokNum = $('#searchTokNum').val();
 
-            if (!queryId && !queryMob && !querySelfRegDate && !querySelfRegNum) {
+            if (!queryId && !queryMob && !querySelfRegDate && !querySelfRegNum && !querysearchTokNum) {
                 alert('Please enter at least one search criteria');
                 return;
             }
             $.ajax({
-                url: "{{ route('admin.self-registrations.search') }}",
+                url: "{{ route('admin.gallery-passes.search') }}",
                 type: 'GET',
                 data: {
                     // queryName: queryName,
                     queryId: queryId,
                     queryMob: queryMob,
                     querySelfRegDate: querySelfRegDate,
-                    querySelfRegNum: querySelfRegNum
+                    querySelfRegNum: querySelfRegNum,
+                    querysearchTokNum: querysearchTokNum
                 },
                 success: function(data) {
                     //console.log(data);
