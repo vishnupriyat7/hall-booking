@@ -3,16 +3,52 @@
 
 <div class="card">
     <div class="card-header">
+        Search Gallery Pass
+    </div>
+
+    <div class="card-body">
+        <div class="form-group">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="id">Gallery Pass Id</label>
+                    <input type="number" id="id" name="id" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">View</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+   // add an event listener to the form
+    document.querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // get the value of the input field with id="id"
+        const id = document.getElementById('id').value;
+        // redirect to the route with the id value
+        window.location.href = '/admin/gallery-passes/' + id;
+    });
+
+</script>
+
+
+
+<div class="card">
+    <div class="card-header">
         {{ trans('global.show') }} {{ trans('cruds.galleryPass.title') }}
     </div>
 
     <div class="card-body">
         <div class="form-group">
-            <div class="form-group">
-                <a class="btn btn-default" href="{{ route('admin.gallery-passes.index') }}">
-                    {{ trans('global.back_to_list') }}
-                </a>
-            </div>
+
+        @if($galleryPass->photo)
+                                <a href="{{ $galleryPass->photo }}" target="_blank" style="display: inline-block">
+                                    <img src="{{ $galleryPass->photo }}">
+                                </a>
+                            @endif
+
             <table class="table table-bordered table-striped">
                 <tbody>
                     <tr>
@@ -22,6 +58,11 @@
                         <td>
                             {{ $galleryPass->id }}
                         </td>
+                        <th>
+                        </th>
+                        <td>
+                        </td>
+
                     </tr>
                     <tr>
                         <th>
@@ -30,7 +71,15 @@
                         <td>
                             {{ $galleryPass->number }}
                         </td>
+
+                        <th>
+                            {{ trans('cruds.galleryPass.fields.issued_date') }}
+                        </th>
+                        <td>
+                            {{ $galleryPass->issued_date }}
+                        </td>
                     </tr>
+
                     <tr>
                         <th>
                             {{ trans('cruds.galleryPass.fields.name') }}
@@ -38,8 +87,7 @@
                         <td>
                             {{ $galleryPass->name }}
                         </td>
-                    </tr>
-                    <tr>
+
                         <th>
                             {{ trans('cruds.galleryPass.fields.gender') }}
                         </th>
@@ -54,8 +102,7 @@
                         <td>
                             {{ $galleryPass->dob }}
                         </td>
-                    </tr>
-                    <tr>
+
                         <th>
                             {{ trans('cruds.galleryPass.fields.age') }}
                         </th>
@@ -70,8 +117,7 @@
                         <td>
                             {{ $galleryPass->mobile }}
                         </td>
-                    </tr>
-                    <tr>
+
                         <th>
                             {{ trans('cruds.galleryPass.fields.email') }}
                         </th>
@@ -79,14 +125,7 @@
                             {{ $galleryPass->email }}
                         </td>
                     </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.galleryPass.fields.issued_date') }}
-                        </th>
-                        <td>
-                            {{ $galleryPass->issued_date }}
-                        </td>
-                    </tr>
+
 
                     <tr>
                         <th>
@@ -95,8 +134,7 @@
                         <td>
                             {{ $galleryPass->guide->name ?? '' }}
                         </td>
-                    </tr>
-                    <tr>
+
                         <th>
                             {{ trans('cruds.galleryPass.fields.print_count') }}
                         </th>
@@ -111,8 +149,7 @@
                         <td>
                             {{ $galleryPass->id_type }}
                         </td>
-                    </tr>
-                    <tr>
+
                         <th>
                             {{ trans('cruds.galleryPass.fields.id_detail') }}
                         </th>
@@ -127,8 +164,7 @@
                         <td>
                             {{ $galleryPass->address }}
                         </td>
-                    </tr>
-                    <tr>
+
                         <th>
                             {{ trans('cruds.galleryPass.fields.country') }}
                         </th>
@@ -143,8 +179,7 @@
                         <td>
                             {{ $galleryPass->state }}
                         </td>
-                    </tr>
-                    <tr>
+
                         <th>
                             {{ trans('cruds.galleryPass.fields.district') }}
                         </th>
@@ -159,8 +194,7 @@
                         <td>
                             {{ $galleryPass->post_office }}
                         </td>
-                    </tr>
-                    <tr>
+
                         <th>
                             {{ trans('cruds.galleryPass.fields.pincode') }}
                         </th>
@@ -168,18 +202,10 @@
                             {{ $galleryPass->pincode }}
                         </td>
                     </tr>
-                    <tr>
-                        <th>
-                            {{ trans('cruds.galleryPass.fields.photo') }}
-                        </th>
-                        <td>
-                            {{ $galleryPass->photo }}
-                        </td>
-                    </tr>
 
                     <tr>
                         <th>
-                            {{ trans('cruds.galleryPass.fields.num_persons') }}
+                            No of Accompanying Persons
                         </th>
                         <td>
                             {{ $galleryPass->num_persons }}
@@ -188,36 +214,53 @@
                 </tbody>
             </table>
 
+            <h5>Accompanying Persons</h5>
 
             <!-- display all accompanying persons -->
-                    @foreach($galleryPass->accompanyingPersons as $companion)
+
                     <div class="">
                         <table class="table table-bordered table-striped">
-                            <tbody>
+                            <thead>
                             <tr>
-                            <th>
-                                Sl No
-                            </th>
+                                <th>
+                                    Sl No
+                                </th>
+                                <th>
+                                    Name
+                                </th>
+                                <th>
+                                    Gender
+                                </th>
+                                <th>
+                                    Age
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($galleryPass->accompanyingPersons as $companion)
+                            <tr>
+
                             <td>
-                                {{ $galleryPass->sl_no }}
+                                {{ $companion->sl_no }}
                             </td>
                             <td>
-                                {{ $galleryPass->name }}
+                                {{ $companion->name }}
                             </td>
                             <td>
-                                {{ $galleryPass->gender }}
+                                {{ $companion->gender }}
                             </td>
 
                             <td>
-                                {{ $galleryPass->age }}
+                                {{ $companion->age }}
                             </td>
 
 
                             </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
-                    @endforeach
+
 
                     <div class="form-group">
                 <a class="btn btn-default" href="{{ route('admin.gallery-passes.index') }}">

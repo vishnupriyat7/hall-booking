@@ -64,7 +64,7 @@
                 <input autocomplete="new-password" placeholder="Self Reg Date" class="form-control {{ $errors->has('searchSelfRegDate') ? 'is-invalid' : '' }}" type="date" name="searchSelfRegDate" id="searchSelfRegDate">
             </div>
             <div class="form-group ">
-                <input autocomplete="new-password" placeholder="Pass Token No" class="form-control {{ $errors->has('searchSelfRegNum') ? 'is-invalid' : '' }}" type="number" name="searchTokNum" id="searchTokNum">
+                <input autocomplete="new-password" placeholder="Pass Token No" class="form-control {{ $errors->has('searchTokNum') ? 'is-invalid' : '' }}" type="number" name="searchTokNum" id="searchTokNum">
             </div>
             <div class="form-group ">
                 <input autocomplete="new-password" placeholder="Self Reg No" class="form-control {{ $errors->has('searchSelfRegNum') ? 'is-invalid' : '' }}" type="number" name="searchSelfRegNum" id="searchSelfRegNum">
@@ -432,7 +432,7 @@
 function loadAccompanyingPerson(person, i)
 {
     const accompanyingPersonsContainer = document.getElementById('accompanying-persons');
-    
+
     const personDiv = document.createElement('div');
                     personDiv.classList.add('accompanying-person');
                     // add a print button to each person
@@ -486,13 +486,13 @@ function loadAccompanyingPerson(person, i)
                 accompanyingPersonsContainer.innerHTML = '';
                 for (let i = 0; i < numPersons; i++) {
                     const person = accompanyingPersons[i] || (filledData[i] || {});
-                    
+
                     loadAccompanyingPerson(person, i);
                 }
             };
 
             generateFieldsButton.addEventListener('click', generateAccompanyingPersonsFields);
-           
+
             numPersonsInput.addEventListener('change', generateAccompanyingPersonsFields);
 
             if (accompanyingPersons.length > 0) {
@@ -640,7 +640,7 @@ function loadAccompanyingPerson(person, i)
                 $('#passid').val(id);
                 $('#register-print-btn').html(`ReIssue and Print`);
             }
-           
+
 
             $('#name').val(name);
             $('#mobile').val(mobile);
@@ -666,6 +666,8 @@ function loadAccompanyingPerson(person, i)
                 success: function(data) {
                     passItem = data;
                     pass_issued = passItem;
+                    $("#photo").attr("src",passItem.photo);
+
                    // alert(JSON.stringify(passItem));
                     accompanyingPersons = passItem.accompanying_persons || [];
                     //load accompanying persons
@@ -674,7 +676,7 @@ function loadAccompanyingPerson(person, i)
                     accompanyingPersons.forEach((person, i) => {
                         loadAccompanyingPerson(person, i);
                     });
-                    
+
 
                     $('#generate-fields-btn').click();
                 }

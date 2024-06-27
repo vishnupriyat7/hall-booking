@@ -43,6 +43,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::get('visitor-passes/{id}', 'VisitorPassController@show')->name('visitor-passes.show');
     Route::post('visitor-passes/store', 'VisitorPassControllerCustom@store')->name('visitor-passes.store');;
     Route::get('visitor-passes', 'VisitorPassController@index')->name('visitor-passes.index');
+    Route::get('visitor-passes/search', 'VisitorPassControllerCustom@search')->name('visitor-passes.search');
 
     // Visiting Office Category
     Route::delete('visiting-office-categories/destroy', 'VisitingOfficeCategoryController@massDestroy')->name('visiting-office-categories.massDestroy');

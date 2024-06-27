@@ -66,6 +66,9 @@
                 <input autocomplete="new-password" placeholder="Self Reg Date" class="form-control {{ $errors->has('searchSelfRegDate') ? 'is-invalid' : '' }}" type="date" name="searchSelfRegDate" id="searchSelfRegDate">
             </div>
             <div class="form-group ">
+                <input autocomplete="new-password" placeholder="Pass Token No" class="form-control {{ $errors->has('searchTokNum') ? 'is-invalid' : '' }}" type="number" name="searchTokNum" id="searchTokNum">
+            </div>
+            <div class="form-group ">
                 <input autocomplete="new-password" placeholder="Self Reg No" class="form-control {{ $errors->has('searchSelfRegNum') ? 'is-invalid' : '' }}" type="number" name="searchSelfRegNum" id="searchSelfRegNum">
             </div>
             <button class="btn btn-primary" type="submit">
@@ -459,20 +462,22 @@
             let queryMob = $('#searchMob').val();
             let querySelfRegDate = $('#searchSelfRegDate').val();
             let querySelfRegNum = $('#searchSelfRegNum').val();
+            let querysearchTokNum = $('#searchTokNum').val();
 
-            if (!queryId && !queryMob && !querySelfRegDate && !querySelfRegNum) {
+            if (!queryId && !queryMob && !querySelfRegDate && !querySelfRegNum  && !querysearchTokNum) {
                 alert('Please enter at least one search criteria');
                 return;
             }
             $.ajax({
-                url: "{{ route('admin.self-registrations.search') }}",
+                url: "{{ route('admin.visitor-passes.search') }}",
                 type: 'GET',
                 data: {
                     // queryName: queryName,
                     queryId: queryId,
                     queryMob: queryMob,
                     querySelfRegDate: querySelfRegDate,
-                    querySelfRegNum: querySelfRegNum
+                    querySelfRegNum: querySelfRegNum,
+                    querysearchTokNum: querysearchTokNum
                 },
                 success: function(data) {
                     //console.log(data);
