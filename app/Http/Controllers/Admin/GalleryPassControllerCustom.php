@@ -204,7 +204,7 @@ class GalleryPassControllerCustom extends Controller
         \DB::transaction( function() use ($request, $person, $age, &$galleryPass, $dob, $postOffice, $accompanyingPersons)
         {
             //if this is not today's pass, create a new token 
-            
+
             if($request->passid) {
                 $galleryPass = GalleryPass::whereDate('created_at', Carbon::today())
                 ->where( 'id', $request->passid)->first();
@@ -309,6 +309,10 @@ class GalleryPassControllerCustom extends Controller
             ->get()->transform( function($pass) {
                 $idtype = IdType::where( 'name', $pass->id_type)->first();
                 $pass->id_type_id = $idtype->id;
+                //if pass issued date is not today, then remove accompanying persons
+                if( !Carbon::parse($pass->created_at)->isToday() ) {
+                    $pass->accompanyingPersons = [];
+                }
                 return $pass;
             });;
         }
