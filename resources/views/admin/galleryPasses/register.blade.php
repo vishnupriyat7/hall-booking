@@ -405,7 +405,7 @@
     </div>
 
     <div id="info">
-
+    
     </div>
 
 
@@ -533,6 +533,24 @@ function loadAccompanyingPerson(person, i)
 </script>
 
 <script>
+    function resetForm()
+    {
+        $('#registerForm').trigger("reset");
+        $('#num_persons').val(0);
+        $('#generate-fields-btn').click();
+        $('#pass_issed_to_this_person').html(``);
+        $('#passid').val('');
+        //remove options from postoffice
+        $('#post_office_select').hide();
+        $('#post_office').show();
+        $('#post_office').val('');
+        $('#post_office_select').html('');
+        $("#post_office").prop('required',true);
+        $('#post_office_select').prop('required',false);
+        $("#photo").attr("src",'');
+
+    }
+
     var pass_issued = null;
     $(document).ready(function() {
         document.getElementById('searchSelfRegDate').valueAsDate = new Date();
@@ -562,8 +580,10 @@ function loadAccompanyingPerson(person, i)
                 },
                 success: function(data) {
                     //console.log(data);
+                   
                     $('#pass_issed_to_this_person').html(``);
                     if (!data || data?.length == 0) {
+                        resetForm();
                         $('#pass_issed_to_this_person').html(`<div class="mt-1 alert alert-warning">  Not found </div>`);
                         return;
                     }

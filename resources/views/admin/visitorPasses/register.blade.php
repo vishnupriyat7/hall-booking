@@ -651,7 +651,6 @@
                    // localStorage.setItem('pass_issued', JSON.stringify(pass_issued));
                     window.open('/admin/visitor-passes/print/' + pass_issued.id , '_blank');
                     //window.location.href = "{{URL::to('admin/visitor-passes/print/' . ':id')}}" . replace(':id', pass_issued.id) ;
-
                 }
             }
         });
