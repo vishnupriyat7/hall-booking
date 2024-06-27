@@ -66,6 +66,9 @@
                 <input autocomplete="new-password" placeholder="Self Reg Date" class="form-control {{ $errors->has('searchSelfRegDate') ? 'is-invalid' : '' }}" type="date" name="searchSelfRegDate" id="searchSelfRegDate">
             </div>
             <div class="form-group ">
+                <input autocomplete="new-password" placeholder="Pass Token No" class="form-control {{ $errors->has('searchTokNum') ? 'is-invalid' : '' }}" type="number" name="searchTokNum" id="searchTokNum">
+            </div>
+            <div class="form-group ">
                 <input autocomplete="new-password" placeholder="Self Reg No" class="form-control {{ $errors->has('searchSelfRegNum') ? 'is-invalid' : '' }}" type="number" name="searchSelfRegNum" id="searchSelfRegNum">
             </div>
             <button class="btn btn-primary" type="submit">
@@ -459,20 +462,22 @@
             let queryMob = $('#searchMob').val();
             let querySelfRegDate = $('#searchSelfRegDate').val();
             let querySelfRegNum = $('#searchSelfRegNum').val();
+            let querysearchTokNum = $('#searchTokNum').val();
 
-            if (!queryId && !queryMob && !querySelfRegDate && !querySelfRegNum) {
+            if (!queryId && !queryMob && !querySelfRegDate && !querySelfRegNum  && !querysearchTokNum) {
                 alert('Please enter at least one search criteria');
                 return;
             }
             $.ajax({
-                url: "{{ route('admin.self-registrations.search') }}",
+                url: "{{ route('admin.visitor-passes.search') }}",
                 type: 'GET',
                 data: {
                     // queryName: queryName,
                     queryId: queryId,
                     queryMob: queryMob,
                     querySelfRegDate: querySelfRegDate,
-                    querySelfRegNum: querySelfRegNum
+                    querySelfRegNum: querySelfRegNum,
+                    querysearchTokNum: querysearchTokNum
                 },
                 success: function(data) {
                     //console.log(data);
@@ -525,7 +530,8 @@
         });
 
         $(document).on('click', '.select-record', function() {
-            let personid = $(this).data('personid');
+            //let personid = $(this).data('personid');
+            let passid = $(this).data('id');
             let name = $(this).data('name');
             let gender = $(this).data('gender');
             let age = $(this).data('age');
@@ -545,14 +551,15 @@
 
             $('#register-print-btn').html(`Register and Print`);
 
-            if(-1 !== personid){ // -1 means self registration
-                $('#personid').val(personid);
+             //reset old passid
+             $('#passid').val('');
+
+            if(-1 !== passid){ // -1 means self registration
+                //$('#personid').val(personid);
+                $('#passid').val(passid);
                 $('#register-print-btn').html(`ReIssue and Print`);
             }
-            //reset old passid
-            $('#passid').val('');
-
-
+           
             $('#name').val(name);
             $('#mobile').val(mobile);
             $('#dob').val(dob);
@@ -568,8 +575,8 @@
 
             //check if pass is issued to this person
             $('#pass_issed_to_this_person').html('');
-          //  alert(person_visitor_passes_count);
-            if(person_visitor_passes_count > 0){
+          
+            /*if(person_visitor_passes_count > 0){
                 //add a button to view pass details
                 let link = "{{ route('admin.visitor-passes.show', ':id') }}";
                 link = link.replace(':id', person_visitor_pass_latest_id);
@@ -583,7 +590,7 @@
 
                 `);
 
-            }
+            }*/
         });
 
         $('#registerForm').ajaxForm({
@@ -638,13 +645,12 @@
                     // window.location = window.location.href.substr(0, i)
                     pass_issued = jsonResponse.pass
                     $('#passid').val(pass_issued.id);
-                    $('#personid').val(pass_issued.person_id);
+                   // $('#personid').val(pass_issued.person_id);
                     $('#register-print-btn').html(`Update and RePrint (No:${pass_issued.number})`);
                     //go to a pass print page with pass id
                    // localStorage.setItem('pass_issued', JSON.stringify(pass_issued));
                     window.open('/admin/visitor-passes/print/' + pass_issued.id , '_blank');
                     //window.location.href = "{{URL::to('admin/visitor-passes/print/' . ':id')}}" . replace(':id', pass_issued.id) ;
-
                 }
             }
         });

@@ -47,7 +47,8 @@ class GalleryPassControllerCustom extends Controller
         $galleryPass = GalleryPass::with(['person', 'person.id_type:id,name'])
         ->findOrFail($passid);
         \Log::info($galleryPass);
-        $issued_date = Carbon::createFromFormat('Y-m-d H:i:s', $galleryPass->created_at, 'UTC')->setTimezone('Asia/Kolkata');
+        //$issued_date = Carbon::createFromFormat('Y-m-d H:i:s', $galleryPass->created_at, 'UTC')->setTimezone('Asia/Kolkata');
+        $issued_date = Carbon::now()->setTimezone('Asia/Kolkata');
         $issued_on =  $issued_date->format('d.m.Y');
         $issued_at =  $issued_date->format('H:i a');
 
@@ -67,7 +68,7 @@ class GalleryPassControllerCustom extends Controller
         $issued_at =  $issued_date->format('H:i a');
         $companion = GroupPerson::where('gallery_pass_id', $passid)->where('sl_no', $person_index)->first();
         if(!$companion) {
-            dd ('Companion not found');
+            dd ('Companion not found-'. $passid . ' ' . $person_index);
         }
 
         return view('admin.galleryPasses.print_companion', compact('galleryPass', 'issued_at', 'issued_on', 'companion'));
@@ -202,14 +203,18 @@ class GalleryPassControllerCustom extends Controller
         $galleryPass = null;
         \DB::transaction( function() use ($request, $person, $age, &$galleryPass, $dob, $postOffice, $accompanyingPersons)
         {
+            //if this is not today's pass, create a new token 
+            
             if($request->passid) {
-                $galleryPass = GalleryPass::find($request->passid);
-
+                $galleryPass = GalleryPass::whereDate('created_at', Carbon::today())
+                ->where( 'id', $request->passid)->first();
                 if(!$galleryPass) {
-                    return response()->json( [ 'errors' => ['pass_id' => 'Pass not found'] ], 404);
+                 //   return response()->json( [ 'errors' => ['pass_id' => 'Pass not found'] ], 404);
                 }
             }
-            else {
+
+            if(!$galleryPass)
+            {
                 $galleryPass = new GalleryPass();
                 // $lastNumberOfThisYear = VisitorPass::whereYear('created_at', Carbon::now()->year)->orderBy('id', 'desc')->first();
                 //find last number of today
@@ -261,6 +266,12 @@ class GalleryPassControllerCustom extends Controller
 
         return response()->json( [ 'success' => 'Pass created successfully', 'pass'=>$galleryPass ] );
     }
+    public function getAjax(Request $request)
+    {
+        $id = $request->id;
+        $pass = GalleryPass::with(['person', 'accompanyingPersons'])->findOrFail($id);
+        return response()->json( $pass );
+    }
 
     public function search(Request $request)
     {
@@ -295,32 +306,42 @@ class GalleryPassControllerCustom extends Controller
             // ->when($queryName, function($query) use ($queryName) {
             //     return $query->where('name', 'like', '%'.$queryName.'%');
             // })
-            ->get();
+            ->get()->transform( function($pass) {
+                $idtype = IdType::where( 'name', $pass->id_type)->first();
+                $pass->id_type_id = $idtype->id;
+                return $pass;
+            });;
         }
 
         \Log::info($passes);
         //also search in self registrations if no results found in person
-        $selfRegs = [];
+        $selfRegs = collect();
         if( !$passes || ($passes && $passes->count() == 0)) {
-            \Log::info('searching in self registrations');
-            //replace dots and slashes in $querySelfRegDate with dashes
-           
 
-            $selfRegs = SelfRegistration::with('id_type')
-            ->when($queryMob, function($query) use ($queryMob) {
-                return $query->where('mobile', 'like', '%'.$queryMob.'%');
-            })
-            ->when($queryId, function($query) use ($queryId) {
-                return $query->where('id_detail', 'like', '%'.$queryId.'%');
-            })
-            // ->when($queryName, function($query) use ($queryName) {
-            //     return $query->where('name', 'like', '%'.$queryName.'%');
-            // })
-            ->when($querySelfRegNum &&  $querySelfRegDate, function($query) use ($querySelfRegNum, $querySelfRegDate) {
-                return $query->where('number', $querySelfRegNum)
-                ->whereDate('created_at', $querySelfRegDate);
-            })
-            ->get();
+            if($queryMob || $queryId || $querySelfRegNum ){
+
+                \Log::info('searching in self registrations');
+                //replace dots and slashes in $querySelfRegDate with dashes
+            
+                $selfRegs = SelfRegistration::with('id_type')
+                ->where('pass_type', 'gallery')
+                ->when($queryMob, function($query) use ($queryMob) {
+                    return $query->where('mobile', 'like', '%'.$queryMob.'%');
+                })
+                ->when($queryId, function($query) use ($queryId) {
+                    return $query->where('id_detail', 'like', '%'.$queryId.'%');
+                })
+                // ->when($queryName, function($query) use ($queryName) {
+                //     return $query->where('name', 'like', '%'.$queryName.'%');
+                // })
+                ->when($querySelfRegNum &&  $querySelfRegDate, function($query) use ($querySelfRegNum, $querySelfRegDate) {
+                    return $query->where('number', $querySelfRegNum)
+                    ->whereDate('created_at', $querySelfRegDate);
+                })
+                ->get();
+                }
+                    
+
             \Log::info($selfRegs);
 
             //if results found, convert them to person

@@ -64,7 +64,7 @@
                 <input autocomplete="new-password" placeholder="Self Reg Date" class="form-control {{ $errors->has('searchSelfRegDate') ? 'is-invalid' : '' }}" type="date" name="searchSelfRegDate" id="searchSelfRegDate">
             </div>
             <div class="form-group ">
-                <input autocomplete="new-password" placeholder="Token No" class="form-control {{ $errors->has('searchSelfRegNum') ? 'is-invalid' : '' }}" type="number" name="searchTokNum" id="searchTokNum">
+                <input autocomplete="new-password" placeholder="Pass Token No" class="form-control {{ $errors->has('searchTokNum') ? 'is-invalid' : '' }}" type="number" name="searchTokNum" id="searchTokNum">
             </div>
             <div class="form-group ">
                 <input autocomplete="new-password" placeholder="Self Reg No" class="form-control {{ $errors->has('searchSelfRegNum') ? 'is-invalid' : '' }}" type="number" name="searchSelfRegNum" id="searchSelfRegNum">
@@ -405,7 +405,7 @@
     </div>
 
     <div id="info">
-
+    
     </div>
 
 
@@ -427,8 +427,41 @@
 <script src="{{ asset('js/pin.js') }}"></script>
 
 <script>
+
+
+function loadAccompanyingPerson(person, i)
+{
+    const accompanyingPersonsContainer = document.getElementById('accompanying-persons');
+
+    const personDiv = document.createElement('div');
+                    personDiv.classList.add('accompanying-person');
+                    // add a print button to each person
+                    personDiv.innerHTML = `
+                        <div class='mt-1 row input-group' id="person_${i+1}">
+                            <input readonly type="number" placeholder="sl_no" name="accompanyingPersons[${i}][sl_no]" class="form-control" value="${person.sl_no || (i + 1)}">
+
+                            <input type="text" placeholder="name" name="accompanyingPersons[${i}][name]" class="form-control" required value="${person.name || ''}">
+
+                            <input type="number"  placeholder="age"  name="accompanyingPersons[${i}][age]" class="form-control" required value="${person.age || ''}">
+
+                            <select name="accompanyingPersons[${i}][gender]" class="form-control" required>
+                                <option value="male" ${person.gender === 'male' ? 'selected' : ''}>Male</option>
+                                <option value="female" ${person.gender === 'female' ? 'selected' : ''}>Female</option>
+                                <option value="transgender" ${person.gender === 'transgender' ? 'selected' : ''}>Transgender</option>
+                            </select>
+
+
+                            <a class="btn btn-danger print-btn">Print</a>
+
+                        </div>
+                    `;
+     accompanyingPersonsContainer.appendChild(personDiv);
+}
+</script>
+
+<script>
         document.addEventListener('DOMContentLoaded', function () {
-            const accompanyingPersons = @json($form->accompanyingPersons ?? []);
+            var accompanyingPersons = @json($form->accompanyingPersons ?? []);
             const generateFieldsButton = document.getElementById('generate-fields-btn');
             const numPersonsInput = document.getElementById('num_persons');
             const accompanyingPersonsContainer = document.getElementById('accompanying-persons');
@@ -453,31 +486,8 @@
                 accompanyingPersonsContainer.innerHTML = '';
                 for (let i = 0; i < numPersons; i++) {
                     const person = accompanyingPersons[i] || (filledData[i] || {});
-                    const personDiv = document.createElement('div');
-                    personDiv.classList.add('accompanying-person');
 
-                    // add a print button to each person
-                    personDiv.innerHTML = `
-                        <div class='mt-1 row input-group' id="person_${i+1}">
-                            <input readonly type="number" placeholder="sl_no" name="accompanyingPersons[${i}][sl_no]" class="form-control" value="${person.sl_no || (i + 1)}">
-
-                            <input type="text" placeholder="name" name="accompanyingPersons[${i}][name]" class="form-control" required value="${person.name || ''}">
-
-                            <input type="number"  placeholder="age"  name="accompanyingPersons[${i}][age]" class="form-control" required value="${person.age || ''}">
-
-                            <select name="accompanyingPersons[${i}][gender]" class="form-control" required>
-                                <option value="male" ${person.gender === 'male' ? 'selected' : ''}>Male</option>
-                                <option value="female" ${person.gender === 'female' ? 'selected' : ''}>Female</option>
-                                <option value="transgender" ${person.gender === 'transgender' ? 'selected' : ''}>Transgender</option>
-                            </select>
-
-
-                            <a class="btn btn-danger print-btn">Print</a>
-
-                        </div>
-                    `;
-
-                    accompanyingPersonsContainer.appendChild(personDiv);
+                    loadAccompanyingPerson(person, i);
                 }
             };
 
@@ -523,6 +533,24 @@
 </script>
 
 <script>
+    function resetForm()
+    {
+        $('#registerForm').trigger("reset");
+        $('#num_persons').val(0);
+        $('#generate-fields-btn').click();
+        $('#pass_issed_to_this_person').html(``);
+        $('#passid').val('');
+        //remove options from postoffice
+        $('#post_office_select').hide();
+        $('#post_office').show();
+        $('#post_office').val('');
+        $('#post_office_select').html('');
+        $("#post_office").prop('required',true);
+        $('#post_office_select').prop('required',false);
+        $("#photo").attr("src",'');
+
+    }
+
     var pass_issued = null;
     $(document).ready(function() {
         document.getElementById('searchSelfRegDate').valueAsDate = new Date();
@@ -552,8 +580,10 @@
                 },
                 success: function(data) {
                     //console.log(data);
+                   
                     $('#pass_issed_to_this_person').html(``);
                     if (!data || data?.length == 0) {
+                        resetForm();
                         $('#pass_issed_to_this_person').html(`<div class="mt-1 alert alert-warning">  Not found </div>`);
                         return;
                     }
@@ -576,7 +606,7 @@
                                             data-person_visitor_passes_count="${item.person_visitor_passes_count}"
                                             data-person_visitor_pass_latest_date="${item.person_visitor_pass_latest?.created_at}"
                                             data-person_visitor_pass_latest_id="${item.person_visitor_pass_latest?.id}"
-                                            data-personid="${item.id}"
+                                            data-id="${item.id}"
                                             data-name="${item.name}"
                                             data-age="${item.age}"
                                             data-dob="${item.dob}"
@@ -588,7 +618,7 @@
                                             data-address="${item.address}"
                                             data-pincode="${item.pincode}"
                                             data-postoffice="${item.post_office}"
-                                            data-group_persons="${item.group_persons}"
+                                            data-num_persons="${item.num_persons}"
                                             >
                                             Select
                                         </button>
@@ -602,7 +632,8 @@
         });
 
         $(document).on('click', '.select-record', function() {
-            let personid = $(this).data('personid');
+          //  let personid = $(this).data('personid');
+            let id = $(this).data('id');
             let name = $(this).data('name');
             let gender = $(this).data('gender');
             let age = $(this).data('age');
@@ -616,19 +647,19 @@
             let address = $(this).data('address');
             let pincode = $(this).data('pincode')?.toString();
             let postoffice = $(this).data('postoffice');
-            let group_persons = $(this).data('group_persons') || 0;
+            let num_persons = $(this).data('num_persons') || 0;
             let person_visitor_passes_count = $(this).data('person_visitor_passes_count') || 0;
             let person_visitor_pass_latest_date = $(this).data('person_visitor_pass_latest_date') || null;
             let person_visitor_pass_latest_id = $(this).data('person_visitor_pass_latest_id') || null;
 
             $('#register-print-btn').html(`Register and Print`);
 
-            if(-1 !== personid){ // -1 means self registration
-                $('#personid').val(personid);
+             //reset old passid
+             $('#passid').val('');
+            if(-1 !== id){ // -1 means self registration
+                $('#passid').val(id);
                 $('#register-print-btn').html(`ReIssue and Print`);
             }
-            //reset old passid
-            $('#passid').val('');
 
 
             $('#name').val(name);
@@ -641,11 +672,37 @@
             $('#id_detail').val(id_detail);
             $('#address').val(address);
             $('#pincode').val(pincode);
-            $('#num_persons').val(group_persons);
+            $('#num_persons').val(num_persons);
             $('#resultsModal').modal('hide');
             //alert(postoffice)
             fetchPin(pincode, postoffice);
             //select post office if it exists
+
+            //get pass using ajax  using passid
+
+            $.ajax({
+                url: "{{ route('admin.gallery-passes.getAjax') }}",
+                type: 'GET',  data: { id: id },
+                success: function(data) {
+                    passItem = data;
+                    pass_issued = passItem;
+                    $("#photo").attr("src",passItem.photo);
+
+                   // alert(JSON.stringify(passItem));
+                    accompanyingPersons = passItem.accompanying_persons || [];
+                    //load accompanying persons
+                    const accompanyingPersonsContainer = document.getElementById('accompanying-persons');
+                    accompanyingPersonsContainer.innerHTML = '';
+                    accompanyingPersons.forEach((person, i) => {
+                        loadAccompanyingPerson(person, i);
+                    });
+
+
+                    $('#generate-fields-btn').click();
+                }
+            });
+
+
 
 
             //check if pass is issued to this person
@@ -721,7 +778,7 @@
                     // window.location = window.location.href.substr(0, i)
                     pass_issued = jsonResponse.pass
                     $('#passid').val(pass_issued.id);
-                    $('#personid').val(pass_issued.person_id);
+                    //$('#personid').val(pass_issued.person_id);
                     $('#register-print-btn').html(`Update and RePrint (No:${pass_issued.number})`);
                     //go to a pass print page with pass id
                    // localStorage.setItem('pass_issued', JSON.stringify(pass_issued));

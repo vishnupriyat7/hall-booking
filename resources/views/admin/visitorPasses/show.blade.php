@@ -3,6 +3,42 @@
 
 <div class="card">
     <div class="card-header">
+        Search Visitor Pass
+    </div>
+
+    <div class="card-body">
+        <div class="form-group">
+            <form class="form-inline">
+                <div class="form-group">
+                    <label for="id">Visitor Pass Id</label>
+                    <input type="number" id="id" name="id" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit">View</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+   // add an event listener to the form
+    document.querySelector('form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        // get the value of the input field with id="id"
+        const id = document.getElementById('id').value;
+        // redirect to the route with the id value
+        window.location.href = '/admin/visistor-passes/' + id;
+    });
+
+</script>
+
+
+
+
+
+<div class="card">
+    <div class="card-header">
         {{ trans('global.show') }} {{ trans('cruds.visitorPass.title') }}
     </div>
 
@@ -13,6 +49,13 @@
                     {{ trans('global.back_to_list') }}
                 </a>
             </div>
+
+            @if($visitorPass->person->photo)
+                                <a href="{{ $visitorPass->person->photo->getUrl() }}" target="_blank" style="display: inline-block">
+                                    <img src="{{ $visitorPass->person->photo->getUrl('thumb') }}">
+                                </a>
+                            @endif
+
             <table class="table table-bordered table-striped">
                 <tbody>
                     <tr>

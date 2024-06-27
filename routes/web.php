@@ -43,6 +43,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::get('visitor-passes/{id}', 'VisitorPassController@show')->name('visitor-passes.show');
     Route::post('visitor-passes/store', 'VisitorPassControllerCustom@store')->name('visitor-passes.store');;
     Route::get('visitor-passes', 'VisitorPassController@index')->name('visitor-passes.index');
+    Route::get('visitor-passes/search', 'VisitorPassControllerCustom@search')->name('visitor-passes.search');
 
     // Visiting Office Category
     Route::delete('visiting-office-categories/destroy', 'VisitingOfficeCategoryController@massDestroy')->name('visiting-office-categories.massDestroy');
@@ -68,6 +69,7 @@ Route::group(['prefix' => 'admin', 'as' => 'admin.', 'namespace' => 'Admin', 'mi
     Route::get('gallery-passes/search', 'GalleryPassControllerCustom@search')->name('gallery-passes.search');
     Route::get('gallery-passes/register', 'GalleryPassControllerCustom@register')->name('gallery-passes.register');;
     Route::post('gallery-passes/store', 'GalleryPassControllerCustom@store')->name('gallery-passes.store');;
+    Route::get('gallery-passes/getAjax', 'GalleryPassControllerCustom@getAjax')->name('gallery-passes.getAjax');
     Route::get('gallery-passes/{id}', 'GalleryPassController@show')->name('gallery-passes.show');
     Route::get('gallery-passes', 'GalleryPassController@index')->name('gallery-passes.index');
     // Route::resource('gallery-passes', 'GalleryPassController', ['except' => ['destroy']]);
