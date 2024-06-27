@@ -303,6 +303,7 @@ class GalleryPassControllerCustom extends Controller
                 return $query->where('number', $querysearchTokNum)
                 ->whereDate('created_at', $querySelfRegDate);
             })
+            ->orderBy('created_at', 'desc')
             // ->when($queryName, function($query) use ($queryName) {
             //     return $query->where('name', 'like', '%'.$queryName.'%');
             // })

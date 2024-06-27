@@ -72,8 +72,8 @@
                     </li>
                 @endcan
                 @can('visitor_mangement_access')
-                    <li class="nav-item has-treeview {{ request()->is("admin/visitor-passes*") ? "menu-open" : "" }} {{ request()->is("admin/gallery-passes*") ? "menu-open" : "" }} {{ request()->is("admin/people*") ? "menu-open" : "" }} {{ request()->is("admin/lockers*") ? "menu-open" : "" }}">
-                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/visitor-passes*") ? "active" : "" }} {{ request()->is("admin/gallery-passes*") ? "active" : "" }} {{ request()->is("admin/people*") ? "active" : "" }} {{ request()->is("admin/lockers*") ? "active" : "" }}" href="#">
+                    <li class="nav-item has-treeview {{ request()->is("admin/visitor-passes*") ? "menu-open" : "" }} {{ request()->is("admin/gallery-passes*") ? "menu-open" : "" }}">
+                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/visitor-passes*") ? "active" : "" }} {{ request()->is("admin/gallery-passes*") ? "active" : "" }}" href="#">
                             <i class="fa-fw nav-icon fas fa-address-book">
 
                             </i>
@@ -83,18 +83,7 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
-                            @can('person_access')
-                                <li class="nav-item">
-                                    <a href="{{ route("admin.people.index") }}" class="nav-link {{ request()->is("admin/people") || request()->is("admin/people/*") ? "active" : "" }}">
-                                        <i class="fa-fw nav-icon fas fa-address-book">
-
-                                        </i>
-                                        <p>
-                                            {{ trans('cruds.person.title') }}
-                                        </p>
-                                    </a>
-                                </li>
-                            @endcan
+                           
                             @can('visitor_pass_access')
                                 <li class="nav-item">
                                     <a href="{{ route("admin.visitor-passes.register") }}" class="nav-link {{ request()->is("admin/visitor-passes/register") || request()->is("admin/visitor-passes/register") ? "active" : "" }}">
@@ -141,8 +130,8 @@
                     </li>
                 @endcan
                 @can('database_access')
-                    <li class="nav-item has-treeview {{ request()->is("admin/id-types*") ? "menu-open" : "" }} {{ request()->is("admin/recommending-office-categories*") ? "menu-open" : "" }} {{ request()->is("admin/visiting-office-categories*") ? "menu-open" : "" }} {{ request()->is("admin/members*") ? "menu-open" : "" }} {{ request()->is("admin/self-registrations*") ? "menu-open" : "" }}">
-                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/id-types*") ? "active" : "" }} {{ request()->is("admin/recommending-office-categories*") ? "active" : "" }} {{ request()->is("admin/visiting-office-categories*") ? "active" : "" }} {{ request()->is("admin/members*") ? "active" : "" }} {{ request()->is("admin/self-registrations*") ? "active" : "" }}" href="#">
+                    <li class="nav-item has-treeview {{ request()->is("admin/people*") ? "menu-open" : "" }} {{ request()->is("admin/id-types*") ? "menu-open" : "" }} {{ request()->is("admin/recommending-office-categories*") ? "menu-open" : "" }} {{ request()->is("admin/visiting-office-categories*") ? "menu-open" : "" }} {{ request()->is("admin/members*") ? "menu-open" : "" }} {{ request()->is("admin/self-registrations*") ? "menu-open" : "" }} {{ request()->is("admin/group-people*") ? "menu-open" : "" }} {{ request()->is("admin/countries*") ? "menu-open" : "" }} {{ request()->is("admin/guiding-officers*") ? "menu-open" : "" }} {{ request()->is("admin/states*") ? "menu-open" : "" }} {{ request()->is("admin/districts*") ? "menu-open" : "" }} {{ request()->is("admin/post-office-details*") ? "menu-open" : "" }} {{ request()->is("admin/sessions*") ? "menu-open" : "" }}">
+                        <a class="nav-link nav-dropdown-toggle {{ request()->is("admin/people*") ? "active" : "" }} {{ request()->is("admin/id-types*") ? "active" : "" }} {{ request()->is("admin/recommending-office-categories*") ? "active" : "" }} {{ request()->is("admin/visiting-office-categories*") ? "active" : "" }} {{ request()->is("admin/members*") ? "active" : "" }} {{ request()->is("admin/self-registrations*") ? "active" : "" }} {{ request()->is("admin/group-people*") ? "active" : "" }} {{ request()->is("admin/countries*") ? "active" : "" }} {{ request()->is("admin/guiding-officers*") ? "active" : "" }} {{ request()->is("admin/states*") ? "active" : "" }} {{ request()->is("admin/districts*") ? "active" : "" }} {{ request()->is("admin/post-office-details*") ? "active" : "" }} {{ request()->is("admin/sessions*") ? "active" : "" }}" href="#">
                             <i class="fa-fw nav-icon fas fa-cogs">
 
                             </i>
@@ -152,6 +141,18 @@
                             </p>
                         </a>
                         <ul class="nav nav-treeview">
+                            @can('person_access')
+                                <li class="nav-item">
+                                    <a href="{{ route("admin.people.index") }}" class="nav-link {{ request()->is("admin/people") || request()->is("admin/people/*") ? "active" : "" }}">
+                                        <i class="fa-fw nav-icon fas fa-address-book">
+
+                                        </i>
+                                        <p>
+                                            {{ trans('cruds.person.title') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endcan
                             @can('id_type_access')
                                 <li class="nav-item">
                                     <a href="{{ route("admin.id-types.index") }}" class="nav-link {{ request()->is("admin/id-types") || request()->is("admin/id-types/*") ? "active" : "" }}">
