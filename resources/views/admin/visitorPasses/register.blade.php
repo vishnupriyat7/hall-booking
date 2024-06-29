@@ -59,8 +59,7 @@
 
             </div>
             <div class="form-group ">
-                <input autocomplete="new-password" placeholder="ID" class="form-control {{ $errors->has('searchId') ? 'is-invalid' : '' }}" type="text" name="searchId" id="searchId">
-
+                <input autocomplete="new-password" placeholder="IDCard Number" class="form-control {{ $errors->has('searchId') ? 'is-invalid' : '' }}" type="text" name="searchId" id="searchId">
             </div>
             <div class="form-group ">
                 <input autocomplete="new-password" placeholder="Self Reg Date" class="form-control {{ $errors->has('searchSelfRegDate') ? 'is-invalid' : '' }}" type="date" name="searchSelfRegDate" id="searchSelfRegDate">
@@ -451,6 +450,23 @@
 <script src="{{ asset('js/jquery.form.min.js') }}"></script>
 <script src="{{ asset('js/pin.js') }}"></script>
 <script>
+    function resetForm()
+    {
+        $('#registerForm').trigger("reset");
+   
+      
+        $('#pass_issed_to_this_person').html(``);
+        $('#passid').val('');
+        //remove options from postoffice
+        $('#post_office_select').hide();
+        $('#post_office').show();
+        $('#post_office').val('');
+        $('#post_office_select').html('');
+        $("#post_office").prop('required',true);
+        $('#post_office_select').prop('required',false);
+        $("#photo").attr("src",'');
+
+    }
     var pass_issued = null;
 
     $(document).ready(function() {
@@ -483,6 +499,7 @@
                     //console.log(data);
                     $('#pass_issed_to_this_person').html(``);
                     if (!data || data?.length == 0) {
+                        resetForm();
                         $('#pass_issed_to_this_person').html(`<div class="mt-1 alert alert-warning">  Not found </div>`);
                         return;
                     }
@@ -505,7 +522,7 @@
                                             data-person_visitor_passes_count="${item.person_visitor_passes_count}"
                                             data-person_visitor_pass_latest_date="${item.person_visitor_pass_latest?.created_at}"
                                             data-person_visitor_pass_latest_id="${item.person_visitor_pass_latest?.id}"
-                                            data-personid="${item.id}"
+                                            data-id="${item.id}"
                                             data-name="${item.name}"
                                             data-age="${item.age}"
                                             data-dob="${item.dob}"
@@ -517,6 +534,7 @@
                                             data-address="${item.address}"
                                             data-pincode="${item.pincode}"
 					    data-postoffice="${item.post_office}"
+                                            data-photo="${item.photo}"
 					    >
                                             Select
                                         </button>
@@ -544,7 +562,7 @@
             let address = $(this).data('address');
             let pincode = $(this).data('pincode')?.toString();
             let postoffice = $(this).data('postoffice');
-
+             let photo =  $(this).data('photo');
             let person_visitor_passes_count = $(this).data('person_visitor_passes_count') || 0;
             let person_visitor_pass_latest_date = $(this).data('person_visitor_pass_latest_date') || null;
             let person_visitor_pass_latest_id = $(this).data('person_visitor_pass_latest_id') || null;
@@ -570,6 +588,7 @@
             $('#id_detail').val(id_detail);
             $('#address').val(address);
             $('#pincode').val(pincode);
+   	    $("#photo").attr("src",photo);
             $('#resultsModal').modal('hide');
             fetchPin(pincode, postoffice);
 
