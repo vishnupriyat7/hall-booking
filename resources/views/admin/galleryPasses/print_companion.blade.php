@@ -28,7 +28,7 @@
         }
 
         @page {
-            size: 80mm 200mm;
+            size: 80mm 110mm;
             /* landscape */
             /* you can also specify margins here: */
             margin: 0mm;
@@ -38,7 +38,7 @@
 
         @media print {
             @page {
-                size: 80mm 200mm;
+                size: 80mm 110mm;
                 /* landscape */
                 /* you can also specify margins here: */
                 margin: 0mm;
