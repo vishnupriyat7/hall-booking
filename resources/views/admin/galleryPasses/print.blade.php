@@ -29,14 +29,14 @@
 					color:black;
 			}
 			@page {
-   				 size: 80mm 200mm; /* landscape */
+   				 size: 80mm 110mm; /* landscape */
    					 /* you can also specify margins here: */
     			margin: 0mm;
    			    margin-right: 0mm; /* for compatibility with both A4 and Letter */
   				}
 			@media print {
   				@page {
-   				 size: 80mm 200mm; /* landscape */
+   				 size: 80mm 110mm; /* landscape */
    					 /* you can also specify margins here: */
     			margin: 0mm;
    			    margin-right: 0mm; /* for compatibility with both A4 and Letter */
@@ -56,9 +56,25 @@
 		//	window.opener.location.href = window.opener.location.href;
 			//opener.location.reload();
 			//window.close();
+            var css = '@page { size: 80mm 110mm; }',
+                head = document.head || document.getElementsByTagName('head')[0],
+                style = document.createElement('style');
+
+            style.type = 'text/css';
+            style.media = 'print';
+
+            if (style.styleSheet){
+            style.styleSheet.cssText = css;
+            } else {
+            style.appendChild(document.createTextNode(css));
+            }
+
+            head.appendChild(style);
 
 			setTimeout(function () { window.print(); }, 500);
         //window.onfocus = function () { setTimeout(function () { window.close(); }, 500); }
+            window.addEventListener("afterprint", () => self.close);
+
 		}
 		</script>
 </head>
